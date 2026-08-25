@@ -1,0 +1,35 @@
+.chart-card {
+  background-color: #ffffff;
+  border: 1px solid #d9dee8;
+  border-radius: 10px;
+  padding: 16px 18px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* Gráfico de ventas: más ancho */
+.chart-card:first-child {
+  flex: 2;
+}
+
+/* Gráfico de meta: más estrecho */
+.chart-card:last-child {
+  flex: 1;
+}
+
+.chart-card h3 {
+  margin: 0 0 5px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2233;
+}
+
+.chart-sub {
+  margin: 0 0 8px;
+  font-size: 10px;
+  color: #8890a0;
+}
+
+.chart-sub.naranja {
+  color: #ea580c;
+}

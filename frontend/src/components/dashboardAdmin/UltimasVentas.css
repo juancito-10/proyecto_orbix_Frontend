@@ -1,0 +1,62 @@
+.ultimas-ventas {
+  margin: 20px 30px 0;
+  background-color: #ffffff;
+  border: 1px solid #d9e0e8;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.ultimas-ventas h3 {
+  margin: 0;
+  padding: 25px;
+  font-size: 22px;
+  color: #0b1f3a;
+}
+
+.ultimas-ventas table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.ultimas-ventas th {
+  padding: 10px 30px;
+  text-align: left;
+  color: #58708d;
+  font-size: 16px;
+  font-weight: 800;
+  border-top: 1px solid #d9e0e8;
+  border-bottom: 1px solid #d9e0e8;
+}
+
+.ultimas-ventas td {
+  padding: 10px 30px;
+  font-size: 17px;
+  border-bottom: 1px solid #d9e0e8;
+}
+
+.ultimas-ventas tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ultimas-ventas td:first-child {
+  color: #087c9c;
+  font-weight: 600;
+}
+
+.ultimas-ventas td:nth-child(2) {
+  color: #0b1f3a;
+}
+
+.ultimas-ventas td:nth-child(3) {
+  color: #71829a;
+}
+
+.ultimas-ventas td:nth-child(4) {
+  color: #0b1f3a;
+  font-weight: 700;
+}
+
+.ultimas-ventas td:nth-child(5) {
+  font-weight: 700;
+}

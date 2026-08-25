@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import "./LogoutButton.css";
 
 const LogoutButton = () => {
   const navigate = useNavigate();
@@ -11,8 +12,8 @@ const LogoutButton = () => {
   };
 
   return (
-    <button onClick={handleLogout}>
-      Cerrar sesión
+    <button className="cerrar-perfil" onClick={handleLogout}>
+      Cerrar perfil
     </button>
   );
 };

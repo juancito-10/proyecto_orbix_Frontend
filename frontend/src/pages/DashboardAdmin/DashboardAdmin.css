@@ -1,0 +1,108 @@
+.main {
+  min-height: 100vh;
+  background-color: #f0f4f8;
+}
+
+.contenido-dashboard {
+  margin-left: 230px;
+  min-width: 0;
+  min-height: 100vh;
+}
+.orbix {
+  color: #757e87;
+}
+
+.admin {
+  color: #087c9c;
+  font-weight: 800;
+}
+.fecha-mes {
+  color: #757e87;
+}
+.dashboard-letra {
+  font-weight: bold;
+}
+
+.barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 30px 15px;
+  border-bottom: 1px solid #d9e0e8;
+  gap: 380px;
+}
+
+.encabezado-dashboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+}
+.button-exportar {
+  width: 170px;
+  height: 40px;
+  border: none;
+  border-radius: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  cursor: pointer;
+  color: white;
+  background-color: #087c9c;
+}
+.button-exportar:hover {
+  filter: brightness(1.30);
+}
+
+.buscar {
+  position: relative;
+}
+
+.buscar input {
+  width: 285px;
+  padding: 10px 15px 10px 40px;
+  box-sizing: border-box;
+  height: 35px;
+  border: 1px solid #d9e0e8;
+  border-radius: 10px;
+}
+
+.buscar svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.acciones-superiores {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.usuario {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #087c9c;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+.notifi {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.graficas-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 20px 30px;
+  align-items: start;
+}

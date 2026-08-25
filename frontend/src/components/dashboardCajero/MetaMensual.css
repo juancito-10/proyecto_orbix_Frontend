@@ -1,0 +1,54 @@
+.meta-mensual {
+  margin: 20px 30px 0;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 22px 25px;
+}
+
+.meta-mensual-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.meta-mensual-header h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: #1f2233;
+}
+
+.meta-mensual-sub {
+  margin: 0;
+  font-size: 12px;
+  color: #8890a0;
+}
+
+.meta-porcentaje {
+  font-size: 20px;
+  font-weight: 700;
+  color: #7c5cfc;
+}
+
+.meta-barra-track {
+  width: 100%;
+  height: 10px;
+  background-color: #ece9fb;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.meta-barra-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #9b7dfd, #7c5cfc);
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.meta-rango {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #8890a0;
+}

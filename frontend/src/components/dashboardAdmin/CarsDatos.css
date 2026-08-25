@@ -1,0 +1,22 @@
+.dashboard-cards {
+  display: flex;
+  gap: 20px;
+  padding: 0 30px;
+}
+
+.card {
+  flex: 1;
+  height: 240px;
+  padding: 25px;
+
+  background-color: #ffffff;
+  border-radius: 15px;
+
+  display: flex;
+  flex-direction: column;
+}
+.titulo-cars {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
