@@ -42,6 +42,7 @@ const CarsDatos = () => {
               <p>{dato.titulo}</p>
               <Icono size={24} />
             </div>
+
             <h2>{dato.valor}</h2>
           </div>
         );

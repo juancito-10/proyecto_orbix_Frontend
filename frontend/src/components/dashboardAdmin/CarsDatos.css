@@ -6,17 +6,26 @@
 
 .card {
   flex: 1;
-  height: 240px;
+  height: 200px;
   padding: 25px;
-
   background-color: #ffffff;
   border-radius: 15px;
-
   display: flex;
   flex-direction: column;
 }
+
 .titulo-cars {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+}
+
+.titulo-cars p {
+  margin: 0;
+  font-size: 18px;
+}
+
+.card h2 {
+  margin: 12px 0 0;
+  font-size: 32px;
 }
