@@ -47,7 +47,15 @@ function App() {
         <Route
           path="/dashboard/vendedor"
           element={
-            <ProtectedRoute roles={["vendedor"]}>
+            <ProtectedRoute roles={["vendedor", "cajero"]}>
+              <DashboardCajero />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/cajero"
+          element={
+            <ProtectedRoute roles={["vendedor", "cajero"]}>
               <DashboardCajero />
             </ProtectedRoute>
           }

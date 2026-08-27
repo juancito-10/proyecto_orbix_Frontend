@@ -63,6 +63,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
       if (
         tipo === "opera" &&
         usuario.rol !== "vendedor" &&
+        usuario.rol !== "cajero" &&
         usuario.rol !== "inventario"
       ) {
         setError(
@@ -82,7 +83,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
         navigate("/dashboard/admin");
       }
 
-      if (usuario.rol === "vendedor") {
+      if (usuario.rol === "vendedor" || usuario.rol === "cajero") {
         navigate("/dashboard/vendedor");
       }
 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { Search, Bell, Menu } from "lucide-react";
 import SidebarInventario from "../../components/dashboardInventario/SidebarInventario";
-import CardsInventario, { CardsInventarioProps } from "../../components/dashboardInventario/CardsInventario";
-import StockBajoTable, { ProductoStockBajo } from "../../components/dashboardInventario/StockBajoTable";
-import StockChart, { StockChartData } from "../../components/dashboardInventario/StockChart";
-import UltimosMovimientos, { Movimiento } from "../../components/dashboardInventario/UltimosMovimientos";
+import CardsInventario, { type CardsInventarioProps } from "../../components/dashboardInventario/CardsInventario";
+import StockBajoTable, { type ProductoStockBajo } from "../../components/dashboardInventario/StockBajoTable";
+import StockChart, { type StockChartData } from "../../components/dashboardInventario/StockChart";
+import UltimosMovimientos, { type Movimiento } from "../../components/dashboardInventario/UltimosMovimientos";
 
 import "./DashboardInventario.css";
 
