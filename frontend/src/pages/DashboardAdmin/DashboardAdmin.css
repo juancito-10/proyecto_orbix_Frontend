@@ -99,10 +99,3 @@
   align-items: center;
   justify-content: center;
 }
-.graficas-dashboard {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  padding: 20px 30px;
-  align-items: start;
-}

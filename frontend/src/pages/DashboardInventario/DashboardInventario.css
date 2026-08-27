@@ -1,0 +1,122 @@
+.main-inv {
+  min-height: 100vh;
+  background-color: #f0f4f8; /* Mismo gris azulado claro del admin */
+  display: flex;
+}
+
+.contenido-dashboard-inv {
+  margin-left: 230px; /* Igualar al ancho del Sidebar de admin */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.barra-superior-inv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: white;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.breadcrumbs-inv {
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bread-orbix { color: #94a3b8; }
+.bread-sep { color: #cbd5e1; }
+.bread-inventario { color: #10b981; font-weight: 700; }
+.bread-dashboard { color: #0f172a; font-weight: 700; }
+
+.acciones-superiores-inv {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.buscar-inv {
+  position: relative;
+}
+
+.buscar-inv input {
+  width: 250px;
+  padding: 8px 15px 8px 35px;
+  height: 38px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  outline: none;
+  font-size: 14px;
+}
+
+.buscar-inv input:focus {
+  border-color: #10b981;
+}
+
+.buscar-inv svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.notifi-inv {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.usuario-inv {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: #10b981;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.panel-scroll-inv {
+  padding: 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.encabezado-dashboard-inv {
+  margin-bottom: 25px;
+}
+
+.encabezado-dashboard-inv h2 {
+  margin: 0 0 5px 0;
+  font-size: 24px;
+  color: #0f172a;
+}
+
+.fecha-mes-inv {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.bottom-row-inv {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 25px;
+}

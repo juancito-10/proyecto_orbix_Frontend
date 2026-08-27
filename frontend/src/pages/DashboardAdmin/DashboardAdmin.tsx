@@ -1,8 +1,5 @@
 import Sidebar from "../../components/dashboardAdmin/Sidebar";
 import CarsDatos from "../../components/dashboardAdmin/CarsDatos";
-import Ventasanuales from "../../components/dashboardAdmin/ventasAnuales";
-import VentasCategorias from "../../components/dashboardAdmin/VentasCategorias";
-import UltimasVentas from "../../components/dashboardAdmin/UltimasVentas";
 import { Search, Bell, Download } from "lucide-react";
 import "./DashboardAdmin.css";
 
@@ -43,11 +40,6 @@ const DashboardAdmin = () => {
           </button>
         </div>
         <CarsDatos />
-        <div className="graficas-dashboard">
-          <Ventasanuales />
-          <VentasCategorias />
-        </div>
-        <UltimasVentas />
       </div>
     </main>
   );
