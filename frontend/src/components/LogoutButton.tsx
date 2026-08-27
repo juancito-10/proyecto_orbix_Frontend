@@ -1,8 +1,14 @@
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 import "./LogoutButton.css";
 
-const LogoutButton = () => {
+interface LogoutButtonProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+const LogoutButton = ({ className = "cerrar-perfil", children = "Cerrar perfil" }: LogoutButtonProps) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -22,6 +28,7 @@ const LogoutButton = () => {
       navigate("/login/admin");
     } else if (
       rol === "vendedor" ||
+      rol === "cajero" ||
       rol === "inventario"
     ) {
       navigate("/login/opera");
@@ -32,10 +39,10 @@ const LogoutButton = () => {
 
   return (
     <button
-      className="cerrar-perfil"
+      className={className}
       onClick={handleLogout}
     >
-      Cerrar perfil
+      {children}
     </button>
   );
 };

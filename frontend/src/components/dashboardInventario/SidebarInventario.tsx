@@ -6,6 +6,7 @@ import {
   X
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import LogoutButton from "../LogoutButton";
 import "./SidebarInventario.css";
 
 interface SidebarProps {
@@ -60,10 +61,10 @@ const SidebarInventario = ({ isOpen, onClose }: SidebarProps) => {
               <p className="user-role-inv">Inventario</p>
             </div>
           </div>
-          <button className="btn-cambiar-perfil">
+          <LogoutButton className="btn-cambiar-perfil">
             <LogOut size={18} />
-            <span>Cambiar perfil</span>
-          </button>
+            <span>Cerrar sesión</span>
+          </LogoutButton>
         </div>
       </aside>
     </>
