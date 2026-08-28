@@ -13,6 +13,9 @@ import DashboardAdmin from "./pages/DashboardAdmin/DashboardAdmin";
 import DashboardCajero from "./pages/DashboardCajero/DashboardCajero";
 
 import DashboardInventario from "./pages/DashboardInventario/DashboardInventario";
+import LayoutInventario from "./components/dashboardInventario/LayoutInventario";
+import ProductosInventario from "./pages/DashboardInventario/ProductosInventario";
+import MovimientosInventario from "./pages/DashboardInventario/MovimientosInventario";
 import InventarioAdmin from "./pages/DashboardAdmin/InventarioAdmin/InventarioAdmin";
 
 function App() {
@@ -61,14 +64,19 @@ function App() {
           }
         />
 
+        {/* Módulo de Inventario con Layout y Subrutas */}
         <Route
           path="/dashboard/inventario"
           element={
             <ProtectedRoute roles={["inventario"]}>
-              <DashboardInventario />
+              <LayoutInventario />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<DashboardInventario />} />
+          <Route path="productos" element={<ProductosInventario />} />
+          <Route path="movimientos" element={<MovimientosInventario />} />
+        </Route>
 
         {/* Ruta no encontrada */}
 

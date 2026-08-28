@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
-import { Search, Bell, Menu } from "lucide-react";
-import SidebarInventario from "../../components/dashboardInventario/SidebarInventario";
-import CardsInventario, { type CardsInventarioProps } from "../../components/dashboardInventario/CardsInventario";
-import StockBajoTable, { type ProductoStockBajo } from "../../components/dashboardInventario/StockBajoTable";
-import StockChart, { type StockChartData } from "../../components/dashboardInventario/StockChart";
-import UltimosMovimientos, { type Movimiento } from "../../components/dashboardInventario/UltimosMovimientos";
+import CardsInventario, { CardsInventarioProps } from "../../components/dashboardInventario/CardsInventario";
+import StockBajoTable, { ProductoStockBajo } from "../../components/dashboardInventario/StockBajoTable";
+import StockChart, { StockChartData } from "../../components/dashboardInventario/StockChart";
+import UltimosMovimientos, { Movimiento } from "../../components/dashboardInventario/UltimosMovimientos";
 
 import "./DashboardInventario.css";
 
 const DashboardInventario = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Estado para el sidebar móvil
 
   const [dashboardMetrics, setDashboardMetrics] = useState<CardsInventarioProps['metrics']>({
     valorTotal: 0,
@@ -64,52 +61,22 @@ const DashboardInventario = () => {
   }, []);
 
   return (
-    <main className="main-inv">
-      <SidebarInventario isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
-
-      <div className="contenido-dashboard-inv">
-        <div className="barra-superior-inv">
-          <div className="left-acciones-inv">
-            <button className="menu-toggle-inv" onClick={() => setIsSidebarOpen(true)}>
-              <Menu size={24} />
-            </button>
-            <p className="breadcrumbs-inv">
-              <span className="bread-orbix">Orbix</span> <span className="bread-sep">/</span>{" "}
-              <span className="bread-inventario">Inventario</span> <span className="bread-sep">/</span>{" "}
-              <span className="bread-dashboard">Dashboard</span>
-            </p>
-          </div>
-
-          <div className="acciones-superiores-inv">
-            <form className="buscar-inv">
-              <Search size={18} />
-              <input type="text" placeholder="Buscar..." />
-            </form>
-            <div className="notifi-inv">
-              <Bell size={20} />
-            </div>
-            <div className="usuario-inv">LH</div>
-          </div>
-        </div>
-
-        <div className="panel-scroll-inv">
-          <div className="encabezado-dashboard-inv">
-            <h2>Dashboard de Inventario</h2>
-            <p className="fecha-mes-inv">Estado general del stock · 30 de julio de 2026</p>
-          </div>
-          
-          <div className="dashboard-content">
-            <CardsInventario metrics={dashboardMetrics} isLoading={isLoading} />
-            <StockBajoTable data={stockBajo} isLoading={isLoading} />
-            
-            <div className="bottom-row-inv">
-              <StockChart data={chartData} isLoading={isLoading} />
-              <UltimosMovimientos data={movimientos} isLoading={isLoading} />
-            </div>
-          </div>
+    <>
+      <div className="encabezado-dashboard-inv">
+        <h2>Dashboard Principal</h2>
+        <p className="fecha-mes-inv">Resumen general del inventario</p>
+      </div>
+      
+      <div className="dashboard-content">
+        <CardsInventario metrics={dashboardMetrics} isLoading={isLoading} />
+        <StockBajoTable data={stockBajo} isLoading={isLoading} />
+        
+        <div className="bottom-row-inv">
+          <StockChart data={chartData} isLoading={isLoading} />
+          <UltimosMovimientos data={movimientos} isLoading={isLoading} />
         </div>
       </div>
-    </main>
+    </>
   );
 };
 
