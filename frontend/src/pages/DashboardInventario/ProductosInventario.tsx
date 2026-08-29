@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, X } from "lucide-react";
+import "../../components/dashboardInventario/ModalInventario.css";
 import "./ProductosInventario.css";
 
-const productosData = [
+const initialProductosData = [
   { id: "PRD-001", nombre: "Laptop Lenovo IdeaPad 5", categoria: "Electrónica", precio: 8450, stock: 14, stockMin: 5, valor: 118300, proveedor: "Lenovo Argentina" },
   { id: "PRD-002", nombre: "Monitor Samsung 27\" FHD", categoria: "Electrónica", precio: 3200, stock: 8, stockMin: 5, valor: 25600, proveedor: "Samsung Corp" },
   { id: "PRD-003", nombre: "Zapatillas Nike Air Max 270", categoria: "Ropa y calzado", precio: 1890, stock: 3, stockMin: 10, valor: 5670, proveedor: "Nike Distribuidora" },
@@ -15,21 +16,30 @@ const categories = ["Todas", "Electrónica", "Ropa y calzado", "Alimentos", "Hog
 const statuses = ["Todos", "Disponible", "Stock bajo", "Sin stock"];
 
 const ProductosInventario = () => {
+  const [productos, setProductos] = useState(initialProductosData);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [selectedStatus, setSelectedStatus] = useState("Todos");
 
+  // Estado del Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [nuevoProducto, setNuevoProducto] = useState({
+    nombre: "",
+    categoria: "Electrónica",
+    precio: "",
+    stock: "",
+    stockMin: "",
+    proveedor: ""
+  });
+
   // Lógica de filtrado
-  const filteredProductos = productosData.filter((prod) => {
-    // Filtro por búsqueda (nombre o ID)
+  const filteredProductos = productos.filter((prod) => {
     const matchesSearch =
       prod.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prod.id.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Filtro por categoría
     const matchesCategory = selectedCategory === "Todas" || prod.categoria === selectedCategory;
     
-    // Filtro por estado
     let matchesStatus = true;
     if (selectedStatus === "Disponible") matchesStatus = prod.stock > prod.stockMin;
     if (selectedStatus === "Stock bajo") matchesStatus = prod.stock <= prod.stockMin && prod.stock > 0;
@@ -38,16 +48,44 @@ const ProductosInventario = () => {
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
+  // Manejar creación de producto
+  const handleAgregarProducto = (e: React.FormEvent) => {
+    e.preventDefault();
+    const nuevoId = `PRD-00${productos.length + 1}`;
+    const pPrecio = Number(nuevoProducto.precio);
+    const pStock = Number(nuevoProducto.stock);
+    
+    const productoAgregado = {
+      id: nuevoId,
+      nombre: nuevoProducto.nombre,
+      categoria: nuevoProducto.categoria,
+      precio: pPrecio,
+      stock: pStock,
+      stockMin: Number(nuevoProducto.stockMin),
+      valor: pPrecio * pStock,
+      proveedor: nuevoProducto.proveedor
+    };
+
+    setProductos([productoAgregado, ...productos]);
+    setIsModalOpen(false);
+    
+    // Resetear form
+    setNuevoProducto({ nombre: "", categoria: "Electrónica", precio: "", stock: "", stockMin: "", proveedor: "" });
+  };
+
+  // Calcular valor total de filtrados
+  const totalValor = filteredProductos.reduce((acc, curr) => acc + curr.valor, 0);
+
   return (
     <>
       <div className="productos-header">
         <div className="productos-title">
           <h2>Productos</h2>
-          <p>{filteredProductos.length} productos filtrados</p>
+          <p>{filteredProductos.length} productos · valor total $ {totalValor.toLocaleString('es-AR')}</p>
         </div>
         <div className="productos-actions">
           <button className="btn-outline">Importar</button>
-          <button className="btn-primary">
+          <button className="btn-primary" onClick={() => setIsModalOpen(true)}>
             <Plus size={18} /> Agregar producto
           </button>
         </div>
@@ -143,6 +181,71 @@ const ProductosInventario = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Modal para Agregar Producto */}
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h3>Agregar Nuevo Producto</h3>
+              <button className="close-btn" onClick={() => setIsModalOpen(false)}>
+                <X size={24} />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAgregarProducto}>
+              <div className="modal-body">
+                <div className="form-group-inv">
+                  <label>Nombre del Producto</label>
+                  <input type="text" required placeholder="Ej. Teclado Inalámbrico" 
+                    value={nuevoProducto.nombre} onChange={(e) => setNuevoProducto({...nuevoProducto, nombre: e.target.value})} />
+                </div>
+                
+                <div className="form-row">
+                  <div className="form-group-inv">
+                    <label>Categoría</label>
+                    <select value={nuevoProducto.categoria} onChange={(e) => setNuevoProducto({...nuevoProducto, categoria: e.target.value})}>
+                      <option value="Electrónica">Electrónica</option>
+                      <option value="Ropa y calzado">Ropa y calzado</option>
+                      <option value="Alimentos">Alimentos</option>
+                      <option value="Hogar">Hogar</option>
+                    </select>
+                  </div>
+                  <div className="form-group-inv">
+                    <label>Precio Unitario ($)</label>
+                    <input type="number" required min="0" placeholder="0.00" 
+                      value={nuevoProducto.precio} onChange={(e) => setNuevoProducto({...nuevoProducto, precio: e.target.value})} />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group-inv">
+                    <label>Stock Inicial</label>
+                    <input type="number" required min="0" placeholder="0" 
+                      value={nuevoProducto.stock} onChange={(e) => setNuevoProducto({...nuevoProducto, stock: e.target.value})} />
+                  </div>
+                  <div className="form-group-inv">
+                    <label>Stock Mínimo</label>
+                    <input type="number" required min="0" placeholder="0" 
+                      value={nuevoProducto.stockMin} onChange={(e) => setNuevoProducto({...nuevoProducto, stockMin: e.target.value})} />
+                  </div>
+                </div>
+
+                <div className="form-group-inv">
+                  <label>Proveedor</label>
+                  <input type="text" required placeholder="Nombre de la empresa proveedora" 
+                    value={nuevoProducto.proveedor} onChange={(e) => setNuevoProducto({...nuevoProducto, proveedor: e.target.value})} />
+                </div>
+              </div>
+
+              <div className="modal-footer">
+                <button type="button" className="btn-outline" onClick={() => setIsModalOpen(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary">Guardar Producto</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 };
