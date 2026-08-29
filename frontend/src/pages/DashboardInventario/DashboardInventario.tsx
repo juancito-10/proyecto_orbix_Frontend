@@ -4,8 +4,6 @@ import StockBajoTable, { type ProductoStockBajo } from "../../components/dashboa
 import StockChart, { type StockChartData } from "../../components/dashboardInventario/StockChart";
 import UltimosMovimientos, { type Movimiento } from "../../components/dashboardInventario/UltimosMovimientos";
 
-import "./DashboardInventario.css";
-
 const DashboardInventario = () => {
   const [isLoading, setIsLoading] = useState(true);
 

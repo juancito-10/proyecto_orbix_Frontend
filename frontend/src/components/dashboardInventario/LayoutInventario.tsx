@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Bell, Menu } from "lucide-react";
 import { Outlet } from "react-router-dom";
 import SidebarInventario from "./SidebarInventario";
+import "../../pages/DashboardInventario/DashboardInventario.css";
 
 const LayoutInventario = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
