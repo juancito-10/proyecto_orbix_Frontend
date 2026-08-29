@@ -2,18 +2,13 @@ import { useState } from "react";
 import { Search, ChevronUp, ChevronDown, Minus, X } from "lucide-react";
 import "../../components/dashboardInventario/ModalInventario.css";
 import "./MovimientosInventario.css";
-
-const initialMovData = [
-  { id: "MOV-0048", fecha: "30 Jul 2026", hora: "09:14", tipo: "Entrada", producto: "Laptop Lenovo IdeaPad 5", sku: "PRD-001", cantidad: "+10 u.", isPositive: true, valor: 84500, responsable: "Luis Herrera", nota: "Reposición mensual" },
-  { id: "MOV-0047", fecha: "30 Jul 2026", hora: "08:32", tipo: "Salida", producto: "Smartphone Samsung Galaxy A55", sku: "PRD-005", cantidad: "+3 u.", isPositive: true, valor: 17700, responsable: "Ana Torres", nota: "ORD-2843" },
-  { id: "MOV-0046", fecha: "29 Jul 2026", hora: "16:55", tipo: "Salida", producto: "Monitor Samsung 27\" FHD", sku: "PRD-002", cantidad: "+2 u.", isPositive: true, valor: 6400, responsable: "Diego Ruiz", nota: "ORD-2846" },
-  { id: "MOV-0045", fecha: "29 Jul 2026", hora: "14:20", tipo: "Ajuste", producto: "Zapatillas Nike Air Max 270", sku: "PRD-003", cantidad: "-4 u.", isPositive: false, valor: 7560, responsable: "Luis Herrera", nota: "Conteo físico - diferen..." }
-];
+import { useInventory } from "../../context/InventoryContext";
 
 const types = ["Todos", "Entrada", "Salida", "Ajuste"];
 
 const MovimientosInventario = () => {
-  const [movimientos, setMovimientos] = useState(initialMovData);
+  const { movimientos, registrarMovimiento } = useInventory();
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState("Todos");
 
@@ -58,13 +53,13 @@ const MovimientosInventario = () => {
       producto: nuevoMovimiento.producto,
       sku: nuevoMovimiento.sku || "PRD-XXX",
       cantidad: `${signo}${nuevoMovimiento.cantidad} u.`,
-      isPositive: isEntrada, // o si quieren que salida sea positivo en verde como la imagen
+      isPositive: isEntrada,
       valor: Number(nuevoMovimiento.valor),
       responsable: nuevoMovimiento.responsable,
       nota: nuevoMovimiento.nota
     };
 
-    setMovimientos([movNuevo, ...movimientos]);
+    registrarMovimiento(movNuevo, nuevoMovimiento.sku, Number(nuevoMovimiento.cantidad), modalType);
     setIsModalOpen(false);
     
     // Resetear form

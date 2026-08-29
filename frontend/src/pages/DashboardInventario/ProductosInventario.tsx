@@ -2,21 +2,14 @@ import { useState } from "react";
 import { Search, Plus, X } from "lucide-react";
 import "../../components/dashboardInventario/ModalInventario.css";
 import "./ProductosInventario.css";
-
-const initialProductosData = [
-  { id: "PRD-001", nombre: "Laptop Lenovo IdeaPad 5", categoria: "Electrónica", precio: 8450, stock: 14, stockMin: 5, valor: 118300, proveedor: "Lenovo Argentina" },
-  { id: "PRD-002", nombre: "Monitor Samsung 27\" FHD", categoria: "Electrónica", precio: 3200, stock: 8, stockMin: 5, valor: 25600, proveedor: "Samsung Corp" },
-  { id: "PRD-003", nombre: "Zapatillas Nike Air Max 270", categoria: "Ropa y calzado", precio: 1890, stock: 3, stockMin: 10, valor: 5670, proveedor: "Nike Distribuidora" },
-  { id: "PRD-004", nombre: "Set Utensilios Cocina 12pz", categoria: "Hogar", precio: 4620, stock: 22, stockMin: 5, valor: 101640, proveedor: "Menaje del Sur" },
-  { id: "PRD-005", nombre: "Smartphone Samsung Galaxy A55", categoria: "Electrónica", precio: 5900, stock: 19, stockMin: 8, valor: 112100, proveedor: "Samsung Corp" },
-  { id: "PRD-006", nombre: "Impresora HP LaserJet Pro", categoria: "Electrónica", precio: 2750, stock: 2, stockMin: 3, valor: 5500, proveedor: "HP Argentina" }
-];
+import { useInventory } from "../../context/InventoryContext";
 
 const categories = ["Todas", "Electrónica", "Ropa y calzado", "Alimentos", "Hogar"];
 const statuses = ["Todos", "Disponible", "Stock bajo", "Sin stock"];
 
 const ProductosInventario = () => {
-  const [productos, setProductos] = useState(initialProductosData);
+  const { productos, agregarProducto } = useInventory();
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [selectedStatus, setSelectedStatus] = useState("Todos");
@@ -66,7 +59,7 @@ const ProductosInventario = () => {
       proveedor: nuevoProducto.proveedor
     };
 
-    setProductos([productoAgregado, ...productos]);
+    agregarProducto(productoAgregado);
     setIsModalOpen(false);
     
     // Resetear form
