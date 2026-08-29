@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Search, ChevronUp, ChevronDown, Minus } from "lucide-react";
 import "./MovimientosInventario.css";
 
@@ -8,7 +9,25 @@ const movData = [
   { id: "MOV-0045", fecha: "29 Jul 2026", hora: "14:20", tipo: "Ajuste", producto: "Zapatillas Nike Air Max 270", sku: "PRD-003", cantidad: "-4 u.", isPositive: false, valor: 7560, responsable: "Luis Herrera", nota: "Conteo físico - diferen..." }
 ];
 
+const types = ["Todos", "Entrada", "Salida", "Ajuste"];
+
 const MovimientosInventario = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState("Todos");
+
+  // Lógica de filtrado
+  const filteredMovs = movData.filter((mov) => {
+    // Filtro por búsqueda (producto o ID)
+    const matchesSearch =
+      mov.producto.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      mov.id.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Filtro por tipo
+    const matchesType = selectedType === "Todos" || mov.tipo === selectedType;
+
+    return matchesSearch && matchesType;
+  });
+
   return (
     <>
       <div className="mov-header">
@@ -58,14 +77,24 @@ const MovimientosInventario = () => {
       <div className="filters-bar">
         <div className="search-input">
           <Search size={16} />
-          <input type="text" placeholder="Buscar producto o ID..." />
+          <input 
+            type="text" 
+            placeholder="Buscar producto o ID..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
         
         <div className="filter-pills">
-          <button className="pill active-green">Todos</button>
-          <button className="pill">Entrada</button>
-          <button className="pill">Salida</button>
-          <button className="pill">Ajuste</button>
+          {types.map((t) => (
+            <button 
+              key={t} 
+              className={`pill ${selectedType === t ? 'active-green' : ''}`}
+              onClick={() => setSelectedType(t)}
+            >
+              {t}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -84,49 +113,57 @@ const MovimientosInventario = () => {
             </tr>
           </thead>
           <tbody>
-            {movData.map((mov, index) => {
-              let badgeClass = '';
-              let Icon = null;
-              if (mov.tipo === 'Entrada') {
-                badgeClass = 'badge-entrada';
-                Icon = ChevronUp;
-              } else if (mov.tipo === 'Salida') {
-                badgeClass = 'badge-salida';
-                Icon = ChevronDown;
-              } else {
-                badgeClass = 'badge-ajuste';
-                Icon = Minus;
-              }
+            {filteredMovs.length > 0 ? (
+              filteredMovs.map((mov, index) => {
+                let badgeClass = '';
+                let Icon = null;
+                if (mov.tipo === 'Entrada') {
+                  badgeClass = 'badge-entrada';
+                  Icon = ChevronUp;
+                } else if (mov.tipo === 'Salida') {
+                  badgeClass = 'badge-salida';
+                  Icon = ChevronDown;
+                } else {
+                  badgeClass = 'badge-ajuste';
+                  Icon = Minus;
+                }
 
-              return (
-                <tr key={index}>
-                  <td className="text-green">{mov.id}</td>
-                  <td className="text-gray">
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span className="text-dark">{mov.fecha}</span>
-                      <span>{mov.hora}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`badge-tipo ${badgeClass}`}>
-                      <Icon size={14} strokeWidth={3} /> {mov.tipo}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="prod-info">
-                      <span className="prod-name">{mov.producto}</span>
-                      <span className="prod-sku">{mov.sku}</span>
-                    </div>
-                  </td>
-                  <td className={mov.isPositive ? 'text-green' : 'text-red'} style={{ fontWeight: 600 }}>
-                    {mov.cantidad}
-                  </td>
-                  <td className="text-dark">$ {mov.valor.toLocaleString('es-AR')}</td>
-                  <td className="text-gray">{mov.responsable}</td>
-                  <td className="text-gray">{mov.nota}</td>
-                </tr>
-              )
-            })}
+                return (
+                  <tr key={index}>
+                    <td className="text-green">{mov.id}</td>
+                    <td className="text-gray">
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span className="text-dark">{mov.fecha}</span>
+                        <span>{mov.hora}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`badge-tipo ${badgeClass}`}>
+                        <Icon size={14} strokeWidth={3} /> {mov.tipo}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="prod-info">
+                        <span className="prod-name">{mov.producto}</span>
+                        <span className="prod-sku">{mov.sku}</span>
+                      </div>
+                    </td>
+                    <td className={mov.isPositive ? 'text-green' : 'text-red'} style={{ fontWeight: 600 }}>
+                      {mov.cantidad}
+                    </td>
+                    <td className="text-dark">$ {mov.valor.toLocaleString('es-AR')}</td>
+                    <td className="text-gray">{mov.responsable}</td>
+                    <td className="text-gray">{mov.nota}</td>
+                  </tr>
+                )
+              })
+            ) : (
+              <tr>
+                <td colSpan={8} style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
+                  No se encontraron movimientos que coincidan con los filtros.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

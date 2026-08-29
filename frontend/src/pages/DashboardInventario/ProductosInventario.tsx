@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Search, Plus } from "lucide-react";
 import "./ProductosInventario.css";
 
@@ -10,13 +11,39 @@ const productosData = [
   { id: "PRD-006", nombre: "Impresora HP LaserJet Pro", categoria: "Electrónica", precio: 2750, stock: 2, stockMin: 3, valor: 5500, proveedor: "HP Argentina" }
 ];
 
+const categories = ["Todas", "Electrónica", "Ropa y calzado", "Alimentos", "Hogar"];
+const statuses = ["Todos", "Disponible", "Stock bajo", "Sin stock"];
+
 const ProductosInventario = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("Todas");
+  const [selectedStatus, setSelectedStatus] = useState("Todos");
+
+  // Lógica de filtrado
+  const filteredProductos = productosData.filter((prod) => {
+    // Filtro por búsqueda (nombre o ID)
+    const matchesSearch =
+      prod.nombre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      prod.id.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Filtro por categoría
+    const matchesCategory = selectedCategory === "Todas" || prod.categoria === selectedCategory;
+    
+    // Filtro por estado
+    let matchesStatus = true;
+    if (selectedStatus === "Disponible") matchesStatus = prod.stock > prod.stockMin;
+    if (selectedStatus === "Stock bajo") matchesStatus = prod.stock <= prod.stockMin && prod.stock > 0;
+    if (selectedStatus === "Sin stock") matchesStatus = prod.stock === 0;
+
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
+
   return (
     <>
       <div className="productos-header">
         <div className="productos-title">
           <h2>Productos</h2>
-          <p>12 productos · valor total $ 523.330</p>
+          <p>{filteredProductos.length} productos filtrados</p>
         </div>
         <div className="productos-actions">
           <button className="btn-outline">Importar</button>
@@ -29,22 +56,36 @@ const ProductosInventario = () => {
       <div className="filters-bar">
         <div className="search-input">
           <Search size={16} />
-          <input type="text" placeholder="Buscar producto o código..." />
+          <input 
+            type="text" 
+            placeholder="Buscar producto o código..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
         
         <div className="filter-pills">
-          <button className="pill active-green">Todas</button>
-          <button className="pill">Electrónica</button>
-          <button className="pill">Ropa y calzado</button>
-          <button className="pill">Alimentos</button>
-          <button className="pill">Hogar</button>
+          {categories.map((cat) => (
+            <button 
+              key={cat} 
+              className={`pill ${selectedCategory === cat ? 'active-green' : ''}`}
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
         <div className="filter-pills" style={{ marginLeft: 'auto' }}>
-          <button className="pill active-dark">Todos</button>
-          <button className="pill">Disponible</button>
-          <button className="pill">Stock bajo</button>
-          <button className="pill">Sin stock</button>
+          {statuses.map((stat) => (
+            <button 
+              key={stat} 
+              className={`pill ${selectedStatus === stat ? 'active-dark' : ''}`}
+              onClick={() => setSelectedStatus(stat)}
+            >
+              {stat}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -64,33 +105,41 @@ const ProductosInventario = () => {
             </tr>
           </thead>
           <tbody>
-            {productosData.map((prod, index) => {
-              const statusClass = prod.stock <= prod.stockMin ? 'low' : 'good';
-              const fillWidth = Math.min((prod.stock / (prod.stockMin * 3)) * 100, 100);
+            {filteredProductos.length > 0 ? (
+              filteredProductos.map((prod, index) => {
+                const statusClass = prod.stock === 0 ? 'out' : (prod.stock <= prod.stockMin ? 'low' : 'good');
+                const fillWidth = Math.min((prod.stock / (prod.stockMin * 3)) * 100, 100);
 
-              return (
-                <tr key={index}>
-                  <td className="text-green">{prod.id}</td>
-                  <td className="text-dark">{prod.nombre}</td>
-                  <td className="text-gray">{prod.categoria}</td>
-                  <td className="text-dark">$ {prod.precio.toLocaleString('es-AR')}</td>
-                  <td>
-                    <div className="stock-bar-container">
-                      <div className="stock-bar">
-                        <div className={`stock-bar-fill ${statusClass}`} style={{ width: `${fillWidth}%` }}></div>
+                return (
+                  <tr key={index}>
+                    <td className="text-green">{prod.id}</td>
+                    <td className="text-dark">{prod.nombre}</td>
+                    <td className="text-gray">{prod.categoria}</td>
+                    <td className="text-dark">$ {prod.precio.toLocaleString('es-AR')}</td>
+                    <td>
+                      <div className="stock-bar-container">
+                        <div className="stock-bar">
+                          <div className={`stock-bar-fill ${statusClass}`} style={{ width: `${fillWidth}%` }}></div>
+                        </div>
+                        <span className={`stock-number ${statusClass}`}>{prod.stock}</span>
                       </div>
-                      <span className={`stock-number ${statusClass}`}>{prod.stock}</span>
-                    </div>
-                  </td>
-                  <td className="text-gray">{prod.stockMin}</td>
-                  <td className="text-dark">$ {prod.valor.toLocaleString('es-AR')}</td>
-                  <td className="text-gray">{prod.proveedor}</td>
-                  <td>
-                    <button className="btn-ajustar">Ajustar</button>
-                  </td>
-                </tr>
-              )
-            })}
+                    </td>
+                    <td className="text-gray">{prod.stockMin}</td>
+                    <td className="text-dark">$ {prod.valor.toLocaleString('es-AR')}</td>
+                    <td className="text-gray">{prod.proveedor}</td>
+                    <td>
+                      <button className="btn-ajustar">Ajustar</button>
+                    </td>
+                  </tr>
+                )
+              })
+            ) : (
+              <tr>
+                <td colSpan={9} style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>
+                  No se encontraron productos que coincidan con los filtros.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
