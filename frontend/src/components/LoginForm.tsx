@@ -161,7 +161,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
 
             <ReCAPTCHA
               sitekey="6LfYOZctAAAAAFisLyc7wavVJyjRgdDWlMk_8uhm"
-              onChange={(value) => setCaptcha(value)}
+              onChange={(value: string | null) => setCaptcha(value)}
             />
 
             {error && <p className="login-error">{error}</p>}
