@@ -11,7 +11,7 @@ const ClientesAdmin = () => {
     <main className="clientes-main">
       <Sidebar />
       <div className="clientes-contenido">
-        <div className="ventas-barra-superior">
+        <div className="clientes-barra-superior">
           <p>
             <span className="clientes-orbix">Orbix</span> /{" "}
             <span className="clientes-admin">Admin</span> /{" "}

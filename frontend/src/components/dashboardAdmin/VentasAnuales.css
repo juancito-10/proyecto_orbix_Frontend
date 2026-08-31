@@ -2,9 +2,9 @@
   background-color: #ffffff;
   border: 1px solid #d9e0e8;
   border-radius: 15px;
-  padding: 25px;
+  padding: 18px;
   margin: 0;
-  height: 550px;
+  height: 450px;
   box-sizing: border-box;
 }
 
@@ -16,20 +16,22 @@
 
 .ventas-header h3 {
   margin: 0;
-  font-size: 22px;
+  font-size: 16px;
 }
 
 .ventas-header p {
-  margin: 5px 0 0;
+  margin: 4px 0 0;
   color: #757e87;
+  font-size: 12px;
 }
 
 .leyenda {
   display: flex;
-  gap: 20px;
+  gap: 12px;
+  font-size: 12px;
 }
 
 .grafica {
   width: 100%;
-  margin-top: 25px;
+  margin-top: 18px;
 }

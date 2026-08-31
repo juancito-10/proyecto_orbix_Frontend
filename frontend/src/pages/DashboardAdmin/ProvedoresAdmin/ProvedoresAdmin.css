@@ -1,10 +1,10 @@
-.inventario-main {
+.provedores-main {
   min-height: 100vh;
   background-color: #f0f4f8;
   display: flow-root;
 }
 
-.inventario-contenido {
+.provedores-contenido {
   margin-left: 230px;
   min-width: 0;
   min-height: 100vh;
@@ -14,7 +14,7 @@
 
 /* BARRA SUPERIOR */
 
-.inventario-barra-superior {
+.provedores-barra-superior {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,38 +24,38 @@
   margin-top: 0;
 }
 
-.inventario-barra-superior p {
+.provedores-barra-superior p {
   margin: 0;
   padding: 5px 0;
   font-size: 15px;
 }
 
-.inventario-orbix {
+.provedores-orbix {
   color: #757e87;
 }
 
-.inventario-admin {
+.provedores-admin {
   color: #087c9c;
   font-weight: 800;
 }
 
-.inventario-titulo {
+.provedores-titulo {
   font-weight: bold;
 }
 
 /* ACCIONES SUPERIORES */
 
-.inventario-acciones-superiores {
+.provedores-acciones-superiores {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.inventario-buscar {
+.provedores-buscar {
   position: relative;
 }
 
-.inventario-buscar input {
+.provedores-buscar input {
   width: 285px;
   height: 35px;
   padding: 10px 15px 10px 40px;
@@ -63,14 +63,13 @@
   border: 1px solid #d9e0e8;
   border-radius: 10px;
   outline: none;
-  font-size: 13px;
 }
 
-.inventario-buscar input:focus {
+.provedores-buscar input:focus {
   border-color: #087c9c;
 }
 
-.inventario-buscar svg {
+.provedores-buscar svg {
   position: absolute;
   left: 12px;
   top: 50%;
@@ -79,7 +78,7 @@
 
 /* NOTIFICACIONES */
 
-.inventario-notifi {
+.provedores-notifi {
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -91,7 +90,7 @@
 
 /* USUARIO */
 
-.inventario-usuario {
+.provedores-usuario {
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -101,45 +100,45 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 13px;
 }
 
 /* ENCABEZADO */
 
-.inventario-encabezado {
+.provedores-encabezado {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 24px 0;
+  padding: 30px 0;
 }
 
-.inventario-encabezado h2 {
+.provedores-encabezado h2 {
   margin: 0;
   font-size: 20px;
 }
 
-.inventario-fecha {
+.provedores-fecha {
+  margin: 4px 0 0;
   color: #757e87;
   font-size: 13px;
 }
 
-/* BOTÓN AGREGAR */
+/* BOTÓN NUEVO PROVEEDOR */
 
-.inventario-button-agregar {
-  width: 150px;
-  height: 36px;
+.provedores-button-agregar {
+  width: 170px;
+  height: 40px;
   border: none;
   border-radius: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
   cursor: pointer;
   color: white;
   background-color: #087c9c;
   font-size: 13px;
 }
 
-.inventario-button-agregar:hover {
+.provedores-button-agregar:hover {
   filter: brightness(1.30);
 }

@@ -1,20 +1,20 @@
-.filtros-clientes {
+.filtros-provedores {
   width: 100%;
 }
 
-.filtros-clientes-contenido {
+.filtros-provedores-contenido {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 0px;
 }
 
-.buscar-clientes {
+.buscar-provedores {
   position: relative;
   flex: 1;
 }
 
-.buscar-clientes input {
+.buscar-provedores input {
   width: 100%;
   height: 40px;
   padding: 0 14px 0 42px;
@@ -27,15 +27,15 @@
   outline: none;
 }
 
-.buscar-clientes input::placeholder {
+.buscar-provedores input::placeholder {
   color: #71859c;
 }
 
-.buscar-clientes input:focus {
+.buscar-provedores input:focus {
   border-color: #087c9c;
 }
 
-.buscar-clientes svg {
+.buscar-provedores svg {
   position: absolute;
   left: 13px;
   top: 50%;
@@ -46,13 +46,13 @@
 
 /* BOTONES */
 
-.botones-filtros-clientes {
+.botones-filtros-provedores {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.botones-filtros-clientes button {
+.botones-filtros-provedores button {
   height: 38px;
   padding: 0 18px;
   border: 1px solid #d9e0e8;
@@ -65,11 +65,11 @@
   white-space: nowrap;
 }
 
-.botones-filtros-clientes button:hover {
+.botones-filtros-provedores button:hover {
   border-color: #087c9c;
 }
 
-.botones-filtros-clientes .filtro-cliente-activo {
+.botones-filtros-provedores .filtro-provedor-activo {
   background-color: #087c9c;
   border-color: #087c9c;
   color: white;

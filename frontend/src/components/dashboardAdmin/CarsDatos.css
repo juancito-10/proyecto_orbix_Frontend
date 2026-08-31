@@ -1,13 +1,13 @@
 .dashboard-cards {
   display: flex;
   gap: 20px;
-  padding: 0 30px;
+  padding: 0px;
 }
 
 .card {
   flex: 1;
-  height: 200px;
-  padding: 25px;
+  height: 130px;
+  padding: 18px;
   background-color: #ffffff;
   border-radius: 15px;
   display: flex;
@@ -22,10 +22,15 @@
 
 .titulo-cars p {
   margin: 0;
-  font-size: 18px;
+  font-size: 13px;
+}
+
+.titulo-cars svg {
+  width: 19px;
+  height: 19px;
 }
 
 .card h2 {
-  margin: 12px 0 0;
-  font-size: 32px;
+  margin: 10px 0 0;
+  font-size: 24px;
 }

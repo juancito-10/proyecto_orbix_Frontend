@@ -1,10 +1,12 @@
 .tabla-productos {
-  margin: 0 30px;
+  margin: 0;
   background-color: #ffffff;
   border: 1px solid #d9e0e8;
-  border-radius: 15px;
+  border-radius: 18px;
   overflow: hidden;
 }
+
+/* ENCABEZADO Y FILAS */
 
 .tabla-productos-encabezado,
 .tabla-productos-fila {
@@ -13,28 +15,35 @@
   align-items: center;
 }
 
+/* ENCABEZADO */
+
 .tabla-productos-encabezado {
-  height: 58px;
-  background-color: #f0f4f8;
+  height: 46px;
+  background-color: #f1f5f9;
   border-bottom: 1px solid #d9e0e8;
   color: #64748b;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 12px;
+  letter-spacing: 0.2px;
 }
 
 .tabla-productos-encabezado span {
-  padding: 0 25px;
+  padding: 0 18px;
 }
 
+/* FILAS */
+
 .tabla-productos-fila {
-  min-height: 95px;
+  min-height: 88px;
   border-bottom: 1px solid #d9e0e8;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 400;
+  transition: background-color 0.15s ease;
 }
 
 .tabla-productos-fila:hover {
   background-color: #f8fafc;
+  cursor: pointer;
 }
 
 .tabla-productos-fila:last-child {
@@ -42,31 +51,46 @@
 }
 
 .tabla-productos-fila > span {
-  padding: 0 25px;
+  padding: 10px 18px;
 }
+
+/* CÓDIGO */
 
 .producto-codigo {
   color: #087c9c;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
 }
+
+/* PRODUCTO */
 
 .producto-nombre {
   color: #0f172a;
-  font-weight: 400;
+  font-size: 14px;
+  font-weight: 700;
 }
+
+/* CATEGORÍA */
 
 .producto-categoria {
   color: #64748b;
+  font-size: 13px;
   font-weight: 400;
 }
 
+/* PRECIO */
+
 .producto-precio {
   color: #0f172a;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 700;
 }
+
+/* STOCK */
 
 .producto-stock {
   color: #0f172a;
+  font-size: 13px;
   font-weight: 600;
 }
 

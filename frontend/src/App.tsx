@@ -22,6 +22,7 @@ import DashboardInventario from "./pages/DashboardInventario/DashboardInventario
 import InventarioAdmin from "./pages/DashboardAdmin/InventarioAdmin/InventarioAdmin";
 import VentasAdmin from "./pages/DashboardAdmin/VentasAdmin/VentasAdmin";
 import ClientesAdmin from "./pages/DashboardAdmin/ClientesAdmin/ClientesAdmin";
+import ProvedoresAdmin from "./pages/DashboardAdmin/ProvedoresAdmin/ProvedoresAdmin";
 
 function App() {
   return (
@@ -64,7 +65,15 @@ function App() {
           path="/dashboard/admin/clientes"
           element={
             <ProtectedRoute roles={["admin"]}>
-              <ClientesAdmin/>
+              <ClientesAdmin />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/admin/provedores"
+          element={
+            <ProtectedRoute roles={["admin"]}>
+              <ProvedoresAdmin />
             </ProtectedRoute>
           }
         />
