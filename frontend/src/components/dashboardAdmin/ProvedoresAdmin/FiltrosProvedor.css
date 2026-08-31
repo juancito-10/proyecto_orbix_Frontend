@@ -1,0 +1,76 @@
+.filtros-provedores {
+  width: 100%;
+}
+
+.filtros-provedores-contenido {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0px;
+}
+
+.buscar-provedores {
+  position: relative;
+  flex: 1;
+}
+
+.buscar-provedores input {
+  width: 100%;
+  height: 40px;
+  padding: 0 14px 0 42px;
+  box-sizing: border-box;
+  border: 1px solid #d9e0e8;
+  border-radius: 10px;
+  background-color: white;
+  color: #58708c;
+  font-size: 13px;
+  outline: none;
+}
+
+.buscar-provedores input::placeholder {
+  color: #71859c;
+}
+
+.buscar-provedores input:focus {
+  border-color: #087c9c;
+}
+
+.buscar-provedores svg {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #58708c;
+  width: 18px;
+}
+
+/* BOTONES */
+
+.botones-filtros-provedores {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.botones-filtros-provedores button {
+  height: 38px;
+  padding: 0 18px;
+  border: 1px solid #d9e0e8;
+  border-radius: 21px;
+  background-color: white;
+  color: #58708c;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.botones-filtros-provedores button:hover {
+  border-color: #087c9c;
+}
+
+.botones-filtros-provedores .filtro-provedor-activo {
+  background-color: #087c9c;
+  border-color: #087c9c;
+  color: white;
+}

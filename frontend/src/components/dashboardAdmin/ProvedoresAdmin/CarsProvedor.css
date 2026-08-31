@@ -1,0 +1,59 @@
+.cards-ventas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 18px;
+  margin-bottom: 22px;
+  padding: 0;
+}
+
+.card-venta {
+  background-color: white;
+  border: 1px solid #d9e0e8;
+  border-radius: 15px;
+  padding: 18px;
+  height: 50px;
+  box-sizing: border-box;
+}
+
+.card-venta-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #58708c;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.card-venta h3 {
+  margin: 8px 0 0;
+  color: #071b2f;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.punto-verde,
+.punto-azul,
+.punto-naranja,
+.punto-rojo {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.punto-verde {
+  background-color: #087c9c;
+}
+
+.punto-azul {
+  background-color: #127d3b;
+}
+
+.punto-naranja {
+  background-color: gray;
+}
+
+.punto-rojo {
+  background-color: #f59e0b;
+}
