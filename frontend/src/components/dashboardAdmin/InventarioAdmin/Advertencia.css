@@ -1,12 +1,12 @@
 .advertencia {
   background-color: #fff7ed;
-  height: 45px;
-  border-radius: 12px;
+  height: 40px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding-left: 30px;
-  margin: 10px 30px 30px 30px;
+  gap: 10px;
+  padding-left: 18px;
+  margin: 10px 0 20px 0;
 }
 
 .advertencia-logo {
@@ -15,10 +15,15 @@
   align-items: center;
 }
 
+.advertencia-logo svg {
+  width: 19px;
+  height: 19px;
+}
+
 .advertencia-parrafo {
   margin: 0;
   color: #92400e;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
 }
 

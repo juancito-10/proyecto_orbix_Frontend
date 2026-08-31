@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 30px;
+  padding: 0px;
 }
 
 .buscar-clientes {
@@ -16,7 +16,7 @@
 
 .buscar-clientes input {
   width: 100%;
-  height: 46px;
+  height: 40px;
   padding: 0 14px 0 42px;
   box-sizing: border-box;
   border: 1px solid #d9e0e8;
@@ -53,7 +53,7 @@
 }
 
 .botones-filtros-clientes button {
-  height: 42px;
+  height: 38px;
   padding: 0 18px;
   border: 1px solid #d9e0e8;
   border-radius: 21px;

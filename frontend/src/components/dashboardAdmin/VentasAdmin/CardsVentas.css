@@ -3,32 +3,32 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 18px;
   margin-top: 18px;
-  margin-bottom: 30px;
-  padding: 0px 30px 0px 30px;
+  margin-bottom: 22px;
+  padding: 0;
 }
 
 .card-venta {
   background-color: white;
   border: 1px solid #d9e0e8;
-  border-radius: 16px;
-  padding: 20px 22px;
-  min-height: 105px;
+  border-radius: 15px;
+  padding: 18px;
+  min-height: 95px;
   box-sizing: border-box;
 }
 
 .card-venta-titulo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   color: #58708c;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
 }
 
 .card-venta h3 {
-  margin: 9px 0 0;
+  margin: 8px 0 0;
   color: #071b2f;
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 700;
 }
 
@@ -36,8 +36,8 @@
 .punto-azul,
 .punto-naranja,
 .punto-rojo {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   display: inline-block;
 }

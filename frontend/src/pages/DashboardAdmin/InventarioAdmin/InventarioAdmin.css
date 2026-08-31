@@ -9,7 +9,25 @@
   min-width: 0;
   min-height: 100vh;
   margin-top: 18px;
-  padding: 0px 40px 0px 40px;
+  padding: 0 40px;
+}
+
+/* BARRA SUPERIOR */
+
+.inventario-barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 15px 0;
+  border-bottom: 1px solid #d9e0e8;
+  gap: 40px;
+  margin-top: 0;
+}
+
+.inventario-barra-superior p {
+  margin: 0;
+  padding: 5px 0;
+  font-size: 15px;
 }
 
 .inventario-orbix {
@@ -21,51 +39,16 @@
   font-weight: 800;
 }
 
-.inventario-fecha {
-  color: #757e87;
-}
-
 .inventario-titulo {
   font-weight: bold;
 }
 
-.inventario-barra-superior {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 30px 15px;
-  border-bottom: 1px solid #d9e0e8;
-  gap: 280px;
-  margin-top: 0;
-}
+/* ACCIONES SUPERIORES */
 
-.inventario-barra-superior p {
-  margin: 0;
-}
-
-.inventario-encabezado {
+.inventario-acciones-superiores {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 30px;
-}
-
-.inventario-button-agregar {
-  width: 170px;
-  height: 40px;
-  border: none;
-  border-radius: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  cursor: pointer;
-  color: white;
-  background-color: #087c9c;
-}
-
-.inventario-button-agregar:hover {
-  filter: brightness(1.30);
+  gap: 10px;
 }
 
 .inventario-buscar {
@@ -74,11 +57,17 @@
 
 .inventario-buscar input {
   width: 285px;
+  height: 35px;
   padding: 10px 15px 10px 40px;
   box-sizing: border-box;
-  height: 35px;
   border: 1px solid #d9e0e8;
   border-radius: 10px;
+  outline: none;
+  font-size: 13px;
+}
+
+.inventario-buscar input:focus {
+  border-color: #087c9c;
 }
 
 .inventario-buscar svg {
@@ -88,11 +77,19 @@
   transform: translateY(-50%);
 }
 
-.inventario-acciones-superiores {
+/* NOTIFICACIONES */
+
+.inventario-notifi {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: white;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
 }
+
+/* USUARIO */
 
 .inventario-usuario {
   width: 35px;
@@ -104,14 +101,45 @@
   align-items: center;
   justify-content: center;
   font-weight: bold;
+  font-size: 13px;
 }
 
-.inventario-notifi {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: white;
+/* ENCABEZADO */
+
+.inventario-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+}
+
+.inventario-encabezado h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.inventario-fecha {
+  color: #757e87;
+  font-size: 13px;
+}
+
+/* BOTÓN AGREGAR */
+
+.inventario-button-agregar {
+  width: 150px;
+  height: 36px;
+  border: none;
+  border-radius: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  color: white;
+  background-color: #087c9c;
+  font-size: 13px;
+}
+
+.inventario-button-agregar:hover {
+  filter: brightness(1.30);
 }

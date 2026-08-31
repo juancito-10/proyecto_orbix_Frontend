@@ -1,25 +1,23 @@
-/* Contenedor exterior */
+/* CONTENEDOR EXTERIOR */
 
 .tabla-ventas-wrapper {
   width: 100%;
-  padding: 0px 30px 0px 30px;
+  padding: 0;
   box-sizing: border-box;
 }
 
-
-/* Contenedor real de la tabla */
+/* CONTENEDOR REAL DE LA TABLA */
 
 .tabla-ventas-contenedor {
   width: 100%;
   background-color: white;
   border: 1px solid #d9e0e8;
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-
-/* Tabla */
+/* TABLA */
 
 .tabla-ventas {
   width: 100%;
@@ -27,41 +25,37 @@
   table-layout: fixed;
 }
 
-
-/* Encabezado */
+/* ENCABEZADO */
 
 .tabla-ventas thead {
-  background-color: #f0f4f8;
+  background-color: #f1f5f9;
 }
 
 .tabla-ventas th {
-  height: 52px;
-  padding: 0 20px;
-
+  height: 46px;
+  padding: 0 18px;
   text-align: left;
-
   color: #58708c;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
-
+  letter-spacing: 0.2px;
   border-bottom: 1px solid #d9e0e8;
-
   white-space: nowrap;
 }
 
-
-/* Celdas */
+/* CELDAS */
 
 .tabla-ventas td {
   height: 68px;
-  padding: 0 20px;
-
+  padding: 10px 18px;
   color: #58708c;
-  font-size: 15px;
-
+  font-size: 13px;
   border-bottom: 1px solid #d9e0e8;
-
   vertical-align: middle;
+}
+
+.tabla-ventas tbody tr {
+  transition: background-color 0.15s ease;
 }
 
 .tabla-ventas tbody tr:last-child td {
@@ -70,157 +64,129 @@
 
 .tabla-ventas tbody tr:hover {
   background-color: #f8fafc;
+  cursor: pointer;
 }
 
-
-/* Pedido */
+/* PEDIDO */
 
 .pedido-venta {
   color: #087c9c !important;
-
   font-family: monospace;
-  font-size: 16px !important;
-  font-weight: 500;
-
+  font-size: 12px !important;
+  font-weight: 600;
   white-space: nowrap;
 }
 
-
-/* Cliente */
+/* CLIENTE */
 
 .cliente-venta {
   color: #071b2f !important;
-
-  font-weight: 500;
-  line-height: 1.4;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
-
-/* Vendedor */
+/* VENDEDOR */
 
 .vendedor-venta {
   color: #71859c !important;
+  font-size: 13px;
 }
 
-
-/* Items */
+/* ITEMS */
 
 .items-venta {
   text-align: center;
+  font-size: 13px !important;
 }
 
-
-/* Monto */
+/* MONTO */
 
 .monto-venta {
   color: #071b2f !important;
-
   font-family: monospace;
-  font-size: 17px !important;
+  font-size: 15px !important;
   font-weight: 700;
-
   white-space: nowrap;
 }
 
-
-/* Pago */
+/* PAGO */
 
 .pago-efectivo,
 .pago-transferencia {
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
-
-  min-width: 110px;
-  height: 32px;
-
-  padding: 0 13px;
-
+  min-width: 95px;
+  height: 30px;
+  padding: 0 10px;
   box-sizing: border-box;
-
-  border-radius: 18px;
-
-  font-size: 14px;
+  border-radius: 16px;
+  font-size: 12px;
   font-weight: 600;
-
   white-space: nowrap;
 }
 
-
-/* Efectivo */
+/* EFECTIVO */
 
 .pago-efectivo {
   background-color: #fff0c2;
   color: #a45100;
 }
 
-
-/* Transferencia */
+/* TRANSFERENCIA */
 
 .pago-transferencia {
   background-color: #eee8ff;
   color: #6832d8;
 }
 
-
-/* Estado */
+/* ESTADO */
 
 .estado-venta {
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
-
-  padding: 6px 12px;
-
-  border-radius: 18px;
-
-  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 12px;
   font-weight: 600;
-
   white-space: nowrap;
 }
 
-
-/* Completada */
+/* COMPLETADA */
 
 .estado-completada {
   background-color: #d9f7eb;
   color: #087c61;
 }
 
-
-/* En proceso */
+/* EN PROCESO */
 
 .estado-en-proceso {
   background-color: #dfeaff;
   color: #2864c7;
 }
 
-
-/* Pendiente */
+/* PENDIENTE */
 
 .estado-pendiente {
   background-color: #fff0c2;
   color: #a45100;
 }
 
-
-/* Cancelada */
+/* CANCELADA */
 
 .estado-cancelada {
   background-color: #ffe0e0;
   color: #c93636;
 }
 
-
-/* Sin resultados */
+/* SIN RESULTADOS */
 
 .ventas-sin-resultados {
-  height: 100px !important;
-
+  height: 80px !important;
   text-align: center;
-
   color: #71859c !important;
+  font-size: 13px !important;
 }
