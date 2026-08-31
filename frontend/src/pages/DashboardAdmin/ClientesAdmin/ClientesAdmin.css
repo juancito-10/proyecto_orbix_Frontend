@@ -1,0 +1,117 @@
+.clientes-main {
+  min-height: 100vh;
+  background-color: #f0f4f8;
+  display: flow-root;
+}
+
+.clientes-contenido {
+  margin-left: 230px;
+  min-width: 0;
+  min-height: 100vh;
+  margin-top: 18px;
+  padding: 0px 40px 0px 40px;
+}
+
+.clientes-orbix {
+  color: #757e87;
+}
+
+.clientes-admin {
+  color: #087c9c;
+  font-weight: 800;
+}
+
+.clientes-fecha {
+  color: #757e87;
+}
+
+.clientes-titulo {
+  font-weight: bold;
+}
+
+.clientes-barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px 15px;
+  border-bottom: 1px solid #d9e0e8;
+  gap: 280px;
+  margin-top: 0;
+}
+
+.clientes-barra-superior p {
+  margin: 0;
+}
+
+.clientes-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px;
+}
+
+.clientes-button-agregar {
+  width: 170px;
+  height: 40px;
+  border: none;
+  border-radius: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  cursor: pointer;
+  color: white;
+  background-color: #087c9c;
+}
+
+.clientes-button-agregar:hover {
+  filter: brightness(1.30);
+}
+
+.clientes-buscar {
+  position: relative;
+}
+
+.clientes-buscar input {
+  width: 285px;
+  padding: 10px 15px 10px 40px;
+  box-sizing: border-box;
+  height: 35px;
+  border: 1px solid #d9e0e8;
+  border-radius: 10px;
+}
+
+.clientes-buscar svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.clientes-acciones-superiores {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.clientes-usuario {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #087c9c;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.clientes-notifi {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
