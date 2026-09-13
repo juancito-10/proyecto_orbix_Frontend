@@ -1,0 +1,704 @@
+/* =========================================
+   REPORTE FINANCIERO
+========================================= */
+
+.reporte-financiero {
+  width: 100%;
+  margin-bottom: 40px;
+  color: #071b2f;
+}
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.reporte-financiero-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reporte-financiero-header h3 {
+  margin: 0;
+  color: #071b2f;
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.reporte-financiero-header p {
+  margin: 7px 0 0;
+  color: #70839a;
+  font-size: 14px;
+}
+
+/* =========================================
+   BOTÓN VOLVER
+========================================= */
+
+.reporte-financiero-volver {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #087c9c;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.reporte-financiero-volver:hover {
+  color: #065f78;
+  transform: translateX(-3px);
+}
+
+/* =========================================
+   ACCIONES
+========================================= */
+
+.reporte-financiero-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-top: 28px;
+  margin-bottom: 22px;
+}
+
+.reporte-financiero-acciones h4 {
+  margin: 0 0 6px;
+
+  color: #071b2f;
+
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.reporte-financiero-acciones p {
+  margin: 0;
+
+  color: #70839a;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   BOTÓN PDF
+   PETRÓLEO COMO LOS DEMÁS REPORTES
+========================================= */
+
+.reporte-financiero-pdf {
+  height: 42px;
+
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: none;
+  border-radius: 10px;
+
+  background-color: #087c9c;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.reporte-financiero-pdf:hover {
+  background-color: #096d88;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 12px rgba(8, 124, 156, 0.20);
+}
+
+.reporte-financiero-pdf:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+
+  box-shadow: none;
+}
+
+/* =========================================
+   PERIODOS
+========================================= */
+
+.reporte-financiero-periodos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
+.reporte-financiero-periodos-botones {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.reporte-financiero-periodos button {
+  min-width: 105px;
+
+  padding: 11px 20px;
+
+  border: 1px solid #d6e0e8;
+  border-radius: 10px;
+
+  background-color: #ffffff;
+  color: #58708c;
+
+  font-size: 14px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.reporte-financiero-periodos button:hover {
+  border-color: #087c9c;
+
+  color: #087c9c;
+
+  background-color: #f7fcfd;
+
+  transform: translateY(-1px);
+}
+
+.reporte-financiero-periodos
+  .periodo-activo {
+  background-color: #087c9c;
+
+  border-color: #087c9c;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 4px 10px rgba(8, 124, 156, 0.18);
+}
+
+.reporte-financiero-periodos
+  .periodo-activo:hover {
+  background-color: #087c9c;
+
+  border-color: #087c9c;
+
+  color: #ffffff;
+}
+
+/* =========================================
+   FECHAS PERSONALIZADAS
+========================================= */
+
+.reporte-financiero-fechas {
+  display: flex;
+  align-items: center;
+
+  gap: 26px;
+
+  width: fit-content;
+
+  padding: 25px 30px;
+
+  margin-bottom: 30px;
+
+  background-color: #ffffff;
+
+  border: 1px solid #d9e0e8;
+
+  border-radius: 15px;
+
+  box-shadow:
+    0 5px 15px rgba(7, 27, 47, 0.04);
+}
+
+.reporte-financiero-fecha {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+}
+
+.reporte-financiero-fecha label {
+  color: #58708c;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reporte-financiero-fecha input {
+  width: 265px;
+  height: 42px;
+
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  border: 1px solid #d9e0e8;
+
+  border-radius: 10px;
+
+  background-color: #ffffff;
+
+  color: #071b2f;
+
+  font-size: 14px;
+
+  outline: none;
+}
+
+.reporte-financiero-fecha input:focus {
+  border-color: #087c9c;
+
+  box-shadow:
+    0 0 0 3px rgba(8, 124, 156, 0.08);
+}
+
+/* =========================================
+   RESUMEN
+========================================= */
+
+.reporte-financiero-resumen {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 22px;
+}
+
+/* =========================================
+   TARJETAS
+========================================= */
+
+.reporte-financiero-card {
+  position: relative;
+
+  min-height: 125px;
+
+  padding: 22px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 3px 10px rgba(7, 27, 47, 0.035);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/*
+   NARANJA DE LA TARJETA FINANCIERA
+*/
+
+.reporte-financiero-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 4px;
+  height: 100%;
+
+  background-color: #ff9800;
+}
+
+.reporte-financiero-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 18px rgba(7, 27, 47, 0.07);
+}
+
+.reporte-financiero-card span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #70839a;
+
+  font-size: 13px;
+
+  font-weight: 550;
+}
+
+.reporte-financiero-card strong {
+  display: block;
+
+  color: #071b2f;
+
+  font-size: 25px;
+
+  font-weight: 750;
+
+  line-height: 1.2;
+}
+
+/* =========================================
+   CONTENIDO
+========================================= */
+
+.reporte-financiero-contenido {
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+
+  border-radius: 15px;
+
+  padding: 26px;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 3px 12px rgba(7, 27, 47, 0.035);
+}
+
+.reporte-financiero-contenido h4 {
+  margin: 0 0 8px;
+
+  color: #071b2f;
+
+  font-size: 19px;
+
+  font-weight: 750;
+}
+
+.reporte-financiero-contenido p {
+  margin: 0;
+
+  color: #70839a;
+
+  font-size: 14px;
+
+  line-height: 1.6;
+}
+
+.reporte-financiero-contenido p strong {
+  color: #36536f;
+}
+
+/* =========================================
+   TABLA
+========================================= */
+
+.tabla-financiero-reporte {
+  width: 100%;
+
+  overflow-x: auto;
+
+  margin-top: 24px;
+
+  border: 1px solid #e1e8ee;
+
+  border-radius: 11px;
+
+  scrollbar-width: thin;
+}
+
+.tabla-financiero-reporte table {
+  width: 100%;
+
+  min-width: 650px;
+
+  border-collapse: separate;
+
+  border-spacing: 0;
+}
+
+/* ENCABEZADOS */
+
+.tabla-financiero-reporte th {
+  padding: 14px 15px;
+
+  text-align: left;
+
+  background-color: #f7f9fb;
+
+  border-bottom: 1px solid #dfe7ed;
+
+  color: #58708c;
+
+  font-size: 12px;
+
+  font-weight: 750;
+
+  white-space: nowrap;
+}
+
+.tabla-financiero-reporte
+  th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.tabla-financiero-reporte
+  th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* CELDAS */
+
+.tabla-financiero-reporte td {
+  padding: 15px;
+
+  color: #263f58;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #edf1f4;
+
+  white-space: nowrap;
+
+  background-color: #ffffff;
+}
+
+.tabla-financiero-reporte
+  tbody
+  tr:last-child
+  td {
+  border-bottom: none;
+}
+
+/* HOVER */
+
+.tabla-financiero-reporte
+  tbody
+  tr {
+  transition:
+    background-color 0.2s ease;
+}
+
+.tabla-financiero-reporte
+  tbody
+  tr:hover
+  td {
+  background-color: #f8fbfc;
+}
+
+/* PRODUCTO */
+
+.tabla-financiero-reporte
+  td:first-child {
+  color: #ff9800;
+
+  font-weight: 700;
+}
+
+/* GANANCIA */
+
+.tabla-financiero-reporte
+  td:last-child {
+  color: #071b2f;
+
+  font-weight: 750;
+}
+
+/* =========================================
+   CARGANDO
+========================================= */
+
+.reporte-financiero-cargando {
+  padding: 35px;
+
+  text-align: center;
+
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+
+  border-radius: 14px;
+
+  color: #58708c;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   ERROR
+========================================= */
+
+.reporte-financiero-error {
+  padding: 16px 18px;
+
+  background-color: #fff7f7;
+
+  border: 1px solid #f1caca;
+
+  border-radius: 11px;
+
+  color: #b42318;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   SIN DATOS
+========================================= */
+
+.financiero-sin-datos {
+  margin-top: 22px;
+
+  padding: 35px 20px;
+
+  text-align: center;
+
+  background-color: #f8fafc;
+
+  border: 1px dashed #d4dfe7;
+
+  border-radius: 11px;
+
+  color: #75879a;
+
+  font-size: 14px;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+  .reporte-financiero-resumen {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .reporte-financiero-acciones {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .reporte-financiero-periodos {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .reporte-financiero-periodos-botones {
+    flex-wrap: wrap;
+  }
+
+  .reporte-financiero-fechas {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 700px) {
+  .reporte-financiero-header h3 {
+    font-size: 22px;
+  }
+
+  .reporte-financiero-resumen {
+    grid-template-columns: 1fr;
+
+    gap: 12px;
+  }
+
+  .reporte-financiero-contenido {
+    padding: 18px;
+  }
+
+  .tabla-financiero-reporte {
+    margin-top: 20px;
+  }
+
+  .reporte-financiero-pdf {
+    width: 100%;
+  }
+
+  .reporte-financiero-periodos-botones {
+    width: 100%;
+  }
+
+  .reporte-financiero-periodos-botones button {
+    flex: 1;
+  }
+
+  .reporte-financiero-fechas {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .reporte-financiero-fecha input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .reporte-financiero-periodos-botones {
+    width: 100%;
+  }
+
+  .reporte-financiero-periodos-botones button {
+    flex: 1;
+  }
+
+  .reporte-financiero-pdf {
+    width: 100%;
+  }
+}

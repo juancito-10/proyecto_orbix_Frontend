@@ -49,13 +49,15 @@ const DashboardAdmin = () => {
           <div>
             <h2>Dashboard</h2>
 
-            <p className="dashboard-fecha">Miércoles, 30 de julio de 2026</p>
+            <p className="dashboard-fecha">
+              {new Date().toLocaleDateString("es-CO", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
           </div>
-
-          <button className="dashboard-button-exportar">
-            <Download size={20} />
-            Exportar reporte
-          </button>
         </div>
 
         <CarsDatos />

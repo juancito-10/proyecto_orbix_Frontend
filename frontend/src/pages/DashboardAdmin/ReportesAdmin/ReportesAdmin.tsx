@@ -1,4 +1,4 @@
-import { Search, Bell, Download } from "lucide-react";
+import { Search, Bell } from "lucide-react";
 import { useState } from "react";
 
 import Sidebar from "../../../components/dashboardAdmin/Sidebar";
@@ -12,21 +12,33 @@ import ParticipacionCategoria from "../../../components/dashboardAdmin/ReportesA
 import VentasPorPeriodo from "../../../components/dashboardAdmin/ReportesAdmin/VentasPorPeriodo";
 import RendimientoEquipo from "../../../components/dashboardAdmin/ReportesAdmin/RendimientoEquipo";
 
+import ReporteVentas from "../../../components/dashboardAdmin/ReportesAdmin/ReporteVentas";
+import ReporteInventario from "../../../components/dashboardAdmin/ReportesAdmin/ReporteInventario";
+import ReporteClientes from "../../../components/dashboardAdmin/ReportesAdmin/ReporteClientes";
+import ReporteFinanciero from "../../../components/dashboardAdmin/ReportesAdmin/ReporteFinanciero";
+
 const ReportesAdmin = () => {
   const [filtro, setFiltro] = useState("Resumen");
+
+  const [reporteActivo, setReporteActivo] = useState<string | null>(null);
 
   return (
     <main className="reportes-main">
       <Sidebar />
 
       <div className="reportes-contenido">
-
         {/* BARRA SUPERIOR */}
 
         <div className="reportes-barra-superior">
           <p>
-            <span className="reportes-orbix">Orbix</span> /{" "}
-            <span className="reportes-admin">Admin</span> /{" "}
+            <span className="reportes-orbix">Orbix</span>
+
+            {" / "}
+
+            <span className="reportes-admin">Admin</span>
+
+            {" / "}
+
             <span className="reportes-titulo">Reportes</span>
           </p>
 
@@ -34,69 +46,93 @@ const ReportesAdmin = () => {
             <form className="reportes-buscar">
               <Search size={20} />
 
-              <input
-                type="text"
-                placeholder="Buscar..."
-              />
+              <input type="text" placeholder="Buscar..." />
             </form>
 
             <div className="reportes-notifi">
               <Bell size={20} />
             </div>
 
-            <div className="reportes-usuario">
-              VO
+            <div className="reportes-usuario">VO</div>
+          </div>
+        </div>
+
+        {/* PANTALLA PRINCIPAL DE REPORTES */}
+
+        {!reporteActivo && (
+          <>
+            {/* ENCABEZADO */}
+
+            <div className="reportes-encabezado">
+              <div>
+                <h2>Reportes</h2>
+
+                <p className="reportes-fecha">
+                  Análisis y métricas del negocio · Período:{" "}
+                  {new Date().toLocaleDateString("es-CO", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* ENCABEZADO */}
+            {/* CARDS */}
 
-        <div className="reportes-encabezado">
-          <div>
-            <h2>Reportes</h2>
+            <CardsReportes
+              onGenerarVentas={() => setReporteActivo("ventas")}
+              onGenerarInventario={() => setReporteActivo("inventario")}
+              onGenerarClientes={() => setReporteActivo("clientes")}
+              onGenerarFinanciero={() => setReporteActivo("financiero")}
+            />
 
-            <p className="reportes-fecha">
-              Análisis y métricas del negocio · Período: julio 2026
-            </p>
-          </div>
+            {/* FILTROS */}
 
-          <button className="reportes-button-agregar">
-            <Download size={20} />
+            <FiltrosReportes filtro={filtro} setFiltro={setFiltro} />
 
-            Descargar PDF
-          </button>
-        </div>
+            {/* RESUMEN */}
 
-        {/* CARDS DE REPORTES */}
+            {filtro === "Resumen" && (
+              <div className="reportes-resumen">
+                <VentasMensuales />
 
-        <CardsReportes />
+                <ParticipacionCategoria />
+              </div>
+            )}
 
-        {/* FILTROS */}
+            {/* VENTAS POR PERIODO */}
 
-        <FiltrosReportes
-          filtro={filtro}
-          setFiltro={setFiltro}
-        />
+            {filtro === "Ventas por periodo" && <VentasPorPeriodo />}
 
-        {/* CONTENIDO SEGÚN EL FILTRO */}
+            {/* RENDIMIENTO DEL EQUIPO */}
 
-        {filtro === "Resumen" && (
-          <div className="reportes-resumen">
-            <VentasMensuales />
-
-            <ParticipacionCategoria />
-          </div>
+            {filtro === "Rendimiento equipo" && <RendimientoEquipo />}
+          </>
         )}
 
-        {filtro === "Ventas por periodo" && (
-          <VentasPorPeriodo />
+        {/* REPORTE DE VENTAS */}
+
+        {reporteActivo === "ventas" && (
+          <ReporteVentas onVolver={() => setReporteActivo(null)} />
         )}
 
-        {filtro === "Rendimiento equipo" && (
-          <RendimientoEquipo />
+        {/* REPORTE DE INVENTARIO */}
+
+        {reporteActivo === "inventario" && (
+          <ReporteInventario onVolver={() => setReporteActivo(null)} />
         )}
 
+        {/* REPORTE DE CLIENTES */}
+
+        {reporteActivo === "clientes" && (
+          <ReporteClientes onVolver={() => setReporteActivo(null)} />
+        )}
+
+        {/* REPORTE FINANCIERO */}
+
+        {reporteActivo === "financiero" && (
+          <ReporteFinanciero onVolver={() => setReporteActivo(null)} />
+        )}
       </div>
     </main>
   );

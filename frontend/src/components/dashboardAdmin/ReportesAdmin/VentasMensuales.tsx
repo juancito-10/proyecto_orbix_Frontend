@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import {
   BarChart,
   Bar,
@@ -10,32 +12,160 @@ import {
 
 import "./VentasMensuales.css";
 
-const datosVentas = [
-  { mes: "Ene", ventas: 48000 },
-  { mes: "Feb", ventas: 52000 },
-  { mes: "Mar", ventas: 47000 },
-  { mes: "Abr", ventas: 61000 },
-  { mes: "May", ventas: 58000 },
-  { mes: "Jun", ventas: 73000 },
-  { mes: "Jul", ventas: 68000 },
-  { mes: "Ago", ventas: 82000 },
-  { mes: "Sep", ventas: 77000 },
-  { mes: "Oct", ventas: 92000 },
-  { mes: "Nov", ventas: 88000 },
-  { mes: "Dic", ventas: 105000 },
-];
+import ventasService, {
+  type Venta,
+} from "../../../services/ventas.services";
+
+interface DatoVentaMensual {
+  mes: string;
+  ventas: number;
+}
 
 const VentasMensuales = () => {
+  const [ventas, setVentas] = useState<Venta[]>([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+
+  /*
+   * Meses que vamos a mostrar en la gráfica.
+   */
+  const meses = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
+
+  /*
+   * Cargar las ventas desde la API.
+   */
+  useEffect(() => {
+    const cargarVentas = async () => {
+      try {
+        setCargando(true);
+        setError("");
+
+        const ventasObtenidas =
+          await ventasService.obtenerVentas();
+
+        setVentas(ventasObtenidas);
+      } catch (error) {
+        console.error(
+          "Error al cargar las ventas:",
+          error
+        );
+
+        setError(
+          error instanceof Error
+            ? error.message
+            : "No se pudieron cargar las ventas."
+        );
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarVentas();
+  }, []);
+
+  /*
+   * Agrupamos las ventas por mes.
+   *
+   * Solo tomamos las ventas del año 2026.
+   */
+  const datosVentas: DatoVentaMensual[] =
+    meses.map((mes, indiceMes) => {
+      const ventasDelMes = ventas.filter((venta) => {
+        const fecha = new Date(venta.fecha);
+
+        return (
+          fecha.getFullYear() === 2026 &&
+          fecha.getMonth() === indiceMes
+        );
+      });
+
+      const totalMes = ventasDelMes.reduce(
+        (total, venta) =>
+          total + Number(venta.total),
+        0
+      );
+
+      return {
+        mes,
+        ventas: totalMes,
+      };
+    });
+
+  /*
+   * Calculamos el acumulado anual.
+   */
+  const acumuladoAnual = datosVentas.reduce(
+    (total, dato) => total + dato.ventas,
+    0
+  );
+
+  /*
+   * Estado de carga.
+   */
+  if (cargando) {
+    return (
+      <section className="ventas-mensuales">
+        <div className="ventas-mensuales-titulo">
+          <h3>Ventas mensuales 2026</h3>
+
+          <p>
+            Cargando información...
+          </p>
+        </div>
+
+        <div className="ventas-mensuales-grafica">
+          Cargando ventas...
+        </div>
+      </section>
+    );
+  }
+
+  /*
+   * Error.
+   */
+  if (error) {
+    return (
+      <section className="ventas-mensuales">
+        <div className="ventas-mensuales-titulo">
+          <h3>Ventas mensuales 2026</h3>
+
+          <p>
+            {error}
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="ventas-mensuales">
       <div className="ventas-mensuales-titulo">
         <h3>Ventas mensuales 2026</h3>
 
-        <p>Acumulado anual: $ 858.000</p>
+        <p>
+          Acumulado anual: ${" "}
+          {acumuladoAnual.toLocaleString("es-CO")}
+        </p>
       </div>
 
       <div className="ventas-mensuales-grafica">
-        <ResponsiveContainer width="100%" height={270}>
+        <ResponsiveContainer
+          width="100%"
+          height={270}
+        >
           <BarChart
             data={datosVentas}
             margin={{
@@ -62,12 +192,11 @@ const VentasMensuales = () => {
             />
 
             <YAxis
-              domain={[0, 120000]}
-              ticks={[0, 30000, 60000, 90000, 120000]}
+              domain={[0, "auto"]}
               axisLine={false}
               tickLine={false}
               tickFormatter={(valor) =>
-                `$${valor / 1000}k`
+                `$${Number(valor) / 1000}k`
               }
               tick={{
                 fill: "#58708c",
@@ -77,7 +206,9 @@ const VentasMensuales = () => {
 
             <Tooltip
               formatter={(valor) =>
-                `$ ${Number(valor).toLocaleString("es-CO")}`
+                `$ ${Number(valor).toLocaleString(
+                  "es-CO"
+                )}`
               }
               labelFormatter={(mes) => mes}
               contentStyle={{
