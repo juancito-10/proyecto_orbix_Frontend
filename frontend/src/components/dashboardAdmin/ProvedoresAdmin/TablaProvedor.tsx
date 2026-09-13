@@ -1,165 +1,237 @@
+import { useEffect, useState } from "react";
 import "./TablaProvedor.css";
+
+import proveedoresService, {
+  type Proveedor,
+} from "../../../services/proveedores.services";
+
+import productosService, {
+  type ProductoInventario,
+} from "../../../services/productos.services";
+
+import ventasService, {
+  type Venta,
+} from "../../../services/ventas.services";
+
+import ModalVerProvedor from "../../dashboardAdmin/ProvedoresAdmin/ModalVerProvedor";
+import ModalEditarProvedores from "../../dashboardAdmin/ProvedoresAdmin/ModalEditarProvedores";
 
 interface TablaProvedoresProps {
   filtro: string;
   busqueda: string;
 }
 
-interface Provedor {
-  provedor: string;
-  id: string;
-  contacto: string;
-  correo: string;
-  ciudad: string;
-  total_compras: number;
-  ordenes: number;
-  ultima_orden: string;
-  categoria: string;
-  estado: string;
-}
-
-const provedores: Provedor[] = [
-  {
-    provedor: "Lenovo Argentina",
-    id: "PRV-001",
-    contacto: "Martín Sosa",
-    correo: "msosa@lenovo.com.ar",
-    ciudad: "Buenos Aires",
-    total_compras: 124500,
-    ordenes: 18,
-    ultima_orden: "28 Jul 2026",
-    categoria: "Electrónica",
-    estado: "Activo",
-  },
-  {
-    provedor: "Samsung Corp",
-    id: "PRV-002",
-    contacto: "Valeria Kim",
-    correo: "vkim@samsung.com.ar",
-    ciudad: "Buenos Aires",
-    total_compras: 98300,
-    ordenes: 24,
-    ultima_orden: "25 Jul 2026",
-    categoria: "Electrónica",
-    estado: "Activo",
-  },
-  {
-    provedor: "Nike Distribuidora",
-    id: "PRV-003",
-    contacto: "Pablo Sánchez",
-    correo: "psanchez@nikedist.com",
-    ciudad: "Buenos Aires",
-    total_compras: 47200,
-    ordenes: 11,
-    ultima_orden: "20 Jul 2026",
-    categoria: "Ropa y calzado",
-    estado: "Activo",
-  },
-  {
-    provedor: "Menaje del Sur",
-    id: "PRV-004",
-    contacto: "Claudia Ríos",
-    correo: "crios@menajesur.com",
-    ciudad: "Bahía Blanca",
-    total_compras: 31600,
-    ordenes: 9,
-    ultima_orden: "18 Jul 2026",
-    categoria: "Hogar",
-    estado: "Activo",
-  },
-  {
-    provedor: "HP Argentina",
-    id: "PRV-005",
-    contacto: "Fernando Lagos",
-    correo: "flagos@hp.com.ar",
-    ciudad: "Buenos Aires",
-    total_compras: 52800,
-    ordenes: 14,
-    ultima_orden: "15 Jul 2026",
-    categoria: "Electrónica",
-    estado: "Inactivo",
-  },
-  {
-    provedor: "Sony Corp",
-    id: "PRV-006",
-    contacto: "Natalia Fujimoto",
-    correo: "nfujimoto@sony.com.ar",
-    ciudad: "Buenos Aires",
-    total_compras: 38900,
-    ordenes: 10,
-    ultima_orden: "12 Jul 2026",
-    categoria: "Electrónica",
-    estado: "Activo",
-  },
-  {
-    provedor: "Adidas Distribuidora",
-    id: "PRV-007",
-    contacto: "Ricardo Blanco",
-    correo: "rblanco@adidastad.com",
-    ciudad: "Rosario",
-    total_compras: 29400,
-    ordenes: 8,
-    ultima_orden: "10 Jul 2026",
-    categoria: "Ropa y calzado",
-    estado: "Activo",
-  },
-  {
-    provedor: "Distribuidora Norte",
-    id: "PRV-008",
-    contacto: "Lucía Rodríguez",
-    correo: "lucia@distnorte.com",
-    ciudad: "Rosario",
-    total_compras: 61200,
-    ordenes: 22,
-    ultima_orden: "29 Jul 2026",
-    categoria: "Alimentos",
-    estado: "Activo",
-  },
-  {
-    provedor: "Olivares SA",
-    id: "PRV-009",
-    contacto: "Eduardo Molina",
-    correo: "emolina@olivaresa.com",
-    ciudad: "San Juan",
-    total_compras: 18700,
-    ordenes: 7,
-    ultima_orden: "05 Jul 2026",
-    categoria: "Alimentos",
-    estado: "Activo",
-  },
-  {
-    provedor: "Logitech Corp",
-    id: "PRV-010",
-    contacto: "Andrea Vega",
-    correo: "avega@logitech.com.ar",
-    ciudad: "Buenos Aires",
-    total_compras: 22100,
-    ordenes: 6,
-    ultima_orden: "22 Jul 2026",
-    categoria: "Electrónica",
-    estado: "Inactivo",
-  },
-];
-
 const TablaProvedor = ({
-  filtro,
+  filtro: _filtro,
   busqueda,
 }: TablaProvedoresProps) => {
-  const textoBusqueda = busqueda.toLocaleLowerCase().trim();
+  const [proveedores, setProveedores] = useState<Proveedor[]>([]);
 
-  const clientesFiltrados = provedores.filter((Provedor) => {
-    const coincidePerfil =
-      filtro === "Todos" || Provedor.categoria === filtro;
+  const [productos, setProductos] = useState<ProductoInventario[]>([]);
 
-    const coincideBusqueda =
-      Provedor.provedor.toLocaleLowerCase().includes(textoBusqueda) ||
-      Provedor.id.toLocaleLowerCase().includes(textoBusqueda) ||
-      Provedor.contacto.toLocaleLowerCase().includes(textoBusqueda) ||
-      Provedor.ciudad.toLocaleLowerCase().includes(textoBusqueda);
+  const [ventas, setVentas] = useState<Venta[]>([]);
 
-    return coincidePerfil && coincideBusqueda;
-  });
+  const [cargando, setCargando] = useState(true);
 
+  const [error, setError] = useState("");
+
+  /* Proveedor seleccionado para VER */
+  const [proveedorVer, setProveedorVer] =
+    useState<Proveedor | null>(null);
+
+  /* Proveedor seleccionado para EDITAR */
+  const [proveedorEditar, setProveedorEditar] =
+    useState<Proveedor | null>(null);
+
+  /* Cargamos los datos */
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        setCargando(true);
+        setError("");
+
+        const [
+          proveedoresData,
+          productosData,
+          ventasData,
+        ] = await Promise.all([
+          proveedoresService.obtenerProveedores(),
+          productosService.obtenerProductos(),
+          ventasService.obtenerVentas(),
+        ]);
+
+        setProveedores(proveedoresData);
+        setProductos(productosData);
+        setVentas(ventasData);
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Error al cargar los datos.",
+        );
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarDatos();
+  }, []);
+
+  const textoBusqueda = busqueda
+    .toLocaleLowerCase()
+    .trim();
+
+  /*
+   * Busca los productos relacionados
+   * con un proveedor.
+   */
+  const obtenerProductosProveedor = (
+    idProveedor: string,
+  ) => {
+    return productos.filter((producto) => {
+      const proveedor = proveedores.find(
+        (p) => p.idProveedor === idProveedor,
+      );
+
+      if (!proveedor) {
+        return false;
+      }
+
+      return (
+        producto.proveedor
+          .toLocaleLowerCase()
+          .trim() ===
+        proveedor.nombre
+          .toLocaleLowerCase()
+          .trim()
+      );
+    });
+  };
+
+  /*
+   * Calcula la información relacionada
+   * con las compras del proveedor.
+   *
+   * Ya no manejamos categoría aquí.
+   */
+  const obtenerInformacionProveedor = (
+    proveedor: Proveedor,
+  ) => {
+    const productosProveedor =
+      obtenerProductosProveedor(
+        proveedor.idProveedor,
+      );
+
+    const idsProductos = new Set(
+      productosProveedor.map(
+        (producto) => producto.idProducto,
+      ),
+    );
+
+    const ventasProveedor = ventas.filter((venta) =>
+      venta.detalles.some((detalle) =>
+        idsProductos.has(detalle.idProducto),
+      ),
+    );
+
+    let totalComprado = 0;
+
+    ventasProveedor.forEach((venta) => {
+      venta.detalles.forEach((detalle) => {
+        const producto = productosProveedor.find(
+          (p) =>
+            p.idProducto === detalle.idProducto,
+        );
+
+        if (producto) {
+          totalComprado +=
+            producto.precioCompra *
+            detalle.cantidad;
+        }
+      });
+    });
+
+    const ordenes = ventasProveedor.length;
+
+    return {
+      totalComprado,
+      ordenes,
+    };
+  };
+
+  /*
+   * Filtramos los proveedores únicamente
+   * por búsqueda.
+   *
+   * La categoría ya no pertenece a esta tabla.
+   */
+  const proveedoresFiltrados =
+    proveedores.filter((proveedor) => {
+      const coincideBusqueda =
+        proveedor.nombre
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        proveedor.nit
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        (proveedor.telefono || "")
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        (proveedor.correo || "")
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        (proveedor.ciudad || "")
+          .toLocaleLowerCase()
+          .includes(textoBusqueda);
+
+      return coincideBusqueda;
+    });
+
+  /* Cargando */
+  if (cargando) {
+    return (
+      <section className="tabla-provedores-wrapper">
+        <div className="tabla-provedores-contenedor">
+          <table className="tabla-provedores">
+            <tbody>
+              <tr>
+                <td
+                  colSpan={8}
+                  className="provedores-sin-resultados"
+                >
+                  Cargando proveedores...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    );
+  }
+
+  /* Error */
+  if (error) {
+    return (
+      <section className="tabla-provedores-wrapper">
+        <div className="tabla-provedores-contenedor">
+          <table className="tabla-provedores">
+            <tbody>
+              <tr>
+                <td
+                  colSpan={8}
+                  className="provedores-sin-resultados"
+                >
+                  {error}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    );
+  }
+
+  /* Tabla */
   return (
     <section className="tabla-provedores-wrapper">
       <div className="tabla-provedores-contenedor">
@@ -171,23 +243,38 @@ const TablaProvedor = ({
               <th>CIUDAD</th>
               <th>TOTAL COMPRADO</th>
               <th>ÓRDENES</th>
-              <th>ÚLTIMA ORDEN</th>
-              <th>CATEGORIA</th>
+              <th>TELÉFONO</th>
               <th>ESTADO</th>
               <th></th>
             </tr>
           </thead>
 
           <tbody>
-            {clientesFiltrados.map((Provedor) => {
-              const iniciales = Provedor.provedor
+            {proveedoresFiltrados.map((proveedor) => {
+              const informacion =
+                obtenerInformacionProveedor(
+                  proveedor,
+                );
+
+              /* Iniciales */
+              const iniciales = proveedor.nombre
                 .split(" ")
                 .slice(0, 2)
                 .map((nombre) => nombre[0])
-                .join("");
+                .join("")
+                .toUpperCase();
+
+              /* Estado */
+              const estado =
+                proveedor.estado?.toLowerCase() ===
+                "inactivo"
+                  ? "Inactivo"
+                  : "Activo";
 
               return (
-                <tr key={Provedor.id}>
+                <tr key={proveedor.idProveedor}>
+                  {/* PROVEEDOR */}
+
                   <td className="provedor-info">
                     <div className="provedor-contenido">
                       <div className="provedor-avatar">
@@ -196,65 +283,110 @@ const TablaProvedor = ({
 
                       <div className="provedor-datos">
                         <span className="provedor-nombre">
-                          {Provedor.provedor}
+                          {proveedor.nombre}
                         </span>
 
                         <span className="provedor-id">
-                          {Provedor.id}
+                          {proveedor.nit}
                         </span>
                       </div>
                     </div>
                   </td>
 
+                  {/* CONTACTO */}
+
                   <td className="contacto-info">
                     <div className="contacto-datos">
                       <span className="contacto-nombre">
-                        {Provedor.contacto}
+                        {proveedor.nombre}
                       </span>
 
                       <span className="contacto-correo">
-                        {Provedor.correo}
+                        {proveedor.correo || "-"}
                       </span>
                     </div>
                   </td>
 
+                  {/* CIUDAD */}
+
                   <td className="ciudad-info">
-                    {Provedor.ciudad}
+                    {proveedor.ciudad || "-"}
                   </td>
+
+                  {/* TOTAL COMPRADO */}
 
                   <td className="compras-info">
-                    $ {Provedor.total_compras.toLocaleString("es-CO")}
+                    ${" "}
+                    {informacion.totalComprado.toLocaleString(
+                      "es-CO",
+                    )}
                   </td>
+
+                  {/* ÓRDENES */}
 
                   <td className="ordenes-info">
-                    {Provedor.ordenes}
+                    {informacion.ordenes}
                   </td>
 
-                  <td className="ultima-orden-info">
-                    {Provedor.ultima_orden}
+                  {/* TELÉFONO */}
+
+                  <td className="telefono-info">
+                    {proveedor.telefono || "-"}
                   </td>
 
-                  <td className="categoria-info">
-                    {Provedor.categoria}
-                  </td>
+                  {/* ESTADO */}
 
                   <td className="estado-info">
-                    {Provedor.estado}
+                    <span
+                      className={`estado-badge ${
+                        estado === "Activo"
+                          ? "estado-activo"
+                          : "estado-inactivo"
+                      }`}
+                    >
+                      {estado}
+                    </span>
                   </td>
 
+                  {/* BOTONES */}
+
                   <td className="ver-info">
-                    <button className="boton-ver">
-                      Ver
-                    </button>
+                    <div className="acciones-proveedor">
+                      {/* BOTÓN VER */}
+
+                      <button
+                        type="button"
+                        className="boton-ver"
+                        onClick={() =>
+                          setProveedorVer(proveedor)
+                        }
+                      >
+                        Ver
+                      </button>
+
+                      {/* BOTÓN EDITAR */}
+
+                      <button
+                        type="button"
+                        className="boton-editar"
+                        onClick={() =>
+                          setProveedorEditar(proveedor)
+                        }
+                      >
+                        Editar
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );
             })}
 
-            {clientesFiltrados.length === 0 && (
+            {/* SIN RESULTADOS */}
+
+            {proveedoresFiltrados.length === 0 && (
               <tr>
                 <td
-                  colSpan={9}
+                  colSpan={8}
                   className="provedores-sin-resultados"
                 >
                   No se encontraron proveedores.
@@ -263,6 +395,54 @@ const TablaProvedor = ({
             )}
           </tbody>
         </table>
+
+        {/* =========================================
+            MODAL VER
+        ========================================= */}
+
+        {proveedorVer && (
+          <ModalVerProvedor
+            proveedor={proveedorVer}
+            productos={obtenerProductosProveedor(
+              proveedorVer.idProveedor,
+            )}
+            informacion={obtenerInformacionProveedor(
+              proveedorVer,
+            )}
+            onCerrar={() =>
+              setProveedorVer(null)
+            }
+          />
+        )}
+
+        {/* =========================================
+            MODAL EDITAR
+        ========================================= */}
+
+        {proveedorEditar && (
+          <ModalEditarProvedores
+            proveedor={proveedorEditar}
+            onCerrar={() =>
+              setProveedorEditar(null)
+            }
+            onActualizado={(
+              proveedorActualizado,
+            ) => {
+              setProveedores(
+                (proveedoresActuales) =>
+                  proveedoresActuales.map(
+                    (proveedorActual) =>
+                      proveedorActual.idProveedor ===
+                      proveedorActualizado.idProveedor
+                        ? proveedorActualizado
+                        : proveedorActual,
+                  ),
+              );
+
+              setProveedorEditar(null);
+            }}
+          />
+        )}
       </div>
     </section>
   );

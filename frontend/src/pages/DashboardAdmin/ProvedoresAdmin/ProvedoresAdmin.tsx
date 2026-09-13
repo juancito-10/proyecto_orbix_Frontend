@@ -7,10 +7,13 @@ import FiltrosProvedor from "../../../components/dashboardAdmin/ProvedoresAdmin/
 import { useState } from "react";
 import TablaProvedor from "../../../components/dashboardAdmin/ProvedoresAdmin/TablaProvedor";
 import CardsProvedor from "../../../components/dashboardAdmin/ProvedoresAdmin/CardsProvedor";
+import ModelNuevoProvedor from "../../../components/dashboardAdmin/ProvedoresAdmin/ModelNuevoProvedor";
 
 const ProvedoresAdmin = () => {
   const [filtro, setFiltro] = useState("Todos");
   const [busqueda, setBusqueda] = useState("");
+  const [mostrarModal, setMostrarModal] = useState(false);
+
   return (
     <main className="provedores-main">
       <Sidebar />
@@ -46,11 +49,15 @@ const ProvedoresAdmin = () => {
             <p className="provedores-fecha">8 proveedores registrados</p>
           </div>
 
-          <button className="provedores-button-agregar">
+          <button
+            className="provedores-button-agregar"
+            onClick={() => setMostrarModal(true)}
+          >
             <Plus size={20} />
             Nuevo proveedor
           </button>
         </div>
+
         <CardsProvedor />
 
         <FiltrosProvedor
@@ -59,8 +66,14 @@ const ProvedoresAdmin = () => {
           busqueda={busqueda}
           setBusqueda={setBusqueda}
         />
+
         <TablaProvedor filtro={filtro} busqueda={busqueda} />
       </div>
+
+      <ModelNuevoProvedor
+        isOpen={mostrarModal}
+        onClose={() => setMostrarModal(false)}
+      />
     </main>
   );
 };

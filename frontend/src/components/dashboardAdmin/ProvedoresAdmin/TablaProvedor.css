@@ -45,7 +45,7 @@
 }
 
 .tabla-provedores th:nth-child(2) {
-  width: 16%;
+  width: 17%;
 }
 
 .tabla-provedores th:nth-child(3) {
@@ -53,7 +53,7 @@
 }
 
 .tabla-provedores th:nth-child(4) {
-  width: 13%;
+  width: 14%;
 }
 
 .tabla-provedores th:nth-child(5) {
@@ -61,7 +61,7 @@
 }
 
 .tabla-provedores th:nth-child(6) {
-  width: 12%;
+  width: 11%;
 }
 
 .tabla-provedores th:nth-child(7) {
@@ -69,12 +69,9 @@
 }
 
 .tabla-provedores th:nth-child(8) {
-  width: 7%;
+  width: 14%;
 }
 
-.tabla-provedores th:nth-child(9) {
-  width: 8%;
-}
 /* FILAS */
 
 .tabla-provedores tbody tr {
@@ -158,6 +155,9 @@
   font-size: 12px;
   font-family: monospace;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* CIUDAD */
@@ -185,18 +185,12 @@
   text-align: center;
 }
 
-/* ÚLTIMA ORDEN */
+/* TELÉFONO */
 
-.ultima-orden-info {
+.telefono-info {
   color: #58708c !important;
   font-size: 13px !important;
-}
-
-/* CATEGORIA */
-
-.categoria-info {
-  color: #58708c !important;
-  font-size: 13px !important;
+  white-space: nowrap;
 }
 
 /* ESTADO */
@@ -204,6 +198,32 @@
 .estado-info {
   color: #58708c !important;
   font-size: 13px !important;
+}
+
+/* ETIQUETA ESTADO */
+
+.estado-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ACTIVO */
+
+.estado-activo {
+  background-color: #d7f7e8;
+  color: #0a9a62;
+}
+
+/* INACTIVO */
+
+.estado-inactivo {
+  background-color: #eef1f4;
+  color: #657384;
 }
 
 /* SIN RESULTADOS */
@@ -214,23 +234,74 @@
   color: #71859c !important;
   font-size: 13px !important;
 }
+
+/* ACCIONES */
+
 .ver-info {
   text-align: center;
 }
 
+.acciones-proveedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+/* BOTÓN VER */
+
 .boton-ver {
   height: 34px;
   padding: 0 13px;
-  border: 1px solid #d9e0e8;
+  border: 1px solid #008bb5;
   border-radius: 8px;
   background-color: white;
-  color: #58708c;
+  color: #007fa5;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .boton-ver:hover {
-  border-color: #087c9c;
-  color: #087c9c;
+  background-color: #0083a5;
+  border-color: #0083a5;
+  color: white;
+}
+
+/* CUANDO ESTÁ SELECCIONADO */
+
+.boton-ver.activo {
+  background-color: #0083a5;
+  border-color: #0083a5;
+  color: white;
+}
+
+/* BOTÓN EDITAR */
+
+.boton-editar {
+  height: 34px;
+  padding: 0 13px;
+  border: 1px solid #0083a5;
+  border-radius: 8px;
+  background-color: white;
+  color: #0083a5;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.boton-editar:hover {
+  background-color: #0083a5;
+  border-color: #0083a5;
+  color: white;
+}
+
+/* CUANDO ESTÁ SELECCIONADO */
+
+.boton-editar.activo {
+  background-color: #0083a5;
+  border-color: #0083a5;
+  color: white;
 }

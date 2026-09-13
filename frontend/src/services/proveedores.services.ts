@@ -33,7 +33,7 @@ async function obtenerProveedores(): Promise<Proveedor[]> {
 
   if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Error al obtener los proveedores.",
+      data.message || "Error al obtener los proveedores."
     );
   }
 
@@ -43,6 +43,11 @@ async function obtenerProveedores(): Promise<Proveedor[]> {
 async function crearProveedor(
   nombre: string,
   nit: string,
+  telefono?: string,
+  correo?: string,
+  direccion?: string,
+  ciudad?: string,
+  estado?: string
 ): Promise<Proveedor> {
   const token = localStorage.getItem("token");
 
@@ -59,6 +64,11 @@ async function crearProveedor(
     body: JSON.stringify({
       nombre,
       nit,
+      telefono: telefono || null,
+      correo: correo || null,
+      direccion: direccion || null,
+      ciudad: ciudad || null,
+      estado: estado || undefined,
     }),
   });
 
@@ -66,16 +76,70 @@ async function crearProveedor(
 
   if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Error al crear el proveedor.",
+      data.message || "Error al crear el proveedor."
     );
   }
 
   return data.data;
 }
 
+
+/* =========================================
+   ACTUALIZAR PROVEEDOR
+========================================= */
+
+async function actualizarProveedor(
+  idProveedor: string,
+  nombre: string,
+  nit: string,
+  telefono?: string,
+  correo?: string,
+  direccion?: string,
+  ciudad?: string,
+  estado?: string
+): Promise<Proveedor> {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No hay sesión activa.");
+  }
+
+  const response = await fetch(
+    `${BASE_URL}/proveedores/${idProveedor}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        nombre,
+        nit,
+        telefono: telefono || null,
+        correo: correo || null,
+        direccion: direccion || null,
+        ciudad: ciudad || null,
+        estado: estado || undefined,
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(
+      data.message || "Error al actualizar el proveedor."
+    );
+  }
+
+  return data.data;
+}
+
+
 const proveedoresService = {
   obtenerProveedores,
   crearProveedor,
+  actualizarProveedor,
 };
 
 export default proveedoresService;
