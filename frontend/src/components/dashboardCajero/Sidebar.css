@@ -2,7 +2,7 @@
 .vendedor-sidebar {
   width: 240px;
   height: 100vh;
-  background-color: #1e1b4b;
+  background-color: #0a1628;
   color: rgba(203, 213, 225, 0.7);
   position: sticky;
   top: 0;
@@ -125,8 +125,8 @@
   color: #ffffff;
 }
 
-/* Elementos especificos preservados para no romper los disenios particulares */
-.vendedor-logo-icono {
+/* El logo "O" (icono) adopta el color del rol */
+.vendedor-logo-icono, .logo-icon {
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -136,8 +136,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  font-weight: bold;
 }
-.vendedor-badge-rol {
+.logo-inner-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.vendedor-badge-rol, .badge-inventario {
   display: inline-block;
   margin-top: 10px;
   font-size: 11px;
@@ -147,7 +154,9 @@
   border-radius: 99px;
   background-color: rgba(139, 92, 246, 0.18);
   color: #c4b5fd;
+  margin-left: 10px;
 }
+
 .vendedor-sidebar-footer {
   margin-top: auto;
   padding: 16px;
@@ -208,31 +217,6 @@
 .cerrar-perfil:hover {
   background-color: rgba(255, 255, 255, 0.06);
   color: rgba(203, 213, 225, 0.85);
-}
-
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background-color: #10b981;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.logo-inner-circle {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid white;
-}
-.badge-inventario {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: #34d399;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 12px;
-  margin-left: 10px;
-  font-weight: 600;
 }
 
 @media (max-width: 992px) {
