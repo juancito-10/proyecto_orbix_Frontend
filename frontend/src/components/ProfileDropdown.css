@@ -201,3 +201,20 @@
 
 
 .profile-dropdown-role { font-size: 13px; color: #10b981; margin: 2px 0; font-weight: 600; }
+
+.profile-btn-edit, .profile-btn-save, .profile-btn-cancel {
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 13px;
+}
+.profile-btn-edit { background: #0284c7; color: white; margin-right: 15px;}
+.profile-btn-save { background: #10b981; color: white; }
+.profile-btn-cancel { background: #e2e8f0; color: #0f172a; }
+.cuenta-field input {
+  padding: 5px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  width: 90%;
+}

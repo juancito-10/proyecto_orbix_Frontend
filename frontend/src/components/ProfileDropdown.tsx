@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import './ProfileDropdown.css';
@@ -20,6 +21,8 @@ const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ nombre: '', celular: '', direccion: '' });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -44,6 +47,7 @@ const ProfileDropdown = () => {
       if (res.ok) {
         const data = await res.json();
         setProfileData(data.data);
+        setEditForm({ nombre: data.data.nombre || '', celular: data.data.celular || '', direccion: data.data.direccion || '' });
       }
     } catch (err) {
       console.error(err);
@@ -57,7 +61,31 @@ const ProfileDropdown = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleSaveProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      const res = await fetch('http://localhost:3000/api/v1/auth/me', {
+        method: 'PATCH',
+        headers: { 'Authorization': "Bearer ${token}", 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setProfileData(data.data);
+        setIsEditing(false);
+        // Actualizar usuario en localStorage
+        const storedUser = JSON.parse(localStorage.getItem('usuario') || '{}');
+        storedUser.nombre = data.data.nombre;
+        localStorage.setItem('usuario', JSON.stringify(storedUser));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleOpenAccount = () => {
+    setIsEditing(false);
     setIsModalOpen(true);
     setIsOpen(false);
     if (!profileData) fetchProfile();
@@ -113,11 +141,19 @@ const ProfileDropdown = () => {
         </div>
       )}
 
-      {isModalOpen && (
+      {isModalOpen && createPortal(
         <div className="cuenta-modal-overlay">
           <div className="cuenta-modal-content">
             <div className="cuenta-modal-header">
               <h3>Información del Empleado</h3>
+              {isEditing ? (
+                <div style={{display:'flex', gap:'10px'}}>
+                  <button className="profile-btn-save" onClick={handleSaveProfile}>Guardar</button>
+                  <button className="profile-btn-cancel" onClick={() => setIsEditing(false)}>Cancelar</button>
+                </div>
+              ) : (
+                <button className="profile-btn-edit" onClick={() => setIsEditing(true)}>Editar</button>
+              )}
               <button className="cuenta-close-btn" onClick={() => setIsModalOpen(false)}>
                 <X size={24} />
               </button>
@@ -126,7 +162,7 @@ const ProfileDropdown = () => {
             <div className="cuenta-grid">
               <div className="cuenta-field">
                 <label>Nombre completo</label>
-                <span>{displayData.nombre || 'N/A'}</span>
+                {isEditing ? <input type='text' value={editForm.nombre} onChange={e => setEditForm({...editForm, nombre: e.target.value})} /> : <span>{displayData.nombre || 'N/A'}</span>}
               </div>
               <div className="cuenta-field">
                 <label>Identificación</label>
@@ -142,11 +178,11 @@ const ProfileDropdown = () => {
               </div>
               <div className="cuenta-field">
                 <label>Celular</label>
-                <span>{profileData?.celular || 'N/A'}</span>
+                {isEditing ? <input type='text' value={editForm.celular} onChange={e => setEditForm({...editForm, celular: e.target.value})} /> : <span>{profileData?.celular || 'N/A'}</span>}
               </div>
               <div className="cuenta-field">
                 <label>Dirección</label>
-                <span>{profileData?.direccion || 'N/A'}</span>
+                {isEditing ? <input type='text' value={editForm.direccion} onChange={e => setEditForm({...editForm, direccion: e.target.value})} /> : <span>{profileData?.direccion || 'N/A'}</span>}
               </div>
               <div className="cuenta-field">
                 <label>Fecha de nacimiento</label>
@@ -159,9 +195,15 @@ const ProfileDropdown = () => {
             </div>
           </div>
         </div>
-      )}
+        , document.body)}
     </div>
   );
 };
 
 export default ProfileDropdown;
+
+
+
+
+
+
