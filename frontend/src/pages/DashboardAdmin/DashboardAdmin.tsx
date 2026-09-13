@@ -8,7 +8,7 @@ import VentasCategorias from "../../components/dashboardAdmin/VentasCategorias";
 
 import UltimasVentas from "../../components/dashboardAdmin/UltimasVentas";
 
-import { Search, Bell, Download } from "lucide-react";
+import { Search, Bell } from "lucide-react";
 
 import "./DashboardAdmin.css";
 import EstaSemana from "../../components/dashboardAdmin/EstaSemana";

@@ -1,88 +1,121 @@
+import { useEffect, useState } from "react";
 import "./TablaEmpleados.css";
+
+import ModalEditarEmpleados from "./ModalEditarEmpleados";
+
+import usuariosService, {
+  type Usuario,
+} from "../../../services/usuarios.services";
 
 interface TablaEmpleadosProps {
   filtro: string;
   busqueda: string;
+  actualizar: number;
+  onEmpleadoActualizado: () => void;
 }
 
-interface Empleado {
-  empleado: string;
-  id: string;
-  correo: string;
-  telefono: string;
-  ciudad: string;
-  rol: string;
-  estado: string;
-  fecha_ingreso: string;
-}
+const TablaEmpleados = ({
+  filtro,
+  busqueda,
+  actualizar,
+  onEmpleadoActualizado,
+}: TablaEmpleadosProps) => {
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+  const [empleadoEditar, setEmpleadoEditar] =
+    useState<Usuario | null>(null);
 
-const empleados: Empleado[] = [
-  {
-    empleado: "Ana Torres",
-    id: "EMP-001",
-    correo: "atorres@orbix.com",
-    telefono: "+54 11 4823-7621",
-    ciudad: "Buenos Aires",
-    rol: "Vendedor",
-    estado: "Activo",
-    fecha_ingreso: "12 Mar 2024",
-  },
-  {
-    empleado: "Diego Ruiz",
-    id: "EMP-002",
-    correo: "druiz@orbix.com",
-    telefono: "+54 11 5510-3344",
-    ciudad: "Buenos Aires",
-    rol: "Vendedor",
-    estado: "Activo",
-    fecha_ingreso: "05 Jun 2024",
-  },
-  {
-    empleado: "Luis Herrera",
-    id: "EMP-003",
-    correo: "lherrera@orbix.com",
-    telefono: "+54 341 482-9341",
-    ciudad: "Rosario",
-    rol: "Inventario",
-    estado: "Activo",
-    fecha_ingreso: "20 Ene 2025",
-  },
-  {
-    empleado: "Sofia Méndez",
-    id: "EMP-004",
-    correo: "smendez@orbix.com",
-    telefono: "+54 351 368-4421",
-    ciudad: "Córdoba",
-    rol: "Inventario",
-    estado: "Activo",
-    fecha_ingreso: "08 Abr 2025",
-  },
-  {
-    empleado: "Carlos Vidal",
-    id: "EMP-005",
-    correo: "cvidal@orbix.com",
-    telefono: "+54 223 432-5541",
-    ciudad: "Mar del Plata",
-    rol: "Vendedor",
-    estado: "Inactivo",
-    fecha_ingreso: "14 Nov 2023",
-  },
-];
+  useEffect(() => {
+    const cargarUsuarios = async () => {
+      try {
+        setCargando(true);
+        setError("");
 
-const TablaEmpleados = ({ filtro, busqueda }: TablaEmpleadosProps) => {
-  const textoBusqueda = busqueda.toLocaleLowerCase().trim();
+        const data =
+          await usuariosService.obtenerUsuarios();
 
-  const empleadosFiltrados = empleados.filter((Empleado) => {
-    const coincideRol = filtro === "Todos" || Empleado.rol === filtro;
+        setUsuarios(data);
+      } catch (error) {
+        console.error(
+          "Error al cargar los usuarios:",
+          error,
+        );
 
-    const coincideBusqueda =
-      Empleado.empleado.toLocaleLowerCase().includes(textoBusqueda) ||
-      Empleado.id.toLocaleLowerCase().includes(textoBusqueda) ||
-      Empleado.correo.toLocaleLowerCase().includes(textoBusqueda) ||
-      Empleado.ciudad.toLocaleLowerCase().includes(textoBusqueda);
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Error al cargar los usuarios.",
+        );
+      } finally {
+        setCargando(false);
+      }
+    };
 
-    return coincideRol && coincideBusqueda;
-  });
+    cargarUsuarios();
+  }, [actualizar]);
+
+  const textoBusqueda =
+    busqueda.toLocaleLowerCase().trim();
+
+  const usuariosFiltrados =
+    usuarios.filter((usuario) => {
+      const rolMostrar =
+        usuario.rol === "admin"
+          ? "Administrador"
+          : usuario.rol === "vendedor"
+            ? "Vendedor"
+            : usuario.rol === "inventario"
+              ? "Inventario"
+              : "Consulta";
+
+      const coincideRol =
+        filtro === "Todos" ||
+        rolMostrar === filtro;
+
+      const coincideBusqueda =
+        usuario.nombre
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        usuario.correo
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        (usuario.codigoEmpleado ?? "")
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        (usuario.ciudad ?? "")
+          .toLocaleLowerCase()
+          .includes(textoBusqueda) ||
+        (usuario.celular ?? "")
+          .toLocaleLowerCase()
+          .includes(textoBusqueda);
+
+      return coincideRol && coincideBusqueda;
+    });
+
+  if (cargando) {
+    return (
+      <section className="tabla-empleados-wrapper">
+        <div className="tabla-empleados-contenedor">
+          <p className="empleados-sin-resultados">
+            Cargando empleados...
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="tabla-empleados-wrapper">
+        <div className="tabla-empleados-contenedor">
+          <p className="empleados-sin-resultados">
+            {error}
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="tabla-empleados-wrapper">
@@ -101,25 +134,65 @@ const TablaEmpleados = ({ filtro, busqueda }: TablaEmpleadosProps) => {
           </thead>
 
           <tbody>
-            {empleadosFiltrados.map((Empleado) => {
-              const iniciales = Empleado.empleado
-                .split(" ")
-                .slice(0, 2)
-                .map((nombre) => nombre[0])
-                .join("");
+            {usuariosFiltrados.map((usuario) => {
+              const iniciales =
+                usuario.nombre
+                  .split(" ")
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((nombre) => nombre[0])
+                  .join("")
+                  .toUpperCase();
+
+              const rolMostrar =
+                usuario.rol === "admin"
+                  ? "Administrador"
+                  : usuario.rol === "vendedor"
+                    ? "Vendedor"
+                    : usuario.rol === "inventario"
+                      ? "Inventario"
+                      : "Consulta";
+
+              const estadoMostrar =
+                usuario.estado === "activo"
+                  ? "Activo"
+                  : "Inactivo";
+
+              const codigoEmpleado =
+                usuario.codigoEmpleado || "—";
+
+              const fechaIngreso =
+                usuario.fechaIngreso
+                  ? new Date(
+                      usuario.fechaIngreso,
+                    ).toLocaleDateString(
+                      "es-CO",
+                      {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      },
+                    )
+                  : "—";
 
               return (
-                <tr key={Empleado.id}>
+                <tr
+                  key={usuario.idUsuario}
+                >
                   <td className="empleado-info">
                     <div className="empleado-contenido">
-                      <div className="empleado-avatar">{iniciales}</div>
+                      <div className="empleado-avatar">
+                        {iniciales}
+                      </div>
 
                       <div className="empleado-datos">
                         <span className="empleado-nombre">
-                          {Empleado.empleado}
+                          {usuario.nombre}
                         </span>
 
-                        <span className="empleado-id">{Empleado.id}</span>
+                        <span className="empleado-id">
+                          {codigoEmpleado}
+                        </span>
                       </div>
                     </div>
                   </td>
@@ -127,55 +200,70 @@ const TablaEmpleados = ({ filtro, busqueda }: TablaEmpleadosProps) => {
                   <td className="contacto-empleado-info">
                     <div className="contacto-empleado-datos">
                       <span className="contacto-empleado-correo">
-                        {Empleado.correo}
+                        {usuario.correo}
                       </span>
 
                       <span className="contacto-empleado-telefono">
-                        {Empleado.telefono}
+                        {usuario.celular || "—"}
                       </span>
                     </div>
                   </td>
 
-                  <td className="ciudad-empleado-info">{Empleado.ciudad}</td>
+                  <td className="ciudad-empleado-info">
+                    {usuario.ciudad || "—"}
+                  </td>
 
                   <td className="rol-empleado-info">
                     <span
                       className={
-                        Empleado.rol === "Vendedor"
+                        usuario.rol === "vendedor"
                           ? "rol-vendedor"
-                          : "rol-cajero"
+                          : usuario.rol === "inventario"
+                            ? "rol-cajero"
+                            : "rol-vendedor"
                       }
                     >
-                      {Empleado.rol}
+                      {rolMostrar}
                     </span>
                   </td>
 
                   <td className="estado-empleado-info">
                     <span
                       className={
-                        Empleado.estado === "Activo"
+                        usuario.estado === "activo"
                           ? "estado-activo"
                           : "estado-inactivo"
                       }
                     >
-                      {Empleado.estado}
+                      {estadoMostrar}
                     </span>
                   </td>
 
                   <td className="fecha-empleado-info">
-                    {Empleado.fecha_ingreso}
+                    {fechaIngreso}
                   </td>
 
                   <td className="editar-empleado-info">
-                    <button className="boton-editar-empleado">Editar</button>
+                    <button
+                      type="button"
+                      className="boton-editar-empleado"
+                      onClick={() =>
+                        setEmpleadoEditar(usuario)
+                      }
+                    >
+                      Editar
+                    </button>
                   </td>
                 </tr>
               );
             })}
 
-            {empleadosFiltrados.length === 0 && (
+            {usuariosFiltrados.length === 0 && (
               <tr>
-                <td colSpan={7} className="empleados-sin-resultados">
+                <td
+                  colSpan={7}
+                  className="empleados-sin-resultados"
+                >
                   No se encontraron empleados.
                 </td>
               </tr>
@@ -183,6 +271,31 @@ const TablaEmpleados = ({ filtro, busqueda }: TablaEmpleadosProps) => {
           </tbody>
         </table>
       </div>
+
+      {empleadoEditar && (
+        <ModalEditarEmpleados
+          usuario={empleadoEditar}
+          onCerrar={() =>
+            setEmpleadoEditar(null)
+          }
+          onActualizado={(usuarioActualizado) => {
+            setUsuarios(
+              (usuariosActuales) =>
+                usuariosActuales.map(
+                  (usuario) =>
+                    usuario.idUsuario ===
+                    usuarioActualizado.idUsuario
+                      ? usuarioActualizado
+                      : usuario,
+                ),
+            );
+
+            setEmpleadoEditar(null);
+
+            onEmpleadoActualizado();
+          }}
+        />
+      )}
     </section>
   );
 };

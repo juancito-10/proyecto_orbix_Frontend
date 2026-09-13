@@ -8,28 +8,51 @@ import "./EmpleadosAdmin.css";
 import CardsEmpleados from "../../../components/dashboardAdmin/EmpleadosAdmin/CardsEmpleados";
 import FiltrosEmpleados from "../../../components/dashboardAdmin/EmpleadosAdmin/FiltrosEmpleados";
 import TablaEmpleados from "../../../components/dashboardAdmin/EmpleadosAdmin/TablaEmpleados";
+import ModalAgregarEmpleados from "../../../components/dashboardAdmin/EmpleadosAdmin/ModalAgregarEmpleados";
 
 const EmpleadosAdmin = () => {
   const [busqueda, setBusqueda] = useState("");
   const [filtro, setFiltro] = useState("Todos");
+
+  const [mostrarModalAgregar, setMostrarModalAgregar] =
+    useState(false);
+
+  const [actualizar, setActualizar] = useState(0);
+
+  const handleEmpleadoAgregado = () => {
+    setMostrarModalAgregar(false);
+
+    setActualizar((valor) => valor + 1);
+  };
+
+  const handleEmpleadoActualizado = () => {
+    setActualizar((valor) => valor + 1);
+  };
 
   return (
     <main className="empleados-main">
       <Sidebar />
 
       <div className="empleados-contenido">
-
-        {/* BARRA SUPERIOR */}
         <div className="empleados-barra-superior">
           <p>
-            <span className="empleados-orbix">Orbix</span> /{" "}
-            <span className="empleados-admin">Admin</span> /{" "}
-            <span className="empleados-titulo">Empleados</span>
+            <span className="empleados-orbix">
+              Orbix
+            </span>{" "}
+            /{" "}
+            <span className="empleados-admin">
+              Admin
+            </span>{" "}
+            /{" "}
+            <span className="empleados-titulo">
+              Empleados
+            </span>
           </p>
 
           <div className="empleados-acciones-superiores">
             <form className="empleados-buscar">
               <Search size={20} />
+
               <input
                 type="text"
                 placeholder="Buscar..."
@@ -46,7 +69,6 @@ const EmpleadosAdmin = () => {
           </div>
         </div>
 
-        {/* ENCABEZADO */}
         <div className="empleados-encabezado">
           <div>
             <h2>Empleados</h2>
@@ -56,16 +78,22 @@ const EmpleadosAdmin = () => {
             </p>
           </div>
 
-          <button className="empleados-button-agregar">
+          <button
+            type="button"
+            className="empleados-button-agregar"
+            onClick={() =>
+              setMostrarModalAgregar(true)
+            }
+          >
             <Plus size={20} />
             Agregar empleado
           </button>
         </div>
 
-        {/* CARDS */}
-        <CardsEmpleados />
+        <CardsEmpleados
+          actualizar={actualizar}
+        />
 
-        {/* FILTROS */}
         <FiltrosEmpleados
           busqueda={busqueda}
           filtro={filtro}
@@ -73,13 +101,24 @@ const EmpleadosAdmin = () => {
           onFiltroChange={setFiltro}
         />
 
-        {/* TABLA */}
         <TablaEmpleados
           busqueda={busqueda}
           filtro={filtro}
+          actualizar={actualizar}
+          onEmpleadoActualizado={
+            handleEmpleadoActualizado
+          }
         />
-
       </div>
+
+      {mostrarModalAgregar && (
+        <ModalAgregarEmpleados
+          onCerrar={() =>
+            setMostrarModalAgregar(false)
+          }
+          onAgregado={handleEmpleadoAgregado}
+        />
+      )}
     </main>
   );
 };
