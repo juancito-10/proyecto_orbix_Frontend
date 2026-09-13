@@ -221,8 +221,6 @@ const InventarioAdmin = () => {
             onEliminar={solicitarEliminar}
           />
         )}
-      </div>
-
       {/* MODAL AGREGAR / EDITAR */}
       {mostrarModal && (
         <ModalAgregarProducto
@@ -249,8 +247,9 @@ const InventarioAdmin = () => {
           onCerrar={() => setNotificacion("")}
         />
       )}
-    </main>
+    </>
   );
 };
 
 export default InventarioAdmin;
+

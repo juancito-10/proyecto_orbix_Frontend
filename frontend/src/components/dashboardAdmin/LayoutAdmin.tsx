@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, Bell } from 'lucide-react';
 import Sidebar from './Sidebar';
@@ -17,10 +16,10 @@ const LayoutAdmin = () => {
   const capitalizedSection = section.charAt(0).toUpperCase() + section.slice(1);
 
   return (
-    <main className={dashboard-main } style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f0f4f8' }}>
+    <main className={`dashboard-main ${isSidebarPinned ? 'sidebar-pinned' : 'sidebar-unpinned'}`} style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f0f4f8' }}>
       <Sidebar isPinned={isSidebarPinned} onTogglePin={() => setIsSidebarPinned(!isSidebarPinned)} />
 
-      <div className="dashboard-contenido" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, padding: 0 }}>
+      <div className="layout-admin-contenido" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, padding: 0 }}>
         {/* BARRA SUPERIOR */}
         <div className="dashboard-barra-superior" style={{ padding: '0 28px', height: '56px', borderBottom: '1px solid #e2e8f0', background: 'rgba(240, 244, 248, 0.85)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 10 }}>
           <p style={{ margin: 0, fontSize: '13px', color: '#64748b', fontWeight: 500 }}>

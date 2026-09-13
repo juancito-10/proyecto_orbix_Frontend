@@ -3,16 +3,18 @@ import { Bell } from "lucide-react";
 import Sidebar from "./Sidebar";
 import BuscadorGlobal from "./BuscadorGlobal";
 import ProfileDropdown from "../ProfileDropdown";
+import { Outlet, useLocation } from "react-router-dom";
 
 import "./VendedorLayout.css";
 
-type VendedorLayoutProps = {
-  vista: string;
-  children: React.ReactNode;
-};
-
-const VendedorLayout = ({ vista, children }: VendedorLayoutProps) => {
+const VendedorLayout = () => {
   const [isSidebarPinned, setIsSidebarPinned] = useState(true);
+  const location = useLocation();
+
+  let vista = "Mi Dashboard";
+  if (location.pathname.includes("productos")) vista = "Productos";
+  else if (location.pathname.includes("clientes")) vista = "Mis Clientes";
+  else if (location.pathname.includes("ventas")) vista = "Mis Ventas";
 
   return (
     <main className={`vendedor-app ${isSidebarPinned ? 'sidebar-pinned' : 'sidebar-unpinned'}`}>
@@ -47,7 +49,7 @@ const VendedorLayout = ({ vista, children }: VendedorLayoutProps) => {
         </header>
 
         {/* Contenido de la vista */}
-        <main className="vendedor-main">{children}</main>
+        <main className="vendedor-main"><Outlet /></main>
       </div>
     </main>
   );

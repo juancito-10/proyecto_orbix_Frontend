@@ -151,8 +151,6 @@ const ClientesAdmin = () => {
           busqueda={busqueda}
         />
 
-      </div>
-
       {/* MODAL */}
 
       <NuevoClienteModal
@@ -163,7 +161,9 @@ const ClientesAdmin = () => {
         error={error}
       />
 
-    </main>
+    </>
   );
 };
 export default ClientesAdmin;
+
+

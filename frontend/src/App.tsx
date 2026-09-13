@@ -19,6 +19,7 @@ import VendedorProductos from "./pages/Vendedor/VendedorProductos";
 import VendedorClientes from "./pages/Vendedor/VendedorClientes";
 
 import VendedorVentas from "./pages/Vendedor/VendedorVentas";
+import VendedorLayout from "./components/dashboardCajero/VendedorLayout";
 
 import DashboardInventario from "./pages/DashboardInventario/DashboardInventario";
 import LayoutInventario from "./components/dashboardInventario/LayoutInventario";
@@ -60,9 +61,7 @@ function App() {
         <Route
           element={
             <ProtectedRoute roles={["vendedor"]}>
-              <VendedorDataProvider>
-                <Outlet />
-              </VendedorDataProvider>
+              <VendedorDataProvider><VendedorLayout /></VendedorDataProvider>
             </ProtectedRoute>
           }
         >
@@ -103,5 +102,6 @@ function App() {
 }
 
 export default App;
+
 
 
