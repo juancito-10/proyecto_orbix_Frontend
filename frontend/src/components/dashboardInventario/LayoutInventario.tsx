@@ -8,7 +8,7 @@ import ProfileDropdown from "../ProfileDropdown";
 
 const LayoutInventario = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isSidebarPinned, setIsSidebarPinned] = useState(false);
+  const [isSidebarPinned, setIsSidebarPinned] = useState(true);
 
   return (
     <main className="main-inv">
