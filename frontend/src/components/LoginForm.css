@@ -229,18 +229,42 @@
 
 /* OLVIDASTE CONTRASEÑA */
 
-.forgot-password {
+.forgot-password-orbix {
   align-self: center;
+
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
 
   color: #087c9c;
 
+  font-family: inherit;
+
   font-size: 13px;
 
+  font-weight: 600;
+
+  cursor: pointer;
+
   text-decoration: none;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
-.forgot-password:hover {
+.forgot-password-orbix:hover {
+  color: #066b87;
+
   text-decoration: underline;
+
+  transform: translateY(-1px);
+}
+
+.forgot-password-orbix:active {
+  transform: translateY(0);
 }
 
 /* RECAPTCHA */

@@ -172,7 +172,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
 
             <button
               type="button"
-              className="forgot-password"
+              className="forgot-password-orbix"
               onClick={() => navigate("/forgot-password")}
             >
               ¿Olvidaste la contraseña?
