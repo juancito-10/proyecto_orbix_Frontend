@@ -3,6 +3,7 @@ const BASE_URL = "http://localhost:3000/api/v1";
 export interface CrearUsuario {
   nombre: string;
   correo: string;
+  correoPersonal?: string;
   password: string;
 
   codigoEmpleado?: string;
@@ -24,6 +25,7 @@ export interface CrearUsuario {
 export interface EditarUsuario {
   nombre?: string;
   correo?: string;
+  correoPersonal?: string;
   password?: string;
 
   codigoEmpleado?: string;
@@ -46,15 +48,19 @@ export interface Usuario {
   idUsuario: string;
   nombre: string;
   correo: string;
+  correoPersonal?: string;
+
   codigoEmpleado?: string;
   celular?: string;
   ciudad?: string;
   fechaIngreso?: string;
+
   rol:
     | "admin"
     | "vendedor"
     | "inventario"
     | "consulta";
+
   estado:
     | "activo"
     | "inactivo";

@@ -17,6 +17,7 @@ const ModalAgregarEmpleados = ({
 }: ModalAgregarEmpleadosProps) => {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
+  const [correoPersonal, setCorreoPersonal] = useState("");
   const [celular, setCelular] = useState("");
   const [ciudad, setCiudad] = useState("");
   const [fechaIngreso, setFechaIngreso] = useState("");
@@ -42,6 +43,8 @@ const ModalAgregarEmpleados = ({
         await usuariosService.crearUsuario({
           nombre,
           correo,
+          correoPersonal:
+            correoPersonal || undefined,
           celular: celular || undefined,
           ciudad: ciudad || undefined,
           fechaIngreso: fechaIngreso || undefined,
@@ -112,9 +115,9 @@ const ModalAgregarEmpleados = ({
             />
           </div>
 
-          <div className="campo-agregar campo-completo-agregar">
+          <div className="campo-agregar">
             <label htmlFor="correoEmpleadoAgregar">
-              Correo electrónico
+              Correo de inicio de sesión
             </label>
 
             <input
@@ -124,7 +127,24 @@ const ModalAgregarEmpleados = ({
               onChange={(e) =>
                 setCorreo(e.target.value)
               }
-              placeholder="Ingrese el correo electrónico"
+              placeholder="correo@empresa.com"
+              required
+            />
+          </div>
+
+          <div className="campo-agregar">
+            <label htmlFor="correoPersonalEmpleadoAgregar">
+              Correo personal
+            </label>
+
+            <input
+              id="correoPersonalEmpleadoAgregar"
+              type="email"
+              value={correoPersonal}
+              onChange={(e) =>
+                setCorreoPersonal(e.target.value)
+              }
+              placeholder="correo.personal@gmail.com"
               required
             />
           </div>

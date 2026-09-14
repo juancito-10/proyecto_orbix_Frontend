@@ -19,6 +19,7 @@ const ModalEditarEmpleados = ({
   const [codigoEmpleado, setCodigoEmpleado] = useState("");
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
+  const [correoPersonal, setCorreoPersonal] = useState("");
   const [celular, setCelular] = useState("");
   const [ciudad, setCiudad] = useState("");
   const [fechaIngreso, setFechaIngreso] = useState("");
@@ -29,11 +30,11 @@ const ModalEditarEmpleados = ({
   const [error, setError] = useState("");
 
   // Cargar los datos del empleado
-
   useEffect(() => {
     setCodigoEmpleado(usuario.codigoEmpleado || "");
     setNombre(usuario.nombre || "");
     setCorreo(usuario.correo || "");
+    setCorreoPersonal(usuario.correoPersonal || "");
     setCelular(usuario.celular || "");
     setCiudad(usuario.ciudad || "");
 
@@ -53,7 +54,6 @@ const ModalEditarEmpleados = ({
   }, [usuario]);
 
   // Guardar cambios
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -68,6 +68,7 @@ const ModalEditarEmpleados = ({
             codigoEmpleado,
             nombre,
             correo,
+            correoPersonal,
             celular,
             ciudad,
             fechaIngreso: fechaIngreso || undefined,
@@ -162,7 +163,7 @@ const ModalEditarEmpleados = ({
             />
           </div>
 
-          {/* Correo */}
+          {/* Correo de inicio de sesión */}
 
           <div className="campo-editar campo-completo">
             <label htmlFor="correoEmpleado">
@@ -177,6 +178,25 @@ const ModalEditarEmpleados = ({
                 setCorreo(e.target.value)
               }
               placeholder="Ingrese el correo electrónico"
+              required
+            />
+          </div>
+
+          {/* Correo personal */}
+
+          <div className="campo-editar campo-completo">
+            <label htmlFor="correoPersonalEmpleado">
+              Correo personal
+            </label>
+
+            <input
+              id="correoPersonalEmpleado"
+              type="email"
+              value={correoPersonal}
+              onChange={(e) =>
+                setCorreoPersonal(e.target.value)
+              }
+              placeholder="Ingrese el correo personal"
               required
             />
           </div>
