@@ -30,6 +30,8 @@ import ClientesAdmin from "./pages/DashboardAdmin/ClientesAdmin/ClientesAdmin";
 import ProvedoresAdmin from "./pages/DashboardAdmin/ProvedoresAdmin/ProvedoresAdmin";
 import ReportesAdmin from "./pages/DashboardAdmin/ReportesAdmin/ReportesAdmin";
 import EmpleadosAdmin from "./pages/DashboardAdmin/EmpleadosAdmin/EmpleadosAdmin";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword/ResetPassword";
 
 function App() {
   return (
@@ -121,7 +123,10 @@ function App() {
             path="/dashboard/vendedor/clientes"
             element={<VendedorClientes />}
           />
-          <Route path="/dashboard/vendedor/ventas" element={<VendedorVentas />} />
+          <Route
+            path="/dashboard/vendedor/ventas"
+            element={<VendedorVentas />}
+          />
         </Route>
 
         {/* Dashboards para el inventario*/}
@@ -139,6 +144,12 @@ function App() {
           <Route path="productos" element={<ProductosInventario />} />
           <Route path="movimientos" element={<MovimientosInventario />} />
         </Route>
+
+        {/* Recuperación de contraseña */}
+
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Ruta no encontrada */}
 

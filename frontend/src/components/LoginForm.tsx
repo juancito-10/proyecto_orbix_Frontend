@@ -170,9 +170,13 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
               {cargando ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
 
-            <a href="#" className="forgot-password">
+            <button
+              type="button"
+              className="forgot-password"
+              onClick={() => navigate("/forgot-password")}
+            >
               ¿Olvidaste la contraseña?
-            </a>
+            </button>
           </form>
         </div>
       </div>
