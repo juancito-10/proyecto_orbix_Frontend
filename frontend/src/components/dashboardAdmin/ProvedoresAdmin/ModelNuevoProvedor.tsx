@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./ModelNuevoProvedor.css";
+import "./ModelNuevoprovedor.css";
 import proveedoresService from "../../../services/proveedores.services";
 
 interface NuevoProveedorProps {

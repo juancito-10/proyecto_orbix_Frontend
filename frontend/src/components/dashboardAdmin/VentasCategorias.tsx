@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ventasService from "../../services/ventas.services";
 import productosService from "../../services/productos.services";
 
-import "./ventasCategorias.css";
+import "./VentasCategorias.css";
 
 type DatoCategoria = {
   nombre: string;
