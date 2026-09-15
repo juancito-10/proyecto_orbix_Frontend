@@ -1,3 +1,4 @@
+﻿import ProfileDropdown from "../../../components/ProfileDropdown";
 import { Search, Bell, Plus } from "lucide-react";
 
 import "./ProvedoresAdmin.css";
@@ -37,7 +38,7 @@ const ProvedoresAdmin = () => {
               <Bell size={20} />
             </div>
 
-            <div className="provedores-usuario">VO</div>
+            <ProfileDropdown />
           </div>
         </div>
 
@@ -79,3 +80,4 @@ const ProvedoresAdmin = () => {
 };
 
 export default ProvedoresAdmin;
+

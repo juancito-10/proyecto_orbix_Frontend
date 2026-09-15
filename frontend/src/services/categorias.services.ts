@@ -6,7 +6,7 @@ export type Categoria = {
   descripcion?: string | null;
 };
 
-type RespuestaApi = {
+export type RespuestaApi = {
   success: boolean;
   data: Categoria[];
 };

@@ -11,7 +11,7 @@ export type Proveedor = {
   estado?: string;
 };
 
-type RespuestaApi = {
+export type RespuestaApi = {
   success: boolean;
   data: Proveedor[];
 };

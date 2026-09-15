@@ -1,3 +1,4 @@
+﻿import ProfileDropdown from "../../../components/ProfileDropdown";
 import { Search, Bell } from "lucide-react";
 import { useState } from "react";
 
@@ -53,7 +54,7 @@ const ReportesAdmin = () => {
               <Bell size={20} />
             </div>
 
-            <div className="reportes-usuario">VO</div>
+            <ProfileDropdown />
           </div>
         </div>
 
@@ -68,7 +69,7 @@ const ReportesAdmin = () => {
                 <h2>Reportes</h2>
 
                 <p className="reportes-fecha">
-                  Análisis y métricas del negocio · Período:{" "}
+                  AnÃ¡lisis y mÃ©tricas del negocio Â· PerÃ­odo:{" "}
                   {new Date().toLocaleDateString("es-CO", {
                     month: "long",
                     year: "numeric",
@@ -139,3 +140,5 @@ const ReportesAdmin = () => {
 };
 
 export default ReportesAdmin;
+
+

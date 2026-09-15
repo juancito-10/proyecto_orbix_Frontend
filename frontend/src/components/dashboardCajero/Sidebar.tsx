@@ -1,8 +1,13 @@
-import { LayoutGrid, ShoppingBag, Users, Receipt, Target } from "lucide-react";
+import { LayoutGrid, ShoppingBag, Users, Receipt, Pin, PinOff } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import LogoutButton from "../LogoutButton";
+import { useState } from "react";
 
 import "./Sidebar.css";
+
+interface SidebarProps {
+  isPinned?: boolean;
+  onTogglePin?: () => void;
+}
 
 const ITEMS = [
   { path: "/dashboard/vendedor", label: "Mi Dashboard", icon: LayoutGrid },
@@ -11,77 +16,62 @@ const ITEMS = [
   { path: "/dashboard/vendedor/ventas", label: "Mis Ventas", icon: Receipt },
 ];
 
-const obtenerUsuario = () => {
-  try {
-    const usuarioGuardado = localStorage.getItem("usuario");
-
-    if (!usuarioGuardado) {
-      return { nombre: "Vendedor", iniciales: "VD" };
-    }
-
-    const usuario = JSON.parse(usuarioGuardado);
-
-    const nombre: string = usuario?.nombre ?? "Vendedor";
-
-    const iniciales = nombre
-      .trim()
-      .split(/\s+/)
-      .map((palabra: string) => palabra[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-
-    return {
-      nombre,
-      iniciales: iniciales || "VD",
-    };
-  } catch {
-    return { nombre: "Vendedor", iniciales: "VD" };
-  }
-};
-
-const Sidebar = () => {
+const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
   const { pathname } = useLocation();
-  const { nombre, iniciales } = obtenerUsuario();
+  const [internalPinned, setInternalPinned] = useState(false);
+
+  const isPinned = propIsPinned !== undefined ? propIsPinned : internalPinned;
+
+  const handleTogglePin = () => {
+    if (onTogglePin) onTogglePin();
+    else setInternalPinned(!internalPinned);
+  };
 
   return (
-    <aside className="vendedor-sidebar">
-      {/* Logo */}
-      <div className="vendedor-sidebar-top">
-        <div className="vendedor-logo">
-          <div className="vendedor-logo-icono">
-            <Target size={18} />
+    <aside className={`vendedor-sidebar ${isPinned ? 'sidebar-pinned' : 'sidebar-unpinned'}`}>
+      {/* Header */}
+      <div className="vendedor-sidebar-header">
+        <div className="logo-container">
+          <div className="logo-icon">
+            <span className="logo-inner-circle"></span>
           </div>
-          <span className="vendedor-logo-nombre">Orbix</span>
+          <h2 className="siti">Orbix</h2>
         </div>
-
-        <span className="vendedor-badge-rol">Vendedor</span>
+        <div className="vendedor-sidebar-badge">Ventas</div>
       </div>
 
-      {/* Navegación */}
-      <p className="vendedor-nav-label">MENÚ</p>
-      <nav className="vendedor-nav">
-        {ITEMS.map(({ path, label, icon: Icon }) => {
-          const activo = pathname === path;
+      {/* Nav */}
+      <nav className="vendedor-sidebar-nav">
+        <p className="vendedor-sidebar-nav-title">MENU</p>
+        
+        {ITEMS.map((item) => {
+          const isActive = pathname === item.path || (item.path !== "/dashboard/vendedor" && pathname.startsWith(item.path));
+          const Icon = item.icon;
+
           return (
-            <Link key={path} to={path} className={activo ? "activo" : ""}>
-              <Icon size={18} />
-              <span>{label}</span>
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`vendedor-sidebar-item ${isActive ? "activo" : ""}`}
+            >
+              <Icon size={20} />
+              <span>{item.label}</span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Pie: usuario + cerrar perfil */}
+      {/* Footer (Logout) */}
       <div className="vendedor-sidebar-footer">
-        <div className="vendedor-usuario-info">
-          <div className="vendedor-avatar">{iniciales}</div>
-          <div className="vendedor-usuario-texto">
-            <strong>{nombre}</strong>
-            <span>Vendedor</span>
-          </div>
-        </div>
-        <LogoutButton />
+        <button 
+          className="btn-cambiar-perfil toggle-pin-btn" 
+          onClick={handleTogglePin}
+          title={isPinned ? "Desanclar barra" : "Anclar barra"}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", width: "100%", marginBottom: "10px" }}
+        >
+          {isPinned ? <PinOff size={18} /> : <Pin size={18} />}
+          <span>{isPinned ? "Desanclar" : "Anclar barra"}</span>
+        </button>
       </div>
     </aside>
   );

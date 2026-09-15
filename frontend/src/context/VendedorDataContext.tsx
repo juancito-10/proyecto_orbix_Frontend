@@ -7,9 +7,9 @@ import {
   type ReactNode,
 } from "react";
 import {
-  clientesVendedor,
-  productosVendedor,
-  ventasVendedor,
+  
+  
+  
   type ClienteVendedor,
   type ProductoVendedor,
   type VentaVendedor,

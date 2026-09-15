@@ -1,9 +1,22 @@
+const fs = require('fs');
 
-.vendedor-sidebar {
+function generateCSS(prefix, bg, activeBg, activeText, textColor) {
+  const cls = {
+    sidebar: prefix === 'vendedor' ? '.vendedor-sidebar' : prefix === 'admin' ? '.sidebar' : '.sidebar-inventario',
+    top: prefix === 'vendedor' ? '.vendedor-sidebar-top' : prefix === 'admin' ? '.sidebar-titulo' : '.sidebar-titulo-inv',
+    nav: prefix === 'vendedor' ? '.vendedor-nav' : prefix === 'admin' ? '.navegacion' : '.navegacion-inv',
+    navLabel: prefix === 'vendedor' ? '.vendedor-nav-label' : prefix === 'admin' ? '.navp' : '.navp-inv',
+    siti: prefix === 'vendedor' ? '.vendedor-logo-nombre' : prefix === 'admin' ? '.siti' : '.siti-inv',
+    logo: prefix === 'vendedor' ? '.vendedor-logo' : prefix === 'admin' ? '.logo-container' : '.logo-container',
+    footer: prefix === 'vendedor' ? '.vendedor-sidebar-footer' : prefix === 'admin' ? '.sidebar-footer-inv' : '.sidebar-footer-inv'
+  };
+  
+  return `
+${cls.sidebar} {
   width: 240px;
   height: 100vh;
-  background-color: #0a1628;
-  color: rgba(203, 213, 225, 0.7);
+  background-color: ${bg};
+  color: ${textColor};
   position: sticky;
   top: 0;
   flex-shrink: 0;
@@ -14,7 +27,7 @@
   z-index: 50;
 }
 
-.vendedor-sidebar-top {
+${cls.top} {
   padding: 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   display: flex;
@@ -22,13 +35,13 @@
   justify-content: space-between;
 }
 
-.vendedor-logo {
+${cls.logo} {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.vendedor-logo-nombre {
+${cls.siti} {
   font-family: "Outfit", sans-serif;
   font-weight: 700;
   font-size: 19px;
@@ -37,7 +50,7 @@
   margin: 0;
 }
 
-.vendedor-nav {
+${cls.nav} {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -45,7 +58,7 @@
   flex: 1;
 }
 
-.vendedor-nav-label {
+${cls.navLabel} {
   padding: 16px 12px 6px;
   margin: 0;
   font-family: "Outfit", sans-serif;
@@ -56,7 +69,7 @@
   text-transform: uppercase;
 }
 
-.vendedor-nav a {
+${cls.nav} a {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -65,46 +78,46 @@
   text-decoration: none;
   font-family: "Source Sans 3", sans-serif;
   font-size: 15px;
-  color: rgba(203, 213, 225, 0.7);
+  color: ${textColor};
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.vendedor-nav a span {
+${cls.nav} a span {
   white-space: nowrap;
 }
 
-.vendedor-nav a:hover {
+${cls.nav} a:hover {
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.vendedor-nav a.activo, .vendedor-nav a.active {
-  background-color: rgba(139, 92, 246, 0.18);
-  color: #c4b5fd;
+${cls.nav} a.activo, ${cls.nav} a.active {
+  background-color: ${activeBg};
+  color: ${activeText};
   font-weight: 600;
 }
 
 /* Pin/Unpin behavior for Sidebar */
-.vendedor-sidebar.unpinned {
+${cls.sidebar}.unpinned {
   width: 76px;
 }
-.vendedor-sidebar.unpinned .vendedor-logo-nombre,
-.vendedor-sidebar.unpinned .vendedor-nav-label,
-.vendedor-sidebar.unpinned .vendedor-nav a span,
-.vendedor-sidebar.unpinned .vendedor-sidebar-footer span,
-.vendedor-sidebar.unpinned .badge-inventario {
+${cls.sidebar}.unpinned ${cls.siti},
+${cls.sidebar}.unpinned ${cls.navLabel},
+${cls.sidebar}.unpinned ${cls.nav} a span,
+${cls.sidebar}.unpinned ${cls.footer} span,
+${cls.sidebar}.unpinned .badge-inventario {
   display: none;
 }
 
-.vendedor-sidebar.unpinned:hover {
+${cls.sidebar}.unpinned:hover {
   width: 240px; 
   z-index: 999;
 }
 
-.vendedor-sidebar.unpinned:hover .vendedor-logo-nombre,
-.vendedor-sidebar.unpinned:hover .vendedor-nav-label,
-.vendedor-sidebar.unpinned:hover .vendedor-nav a span,
-.vendedor-sidebar.unpinned:hover .vendedor-sidebar-footer span,
-.vendedor-sidebar.unpinned:hover .badge-inventario {
+${cls.sidebar}.unpinned:hover ${cls.siti},
+${cls.sidebar}.unpinned:hover ${cls.navLabel},
+${cls.sidebar}.unpinned:hover ${cls.nav} a span,
+${cls.sidebar}.unpinned:hover ${cls.footer} span,
+${cls.sidebar}.unpinned:hover .badge-inventario {
   display: block;
 }
 
@@ -125,8 +138,8 @@
   color: #ffffff;
 }
 
-/* El logo "O" (icono) adopta el color del rol */
-.vendedor-logo-icono, .logo-icon {
+/* Elementos especificos preservados para no romper los disenios particulares */
+.vendedor-logo-icono {
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -136,15 +149,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-weight: bold;
 }
-.logo-inner-circle {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid white;
-}
-.vendedor-badge-rol, .badge-inventario {
+.vendedor-badge-rol {
   display: inline-block;
   margin-top: 10px;
   font-size: 11px;
@@ -154,10 +160,8 @@
   border-radius: 99px;
   background-color: rgba(139, 92, 246, 0.18);
   color: #c4b5fd;
-  margin-left: 10px;
 }
-
-.vendedor-sidebar-footer {
+${cls.footer} {
   margin-top: auto;
   padding: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
@@ -219,14 +223,49 @@
   color: rgba(203, 213, 225, 0.85);
 }
 
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-inner-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.badge-inventario {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-left: 10px;
+  font-weight: 600;
+}
+
 @media (max-width: 992px) {
-  .vendedor-sidebar {
+  ${cls.sidebar} {
     position: fixed;
     transform: translateX(-100%);
     z-index: 1000;
   }
-  .vendedor-sidebar.open {
+  ${cls.sidebar}.open {
     transform: translateX(0);
   }
 }
-  
+  `;
+}
+
+// Write Admin
+fs.writeFileSync('frontend/src/components/dashboardAdmin/Sidebar.css', generateCSS('admin', '#0f172a', 'rgba(56, 189, 248, 0.15)', '#38bdf8', '#94a3b8'));
+// Write Vendedor
+fs.writeFileSync('frontend/src/components/dashboardCajero/Sidebar.css', generateCSS('vendedor', '#1e1b4b', 'rgba(139, 92, 246, 0.18)', '#c4b5fd', 'rgba(203, 213, 225, 0.7)'));
+// Write Inventario
+fs.writeFileSync('frontend/src/components/dashboardInventario/SidebarInventario.css', generateCSS('inventario', '#134e4a', 'rgba(16, 185, 129, 0.15)', '#34d399', '#99f6e4'));
+
+console.log("CSS generado exitosamente!");

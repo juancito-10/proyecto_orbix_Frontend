@@ -1,3 +1,4 @@
+﻿import ProfileDropdown from "../../../components/ProfileDropdown";
 import { useEffect, useState } from "react";
 
 import "./InventarioAdmin.css";
@@ -89,7 +90,7 @@ const InventarioAdmin = () => {
     setProductoEditar(null);
   };
 
-  // PREPARAR ELIMINACIÓN
+  // PREPARAR ELIMINACIÃ“N
   const solicitarEliminar = (idProducto: string) => {
     const producto = productos.find(
       (item) => item.idProducto === idProducto,
@@ -102,7 +103,7 @@ const InventarioAdmin = () => {
     setProductoEliminar(producto);
   };
 
-  // CONFIRMAR ELIMINACIÓN
+  // CONFIRMAR ELIMINACIÃ“N
   const confirmarEliminar = async () => {
     if (!productoEliminar) {
       return;
@@ -183,9 +184,7 @@ const InventarioAdmin = () => {
               <Bell size={20} />
             </div>
 
-            <div className="inventario-usuario">
-              VO
-            </div>
+            <ProfileDropdown />
           </div>
         </div>
 
@@ -269,7 +268,7 @@ const InventarioAdmin = () => {
         />
       )}
 
-      {/* CONFIRMACIÓN DE ELIMINACIÓN */}
+      {/* CONFIRMACIÃ“N DE ELIMINACIÃ“N */}
       {productoEliminar && (
         <ConfirmarEliminacion
           nombreProducto={productoEliminar.nombre}
@@ -278,7 +277,7 @@ const InventarioAdmin = () => {
         />
       )}
 
-      {/* NOTIFICACIÓN */}
+      {/* NOTIFICACIÃ“N */}
       {notificacion && (
         <Notificacion
           mensaje={notificacion}
@@ -290,3 +289,4 @@ const InventarioAdmin = () => {
 };
 
 export default InventarioAdmin;
+

@@ -1,3 +1,4 @@
+﻿import ProfileDropdown from "../../components/ProfileDropdown";
 import Sidebar from "../../components/dashboardAdmin/Sidebar";
 
 import CarsDatos from "../../components/dashboardAdmin/CarsDatos";
@@ -39,7 +40,7 @@ const DashboardAdmin = () => {
               <Bell size={20} />
             </div>
 
-            <div className="dashboard-usuario">VO</div>
+            <ProfileDropdown />
           </div>
         </div>
 
@@ -77,3 +78,5 @@ const DashboardAdmin = () => {
 };
 
 export default DashboardAdmin;
+
+

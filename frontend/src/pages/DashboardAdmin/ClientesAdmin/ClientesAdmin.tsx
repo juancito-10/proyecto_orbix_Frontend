@@ -1,3 +1,4 @@
+﻿import ProfileDropdown from "../../../components/ProfileDropdown";
 import { Search, Bell, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -114,9 +115,7 @@ const ClientesAdmin = () => {
               <Bell size={20} />
             </div>
 
-            <div className="clientes-usuario">
-              VO
-            </div>
+            <ProfileDropdown />
 
           </div>
 
@@ -173,3 +172,5 @@ const ClientesAdmin = () => {
   );
 };
 export default ClientesAdmin;
+
+
