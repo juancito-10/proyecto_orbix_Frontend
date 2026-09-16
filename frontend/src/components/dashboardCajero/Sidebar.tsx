@@ -30,7 +30,7 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
   return (
     <aside className={`vendedor-sidebar ${isPinned ? 'pinned' : 'unpinned'}`}>
       {/* Header */}
-      <div className="vendedor-sidebar-header">
+      <div className="vendedor-sidebar-top">
         <div className="logo-container">
           <div className="logo-icon-orbix">O</div>
           <h2 className="siti">Orbix</h2>
@@ -39,8 +39,8 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
       </div>
 
       {/* Nav */}
-      <nav className="vendedor-sidebar-nav">
-        <p className="vendedor-sidebar-nav-title">MENU</p>
+      <nav className="vendedor-nav">
+        <p className="vendedor-nav-label">MENU</p>
         
         {ITEMS.map((item) => {
           const isActive = pathname === item.path || (item.path !== "/dashboard/vendedor" && pathname.startsWith(item.path));
@@ -50,7 +50,7 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
             <Link
               key={item.path}
               to={item.path}
-              className={`vendedor-sidebar-item ${isActive ? "activo" : ""}`}
+              className={isActive ? "activo" : ""}
             >
               <Icon size={20} />
               <span>{item.label}</span>
@@ -76,6 +76,8 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
 };
 
 export default Sidebar;
+
+
 
 
 

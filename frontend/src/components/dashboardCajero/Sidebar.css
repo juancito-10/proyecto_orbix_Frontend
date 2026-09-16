@@ -233,7 +233,7 @@
   .sidebar, .vendedor-sidebar {
     width: 60px !important;
   }
-  .siti, .navp, .vendedor-sidebar-nav-title, .navegacion a span, .vendedor-sidebar-item span, .sidebar-footer-inv span, .badge-inventario, .badge-ventas {
+  .siti, .navp, .vendedor-nav-label, .navegacion a span, .vendedor-nav a span, .sidebar-footer-inv span, .badge-inventario, .badge-ventas {
     display: none !important;
   }
   .logo-icon {
@@ -244,11 +244,11 @@
     width: 14px;
     height: 14px;
   }
-  .sidebar-titulo, .vendedor-sidebar-header {
+  .sidebar-titulo, .vendedor-sidebar-top {
     padding: 15px 10px !important;
     justify-content: center !important;
   }
-  .navegacion a, .vendedor-sidebar-item {
+  .navegacion a, .vendedor-nav a {
     justify-content: center !important;
     padding: 10px !important;
   }
@@ -259,10 +259,10 @@
 
 @media (max-width: 768px) {
   .vendedor-sidebar { width: 60px !important; }
-  .siti, .vendedor-sidebar-nav-title, .vendedor-sidebar-item span, .badge-ventas, .vendedor-sidebar-footer span { display: none !important; }
+  .siti, .vendedor-nav-label, .vendedor-nav a span, .badge-ventas, .vendedor-sidebar-footer span { display: none !important; }
   .logo-icon-orbix { width: 28px; height: 28px; font-size: 14px; }
-  .vendedor-sidebar-header { padding: 15px 10px !important; justify-content: center !important; }
-  .vendedor-sidebar-item { justify-content: center !important; padding: 10px !important; }
+  .vendedor-sidebar-top { padding: 15px 10px !important; justify-content: center !important; }
+  .vendedor-nav a { justify-content: center !important; padding: 10px !important; }
   .vendedor-sidebar-footer { padding: 10px !important; justify-content: center !important; }
 }
 
@@ -279,5 +279,7 @@
   color: #a78bfa;
   margin-left: 10px;
 }
+
+
 
 
