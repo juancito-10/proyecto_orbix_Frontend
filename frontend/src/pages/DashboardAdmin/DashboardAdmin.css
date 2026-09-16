@@ -1,16 +1,6 @@
-.dashboard-main {
-  min-height: 100vh;
-  background-color: #f0f4f8;
-  display: flow-root;
-}
+﻿.dashboard-main { display: flex; min-height: 100vh; background-color: #f0f4f8; overflow-x: hidden; }
 
-.dashboard-contenido {
-  margin-left: 230px;
-  min-width: 0;
-  min-height: 100vh;
-  margin-top: 18px;
-  padding: 0 40px;
-}
+.dashboard-contenido { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; }
 
 /* BARRA SUPERIOR */
 
@@ -121,7 +111,7 @@
   font-size: 13px;
 }
 
-/* BOTÓN EXPORTAR */
+/* BOTÃ“N EXPORTAR */
 
 .dashboard-button-exportar {
   width: 150px;
@@ -141,7 +131,7 @@
 .dashboard-button-exportar:hover {
   filter: brightness(1.30);
 }
-/* GRÁFICAS */
+/* GRÃFICAS */
 
 .graficas-dashboard {
   display: grid;
@@ -156,4 +146,19 @@
   grid-template-columns: 2fr 1fr;
   gap: 18px;
   align-items: start;
+}
+
+
+@media (max-width: 768px) { .dashboard-contenido, .empleados-contenido, .clientes-contenido, .inventario-contenido, .provedores-contenido, .reportes-contenido, .ventas-contenido { padding: 10px; margin-left: 0 !important; } }
+
+@media (max-width: 768px) {
+  .dashboard-barra-superior, .empleados-barra-superior, .clientes-barra-superior, .inventario-barra-superior, .provedores-barra-superior, .reportes-barra-superior, .ventas-barra-superior {
+    gap: 10px !important;
+  }
+  .dashboard-orbix, .dashboard-admin, .empleados-orbix, .empleados-admin, .clientes-orbix, .clientes-admin, .inventario-orbix, .inventario-admin, .provedores-orbix, .provedores-admin, .reportes-orbix, .reportes-admin, .ventas-orbix, .ventas-admin {
+    display: none !important;
+  }
+  .dashboard-buscar input, .empleados-buscar input, .clientes-buscar input, .inventario-buscar input, .provedores-buscar input, .reportes-buscar input, .ventas-buscar input {
+    width: 120px !important;
+  }
 }

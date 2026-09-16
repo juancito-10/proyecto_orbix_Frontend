@@ -1,4 +1,4 @@
-import {
+﻿import {
   LayoutDashboard,
   Users,
   Building2,
@@ -69,7 +69,7 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
 
   return (
     <aside
-      className={`sidebar ${isPinned ? "sidebar-pinned" : "sidebar-unpinned"}`}
+      className={`sidebar ${isPinned ? "pinned" : "unpinned"}`}
     >
       <div className="sidebar-titulo">
         <div className="logo-container">

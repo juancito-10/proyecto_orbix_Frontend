@@ -1,11 +1,11 @@
-.provedores-main {
+﻿.provedores-main {
   min-height: 100vh;
   background-color: #f0f4f8;
-  display: flow-root;
+  display: flex;
 }
 
 .provedores-contenido {
-  margin-left: 230px;
+  flex: 1;
   min-width: 0;
   min-height: 100vh;
   margin-top: 18px;
@@ -122,7 +122,7 @@
   font-size: 13px;
 }
 
-/* BOTÓN NUEVO PROVEEDOR */
+/* BOTÃ“N NUEVO PROVEEDOR */
 
 .provedores-button-agregar {
   width: 170px;
@@ -141,4 +141,18 @@
 
 .provedores-button-agregar:hover {
   filter: brightness(1.30);
+}
+
+@media (max-width: 768px) { .dashboard-contenido, .empleados-contenido, .clientes-contenido, .inventario-contenido, .provedores-contenido, .reportes-contenido, .ventas-contenido { padding: 10px; margin-left: 0 !important; } }
+
+@media (max-width: 768px) {
+  .dashboard-barra-superior, .empleados-barra-superior, .clientes-barra-superior, .inventario-barra-superior, .provedores-barra-superior, .reportes-barra-superior, .ventas-barra-superior {
+    gap: 10px !important;
+  }
+  .dashboard-orbix, .dashboard-admin, .empleados-orbix, .empleados-admin, .clientes-orbix, .clientes-admin, .inventario-orbix, .inventario-admin, .provedores-orbix, .provedores-admin, .reportes-orbix, .reportes-admin, .ventas-orbix, .ventas-admin {
+    display: none !important;
+  }
+  .dashboard-buscar input, .empleados-buscar input, .clientes-buscar input, .inventario-buscar input, .provedores-buscar input, .reportes-buscar input, .ventas-buscar input {
+    width: 120px !important;
+  }
 }

@@ -229,4 +229,27 @@
     transform: translateX(0);
   }
 }
-  
+  @media (max-width: 768px) {
+  .sidebar, .vendedor-sidebar {
+    width: 60px !important;
+  }
+  .siti, .navp, .vendedor-sidebar-nav-title, .navegacion a span, .vendedor-sidebar-item span, .sidebar-footer-inv span, .badge-inventario, .vendedor-sidebar-badge {
+    display: none !important;
+  }
+  .logo-icon {
+    width: 30px;
+    height: 30px;
+  }
+  .logo-inner-circle {
+    width: 14px;
+    height: 14px;
+  }
+  .sidebar-titulo, .vendedor-sidebar-header {
+    padding: 15px 10px !important;
+    justify-content: center !important;
+  }
+  .navegacion a, .vendedor-sidebar-item {
+    justify-content: center !important;
+    padding: 10px !important;
+  }
+}

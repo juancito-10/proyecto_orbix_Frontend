@@ -320,4 +320,17 @@
   color: var(--muted-foreground);
   border-top: 1px solid var(--border);
   opacity: 0.8;
+}@media (max-width: 768px) {
+  .vendedor-topbar {
+    padding: 0 10px;
+  }
+  .vendedor-buscar input {
+    width: 130px;
+  }
+  .vendedor-breadcrumb-muted, .vendedor-breadcrumb-sep, .vendedor-breadcrumb-rol {
+    display: none;
+  }
+  .vendedor-main {
+    padding: 10px;
+  }
 }
