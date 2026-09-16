@@ -28,16 +28,14 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
   };
 
   return (
-    <aside className={`vendedor-sidebar ${isPinned ? 'sidebar-pinned' : 'sidebar-unpinned'}`}>
+    <aside className={`vendedor-sidebar ${isPinned ? 'pinned' : 'unpinned'}`}>
       {/* Header */}
       <div className="vendedor-sidebar-header">
         <div className="logo-container">
-          <div className="logo-icon">
-            <span className="logo-inner-circle"></span>
-          </div>
+          <div className="logo-icon-orbix">O</div>
           <h2 className="siti">Orbix</h2>
         </div>
-        <div className="vendedor-sidebar-badge">Ventas</div>
+        <div className="badge-ventas">Ventas</div>
       </div>
 
       {/* Nav */}
@@ -78,3 +76,7 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
 };
 
 export default Sidebar;
+
+
+
+

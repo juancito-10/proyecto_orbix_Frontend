@@ -1,11 +1,11 @@
-.main-inv {
+﻿.main-inv {
   min-height: 100vh;
   background-color: #f0f4f8; /* Mismo gris azulado claro del admin */
   display: flex;
 }
 
 .contenido-dashboard-inv {
-  margin-left: 230px; /* Igualar al ancho del Sidebar de admin */
+  
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -177,9 +177,10 @@
 }
 @media (max-width: 768px) {
   .acciones-superiores-inv .buscar-inv {
-    display: none; /* Ocultar buscador en móviles muy pequeños */
+    display: none; /* Ocultar buscador en mÃ³viles muy pequeÃ±os */
   }
   .panel-scroll-inv {
     padding: 15px;
   }
 }
+

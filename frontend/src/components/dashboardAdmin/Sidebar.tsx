@@ -73,12 +73,10 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
     >
       <div className="sidebar-titulo">
         <div className="logo-container">
-          <div className="logo-icon">
-            <span className="logo-inner-circle"></span>
-          </div>
+          <div className="logo-icon-orbix">O</div>
           <h2 className="siti">Orbix</h2>
         </div>
-        <span className="badge-inventario" style={{ marginLeft: "10px" }}>
+        <span className="badge-admin" style={{ marginLeft: "10px" }}>
           Admin
         </span>
       </div>
@@ -121,3 +119,5 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
 };
 
 export default Sidebar;
+
+

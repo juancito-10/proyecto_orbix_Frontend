@@ -1,4 +1,4 @@
-import {
+﻿import {
   LayoutDashboard,
   Package,
   ArrowRightLeft,
@@ -32,9 +32,7 @@ const SidebarInventario = ({ isOpen = true, onClose, isPinned: propIsPinned, onT
       <aside className={`sidebar-inventario ${isOpen ? 'open' : ''} ${isPinned ? 'pinned' : 'unpinned'}`}>
         <div className="sidebar-titulo-inv">
           <div className="logo-container">
-            <div className="logo-icon">
-              <span className="logo-inner-circle"></span>
-            </div>
+            <div className="logo-icon-orbix">O</div>
             <h2 className="siti-inv">Orbix</h2>
           </div>
           <span className="badge-inventario">Inventario</span>
@@ -75,3 +73,4 @@ const SidebarInventario = ({ isOpen = true, onClose, isPinned: propIsPinned, onT
 };
 
 export default SidebarInventario;
+

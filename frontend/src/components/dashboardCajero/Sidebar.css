@@ -1,4 +1,4 @@
-
+﻿
 .vendedor-sidebar {
   width: 240px;
   height: 100vh;
@@ -233,7 +233,7 @@
   .sidebar, .vendedor-sidebar {
     width: 60px !important;
   }
-  .siti, .navp, .vendedor-sidebar-nav-title, .navegacion a span, .vendedor-sidebar-item span, .sidebar-footer-inv span, .badge-inventario, .vendedor-sidebar-badge {
+  .siti, .navp, .vendedor-sidebar-nav-title, .navegacion a span, .vendedor-sidebar-item span, .sidebar-footer-inv span, .badge-inventario, .badge-ventas {
     display: none !important;
   }
   .logo-icon {
@@ -253,3 +253,31 @@
     padding: 10px !important;
   }
 }
+
+.logo-icon-orbix { width: 32px; height: 32px; border-radius: 50%; background-color: #8b5cf6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+
+
+@media (max-width: 768px) {
+  .vendedor-sidebar { width: 60px !important; }
+  .siti, .vendedor-sidebar-nav-title, .vendedor-sidebar-item span, .badge-ventas, .vendedor-sidebar-footer span { display: none !important; }
+  .logo-icon-orbix { width: 28px; height: 28px; font-size: 14px; }
+  .vendedor-sidebar-header { padding: 15px 10px !important; justify-content: center !important; }
+  .vendedor-sidebar-item { justify-content: center !important; padding: 10px !important; }
+  .vendedor-sidebar-footer { padding: 10px !important; justify-content: center !important; }
+}
+
+
+.badge-ventas {
+  display: inline-block;
+  margin-top: 0px;
+  font-size: 11px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background-color: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+  margin-left: 10px;
+}
+
+

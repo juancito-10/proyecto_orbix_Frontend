@@ -1,4 +1,4 @@
-
+﻿
 .sidebar {
   width: 240px;
   height: 100vh;
@@ -91,7 +91,7 @@
 .sidebar.unpinned .navp,
 .sidebar.unpinned .navegacion a span,
 .sidebar.unpinned .sidebar-footer-inv span,
-.sidebar.unpinned .badge-inventario {
+.sidebar.unpinned .badge-admin, .badge-inventario {
   display: none;
 }
 
@@ -104,7 +104,7 @@
 .sidebar.unpinned:hover .navp,
 .sidebar.unpinned:hover .navegacion a span,
 .sidebar.unpinned:hover .sidebar-footer-inv span,
-.sidebar.unpinned:hover .badge-inventario {
+.sidebar.unpinned:hover .badge-admin, .badge-inventario {
   display: block;
 }
 
@@ -144,7 +144,7 @@
   border-radius: 50%;
   border: 2px solid white;
 }
-.vendedor-badge-rol, .badge-inventario {
+.vendedor-badge-rol, .badge-admin, .badge-inventario {
   display: inline-block;
   margin-top: 10px;
   font-size: 11px;
@@ -233,7 +233,7 @@
   .sidebar, .vendedor-sidebar {
     width: 60px !important;
   }
-  .siti, .navp, .vendedor-sidebar-nav-title, .navegacion a span, .vendedor-sidebar-item span, .sidebar-footer-inv span, .badge-inventario, .vendedor-sidebar-badge {
+  .siti, .navp, .vendedor-sidebar-nav-title, .navegacion a span, .vendedor-sidebar-item span, .sidebar-footer-inv span, .badge-admin, .badge-inventario, .vendedor-sidebar-badge {
     display: none !important;
   }
   .logo-icon {
@@ -253,3 +253,27 @@
     padding: 10px !important;
   }
 }
+
+.logo-icon-orbix { width: 32px; height: 32px; border-radius: 50%; background-color: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+
+
+@media (max-width: 768px) {
+  .logo-icon-orbix { width: 28px; height: 28px; font-size: 14px; }
+  .sidebar-footer-inv span { display: none !important; }
+}
+
+
+.badge-admin {
+  display: inline-block;
+  margin-top: 0px;
+  font-size: 11px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  margin-left: 10px;
+}
+
+
