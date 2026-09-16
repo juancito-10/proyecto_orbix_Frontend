@@ -1,4 +1,4 @@
-
+﻿
 .sidebar-inventario {
   width: 240px;
   height: 100vh;
@@ -130,7 +130,7 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background-color: #10b981;
+  /* removed */
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -173,7 +173,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #10b981;
+  /* removed */
   color: #ffffff;
   font-family: "Outfit", sans-serif;
   font-weight: 600;
@@ -230,7 +230,7 @@
   }
 }
   
-.logo-icon-orbix { width: 32px; height: 32px; border-radius: 50%; background-color: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+.logo-icon-orbix { width: 32px; height: 32px; border-radius: 50%; /* removed */ color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
 
 
 @media (max-width: 768px) {
@@ -255,4 +255,7 @@
   color: #34d399;
   margin-left: 10px;
 }
+
+
+.logo-inventario { background-color: #10b981; }
 

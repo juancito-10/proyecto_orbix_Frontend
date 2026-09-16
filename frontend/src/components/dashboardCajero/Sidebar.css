@@ -28,7 +28,7 @@
   gap: 10px;
 }
 
-.vendedor-logo-nombre {
+.siti {
   font-family: "Outfit", sans-serif;
   font-weight: 700;
   font-size: 19px;
@@ -87,11 +87,11 @@
 .vendedor-sidebar.unpinned {
   width: 76px;
 }
-.vendedor-sidebar.unpinned .vendedor-logo-nombre,
+.vendedor-sidebar.unpinned .siti,
 .vendedor-sidebar.unpinned .vendedor-nav-label,
 .vendedor-sidebar.unpinned .vendedor-nav a span,
 .vendedor-sidebar.unpinned .vendedor-sidebar-footer span,
-.vendedor-sidebar.unpinned .badge-inventario {
+.vendedor-sidebar.unpinned .badge-ventas {
   display: none;
 }
 
@@ -100,11 +100,11 @@
   z-index: 999;
 }
 
-.vendedor-sidebar.unpinned:hover .vendedor-logo-nombre,
+.vendedor-sidebar.unpinned:hover .siti,
 .vendedor-sidebar.unpinned:hover .vendedor-nav-label,
 .vendedor-sidebar.unpinned:hover .vendedor-nav a span,
 .vendedor-sidebar.unpinned:hover .vendedor-sidebar-footer span,
-.vendedor-sidebar.unpinned:hover .badge-inventario {
+.vendedor-sidebar.unpinned:hover .badge-ventas {
   display: block;
 }
 
@@ -130,7 +130,7 @@
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background-color: #8b5cf6;
+  /* removed */
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -173,7 +173,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: #8b5cf6;
+  /* removed */
   color: #ffffff;
   font-family: "Outfit", sans-serif;
   font-weight: 600;
@@ -254,7 +254,7 @@
   }
 }
 
-.logo-icon-orbix { width: 32px; height: 32px; border-radius: 50%; background-color: #8b5cf6; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+.logo-icon-orbix { width: 32px; height: 32px; border-radius: 50%; /* removed */ color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
 
 
 @media (max-width: 768px) {
@@ -282,4 +282,7 @@
 
 
 
+
+
+.logo-ventas { background-color: #8b5cf6; }
 
