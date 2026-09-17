@@ -1,4 +1,6 @@
-﻿import ProfileDropdown from "../../components/ProfileDropdown";
+﻿import { Menu } from "lucide-react";
+import { useState } from "react";
+import ProfileDropdown from "../../components/ProfileDropdown";
 import Sidebar from "../../components/dashboardAdmin/Sidebar";
 
 import CarsDatos from "../../components/dashboardAdmin/CarsDatos";
@@ -15,9 +17,10 @@ import "./DashboardAdmin.css";
 import EstaSemana from "../../components/dashboardAdmin/EstaSemana";
 
 const DashboardAdmin = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <main className="dashboard-main">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       <div className="dashboard-contenido">
         {/* BARRA SUPERIOR */}
@@ -29,6 +32,7 @@ const DashboardAdmin = () => {
             <span className="dashboard-titulo">Dashboard</span>
           </p>
 
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: "none", border: "none", cursor: "pointer", display: "none" }}><Menu size={24} /></button>
           <div className="dashboard-acciones-superiores">
             
 
@@ -72,6 +76,8 @@ const DashboardAdmin = () => {
 };
 
 export default DashboardAdmin;
+
+
 
 
 

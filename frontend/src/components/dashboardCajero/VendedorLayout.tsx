@@ -1,4 +1,5 @@
 ﻿import React, { useState } from "react";
+import { Menu } from "lucide-react";
 
 import Sidebar from "./Sidebar";
 import BuscadorGlobal from "./BuscadorGlobal";
@@ -12,12 +13,13 @@ type VendedorLayoutProps = {
 };
 
 const VendedorLayout = ({ vista, children }: VendedorLayoutProps) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarPinned, setIsSidebarPinned] = useState(true);
 
   return (
     <main className={`vendedor-app ${isSidebarPinned ? 'sidebar-pinned' : 'sidebar-unpinned'}`}>
       {/* Sidebar */}
-      <Sidebar isPinned={isSidebarPinned} onTogglePin={() => setIsSidebarPinned(!isSidebarPinned)} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} isPinned={isSidebarPinned} onTogglePin={() => setIsSidebarPinned(!isSidebarPinned)} />
 
       {/* Contenido */}
       <div className="vendedor-body">
@@ -31,6 +33,7 @@ const VendedorLayout = ({ vista, children }: VendedorLayoutProps) => {
             <strong>{vista}</strong>
           </p>
 
+          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: "none", border: "none", cursor: "pointer", display: "none" }}><Menu size={24} /></button>
           <div className="vendedor-topbar-acciones">
             {/* Buscador global */}
             <BuscadorGlobal />
@@ -50,4 +53,5 @@ const VendedorLayout = ({ vista, children }: VendedorLayoutProps) => {
 };
 
 export default VendedorLayout;
+
 

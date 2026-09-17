@@ -13,11 +13,13 @@ import { useState } from "react";
 import "./Sidebar.css";
 
 interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
   isPinned?: boolean;
   onTogglePin?: () => void;
 }
 
-const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
+const Sidebar = ({ isOpen = false, onClose, isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const [internalPinned, setInternalPinned] = useState(false);
@@ -68,9 +70,11 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
   ];
 
   return (
-    <aside
-      className={`sidebar ${isPinned ? "pinned" : "unpinned"}`}
-    >
+    <>
+      {isOpen && onClose && <div className="sidebar-overlay" onClick={onClose} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999 }}></div>}
+      <aside
+        className={`sidebar ${isOpen ? "open" : ""} ${isPinned ? "pinned" : "unpinned"}`}
+      >
       <div className="sidebar-titulo">
         <div className="logo-container">
           <div className="logo-icon-orbix logo-admin">O</div>
@@ -115,10 +119,12 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
         </button>
       </div>
     </aside>
+    </>
   );
 };
 
 export default Sidebar;
+
 
 
 

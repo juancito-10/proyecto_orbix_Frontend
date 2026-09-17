@@ -1,4 +1,4 @@
-.vendedor-app {
+﻿.vendedor-app {
   display: flex;
   min-height: 100vh;
   background-color: var(--background);
@@ -334,3 +334,5 @@
     padding: 10px;
   }
 }
+
+@media (max-width: 768px) { .mobile-menu-btn { display: block !important; } }

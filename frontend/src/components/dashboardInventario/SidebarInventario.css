@@ -1,4 +1,4 @@
-﻿
+
 .sidebar-inventario {
   width: 240px;
   height: 100vh;
@@ -223,6 +223,7 @@
   .sidebar-inventario {
     position: fixed;
     transform: translateX(-100%);
+    width: 240px !important;
     z-index: 1000;
   }
   .sidebar-inventario.open {
@@ -234,12 +235,7 @@
 
 
 @media (max-width: 768px) {
-  .sidebar-inventario { width: 60px !important; position: sticky !important; transform: translateX(0) !important; }
-  .siti-inv, .navp-inv, .navegacion-inv a span, .badge-inventario, .sidebar-footer-inv span { display: none !important; }
   .logo-icon-orbix { width: 28px; height: 28px; font-size: 14px; }
-  .sidebar-titulo-inv { padding: 15px 10px !important; justify-content: center !important; }
-  .navegacion-inv a { justify-content: center !important; padding: 10px !important; }
-  .sidebar-footer-inv { padding: 10px !important; justify-content: center !important; }
 }
 
 

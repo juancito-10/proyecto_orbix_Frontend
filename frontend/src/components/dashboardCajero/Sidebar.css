@@ -1,4 +1,4 @@
-﻿
+
 .vendedor-sidebar {
   width: 240px;
   height: 100vh;
@@ -223,6 +223,7 @@
   .vendedor-sidebar {
     position: fixed;
     transform: translateX(-100%);
+    width: 240px !important;
     z-index: 1000;
   }
   .vendedor-sidebar.open {
@@ -230,12 +231,6 @@
   }
 }
   @media (max-width: 768px) {
-  .sidebar, .vendedor-sidebar {
-    width: 60px !important;
-  }
-  .siti, .navp, .vendedor-nav-label, .navegacion a span, .vendedor-nav a span, .sidebar-footer-inv span, .badge-inventario, .badge-ventas {
-    display: none !important;
-  }
   .logo-icon {
     width: 30px;
     height: 30px;
@@ -244,11 +239,11 @@
     width: 14px;
     height: 14px;
   }
-  .sidebar-titulo, .vendedor-sidebar-top {
+  .vendedor-sidebar-header {
     padding: 15px 10px !important;
     justify-content: center !important;
   }
-  .navegacion a, .vendedor-nav a {
+  .vendedor-nav a {
     justify-content: center !important;
     padding: 10px !important;
   }

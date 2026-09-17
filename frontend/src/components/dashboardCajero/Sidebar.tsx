@@ -5,6 +5,8 @@ import { useState } from "react";
 import "./Sidebar.css";
 
 interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
   isPinned?: boolean;
   onTogglePin?: () => void;
 }
@@ -76,6 +78,7 @@ const Sidebar = ({ isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
 };
 
 export default Sidebar;
+
 
 
 
