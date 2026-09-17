@@ -9,7 +9,7 @@ import VentasCategorias from "../../components/dashboardAdmin/VentasCategorias";
 
 import UltimasVentas from "../../components/dashboardAdmin/UltimasVentas";
 
-import { Search, Bell } from "lucide-react";
+
 
 import "./DashboardAdmin.css";
 import EstaSemana from "../../components/dashboardAdmin/EstaSemana";
@@ -30,15 +30,9 @@ const DashboardAdmin = () => {
           </p>
 
           <div className="dashboard-acciones-superiores">
-            <form className="dashboard-buscar">
-              <Search size={20} />
+            
 
-              <input type="text" placeholder="Buscar..." />
-            </form>
-
-            <div className="dashboard-notifi">
-              <Bell size={20} />
-            </div>
+            
 
             <ProfileDropdown />
           </div>
@@ -78,5 +72,6 @@ const DashboardAdmin = () => {
 };
 
 export default DashboardAdmin;
+
 
 

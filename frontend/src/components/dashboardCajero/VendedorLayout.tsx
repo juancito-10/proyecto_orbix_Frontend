@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Bell } from "lucide-react";
+﻿import React, { useState } from "react";
+
 import Sidebar from "./Sidebar";
 import BuscadorGlobal from "./BuscadorGlobal";
 import ProfileDropdown from "../ProfileDropdown";
@@ -35,11 +35,7 @@ const VendedorLayout = ({ vista, children }: VendedorLayoutProps) => {
             {/* Buscador global */}
             <BuscadorGlobal />
 
-            {/* Notificaciones */}
-            <div className="vendedor-notifi">
-              <Bell size={15} />
-              <span className="vendedor-notifi-dot" />
-            </div>
+            
 
             {/* Usuario */}
             <ProfileDropdown />
@@ -54,3 +50,4 @@ const VendedorLayout = ({ vista, children }: VendedorLayoutProps) => {
 };
 
 export default VendedorLayout;
+

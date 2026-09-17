@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Search, Bell, Menu } from "lucide-react";
+﻿import { useState } from "react";
+import { Menu } from "lucide-react";
 import { Outlet } from "react-router-dom";
 import SidebarInventario from "./SidebarInventario";
 import "../../pages/DashboardInventario/DashboardInventario.css";
@@ -32,13 +32,8 @@ const LayoutInventario = () => {
           </div>
 
           <div className="acciones-superiores-inv">
-            <form className="buscar-inv">
-              <Search size={18} />
-              <input type="text" placeholder="Buscar..." />
-            </form>
-            <div className="notifi-inv">
-              <Bell size={20} />
-            </div>
+            
+            
             <ProfileDropdown />
           </div>
         </div>
@@ -54,3 +49,4 @@ const LayoutInventario = () => {
 };
 
 export default LayoutInventario;
+
