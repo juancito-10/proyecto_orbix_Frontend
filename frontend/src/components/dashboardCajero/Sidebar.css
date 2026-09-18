@@ -1,4 +1,4 @@
-
+﻿
 .vendedor-sidebar {
   width: 240px;
   height: 100vh;
@@ -222,6 +222,9 @@
 @media (max-width: 992px) {
   .vendedor-sidebar {
     position: fixed;
+    height: 100% !important;
+    top: 0;
+    bottom: 0;
     transform: translateX(-100%);
     width: 240px !important;
     z-index: 1000;
@@ -280,5 +283,6 @@
 
 
 .logo-ventas { background-color: #8b5cf6; }
+
 
 

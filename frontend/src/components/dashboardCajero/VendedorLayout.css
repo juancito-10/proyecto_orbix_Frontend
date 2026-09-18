@@ -336,3 +336,5 @@
 }
 
 @media (max-width: 768px) { .mobile-menu-btn { display: block !important; } }
+
+.vendedor-contenido { overflow-x: hidden; }

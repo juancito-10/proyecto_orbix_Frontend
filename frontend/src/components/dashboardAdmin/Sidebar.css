@@ -1,4 +1,4 @@
-
+﻿
 .sidebar {
   width: 240px;
   height: 100vh;
@@ -222,6 +222,9 @@
 @media (max-width: 992px) {
   .sidebar {
     position: fixed;
+    height: 100% !important;
+    top: 0;
+    bottom: 0;
     transform: translateX(-100%);
     width: 240px !important;
     z-index: 1000;
@@ -274,6 +277,7 @@
 
 
 .logo-admin { background-color: #3b82f6; }
+
 
 
 
