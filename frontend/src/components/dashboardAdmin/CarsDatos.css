@@ -1,4 +1,4 @@
-.dashboard-cards {
+﻿.dashboard-cards {
   display: flex;
   gap: 20px;
   padding: 0px;
@@ -34,3 +34,5 @@
   margin: 10px 0 0;
   font-size: 24px;
 }
+@media (max-width: 992px) { .dashboard-cards { flex-wrap: wrap; } .card { min-width: 45%; } }
+@media (max-width: 576px) { .card { min-width: 100%; } }

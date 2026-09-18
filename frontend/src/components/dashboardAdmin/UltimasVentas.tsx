@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ventasService, {
   type Venta,
@@ -18,7 +18,7 @@ const UltimasVentas = () => {
 
         const todasLasVentas = await ventasService.obtenerVentas();
 
-        // Ordenamos de la más reciente a la más antigua
+        // Ordenamos de la mÃ¡s reciente a la mÃ¡s antigua
         const ultimasVentas = [...todasLasVentas]
           .sort(
             (a, b) =>
@@ -30,7 +30,7 @@ const UltimasVentas = () => {
         setVentas(ultimasVentas);
       } catch (error) {
         console.error(
-          "Error al cargar las últimas ventas:",
+          "Error al cargar las Ãºltimas ventas:",
           error
         );
       } finally {
@@ -79,17 +79,17 @@ const UltimasVentas = () => {
     <section className="ultimas-ventas">
 
       <div className="ultimas-ventas-header">
-        <h3>Últimas ventas</h3>
+        <h3>Ãšltimas ventas</h3>
 
         <button
           className="ver-todas"
           onClick={() => navigate("/dashboard/admin/ventas")}
         >
-          Ver todas →
+          Ver todas â†’
         </button>
       </div>
 
-      <table>
+      <div className="table-responsive"><table className="ventas-tabla">
         <thead>
           <tr>
             <th>PEDIDO</th>
@@ -151,9 +151,11 @@ const UltimasVentas = () => {
             ))
           )}
         </tbody>
-      </table>
+      </table></div>
     </section>
   );
 };
 
 export default UltimasVentas;
+
+

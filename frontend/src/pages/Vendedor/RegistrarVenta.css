@@ -1,4 +1,4 @@
-.rventa-flex {
+﻿.rventa-flex {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -65,7 +65,7 @@
   }
 }
 
-/* Catálogo */
+/* CatÃ¡logo */
 .rventa-catalogo {
   display: flex;
   flex-direction: column;
@@ -689,7 +689,7 @@
   font-weight: 500;
 }
 
-/* Confirmación */
+/* ConfirmaciÃ³n */
 .rventa-exito-overlay {
   position: fixed;
   inset: 0;
@@ -796,3 +796,4 @@
   background-color: var(--muted);
   color: var(--foreground);
 }
+@media (max-width: 992px) { .rventa-layout { grid-template-columns: 1fr; } }

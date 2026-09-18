@@ -165,3 +165,5 @@
 
 
 @media (max-width: 768px) { .mobile-menu-btn { display: block !important; } }
+
+@media (max-width: 992px) { .graficas-dashboard, .ventas-dashboard { grid-template-columns: 1fr; } }

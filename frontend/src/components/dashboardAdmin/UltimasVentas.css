@@ -1,4 +1,4 @@
-.ultimas-ventas {
+﻿.ultimas-ventas {
   margin: 0px 0px 10px;
   background-color: #ffffff;
   border: 1px solid #d9e0e8;
@@ -162,3 +162,5 @@
   color: #71829a !important;
   padding: 30px !important;
 }
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.ventas-tabla { width: 100%; min-width: 600px; }
