@@ -18,7 +18,7 @@ const METRICAS: Metrica[] = [
   {
     titulo: "Ventas de hoy",
     valor: "$ 9.700",
-    detalle: "3 órdenes confirmadas",
+    detalle: "3 óÓrdenes confirmadas",
     colorDetalle: "green",
   },
   {

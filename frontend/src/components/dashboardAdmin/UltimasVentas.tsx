@@ -18,7 +18,7 @@ const UltimasVentas = () => {
 
         const todasLasVentas = await ventasService.obtenerVentas();
 
-        // Ordenamos de la mÃ¡s reciente a la mÃ¡s antigua
+        // Ordenamos de la más reciente a la más antigua
         const ultimasVentas = [...todasLasVentas]
           .sort(
             (a, b) =>
@@ -30,7 +30,7 @@ const UltimasVentas = () => {
         setVentas(ultimasVentas);
       } catch (error) {
         console.error(
-          "Error al cargar las Ãºltimas ventas:",
+          "Error al cargar las íºltimas ventas:",
           error
         );
       } finally {
@@ -79,7 +79,7 @@ const UltimasVentas = () => {
     <section className="ultimas-ventas">
 
       <div className="ultimas-ventas-header">
-        <h3>Ãšltimas ventas</h3>
+        <h3>Últimas ventas</h3>
 
         <button
           className="ver-todas"

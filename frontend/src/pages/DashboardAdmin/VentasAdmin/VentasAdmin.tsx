@@ -137,7 +137,7 @@ const VentasAdmin = () => {
             </h2>
 
             <p className="ventas-fecha">
-              {ventas.length} Ã³rdenes registradas
+              {ventas.length} óÓrdenes registradas
             </p>
 
           </div>

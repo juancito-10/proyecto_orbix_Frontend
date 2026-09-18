@@ -196,7 +196,7 @@ const VendedorVentas = () => {
           <div>
             <h1 className="vventas-titulo">Mis Ventas</h1>
             <p className="vventas-sub">
-              {ventas.length} órdenes · {formatoCOP(totalConfirmado)} confirmado
+              {ventas.length} óÓrdenes · {formatoCOP(totalConfirmado)} confirmado
             </p>
           </div>
 

@@ -36,7 +36,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
 
     setError("");
 
-    // Validar reCAPTCHA antes de iniciar sesiÃ³n
+    // Validar reCAPTCHA antes de iniciar sesión
     if (!captcha) {
       setError("Por favor, verifica que no eres un robot.");
       return;
@@ -67,18 +67,18 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
         usuario.rol !== "inventario"
       ) {
         setError(
-          "Este usuario no tiene permisos para acceder al Ã¡rea operativa.",
+          "Este usuario no tiene permisos para acceder al área operativa.",
         );
 
         return;
       }
 
-      // Guardar sesiÃ³n solamente despuÃ©s de validar el rol
+      // Guardar sesión solamente después de validar el rol
       localStorage.setItem("token", token);
 
       localStorage.setItem("usuario", JSON.stringify(usuario));
 
-      // Redireccionar segÃºn el rol
+      // Redireccionar segíºn el rol
       if (usuario.rol === "admin") {
         navigate("/dashboard/admin");
       }
@@ -91,7 +91,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
         navigate("/dashboard/inventario");
       }
     } catch (error) {
-      setError("Correo o contraseÃ±a incorrectos.");
+      setError("Correo o contraseña incorrectos.");
     } finally {
       setCargando(false);
     }
@@ -103,7 +103,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
         <div className="panel-izquierdo">
           <img src={Logo} alt="Logo de Orbix" className="logo-imagen" />
 
-          <p className="panel-titulo">GestiÃ³n de tu negocio, mÃ¡s simple.</p>
+          <p className="panel-titulo">Gestión de tu negocio, más simple.</p>
 
           <p>Administra inventario, ventas y clientes desde un solo lugar.</p>
         </div>
@@ -113,7 +113,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
             <div className="form-group">
               <h1>Orbix</h1>
 
-              <label htmlFor="correo">Correo electrÃ³nico</label>
+              <label htmlFor="correo">Correo electrónico</label>
 
               <div className="input-con-icono">
                 <Mail size={19} />
@@ -130,7 +130,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">ContraseÃ±a</label>
+              <label htmlFor="password">Contraseña</label>
 
               <div className="input-con-icono">
                 <LockKeyhole size={19} />
@@ -138,7 +138,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
                 <input
                   type={mostrarPassword ? "text" : "password"}
                   id="password"
-                  placeholder="Ingresa la contraseÃ±a"
+                  placeholder="Ingresa la contraseña"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -150,8 +150,8 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
                   onClick={() => setMostrarPassword(!mostrarPassword)}
                   aria-label={
                     mostrarPassword
-                      ? "Ocultar contraseÃ±a"
-                      : "Mostrar contraseÃ±a"
+                      ? "Ocultar contraseña"
+                      : "Mostrar contraseña"
                   }
                 >
                   {mostrarPassword ? <EyeOff size={19} /> : <Eye size={19} />}
@@ -166,7 +166,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
             {error && <p className="login-error">{error}</p>}
 
             <button type="submit" className="button-login" disabled={cargando}>
-              {cargando ? "Iniciando sesiÃ³n..." : "Iniciar sesiÃ³n"}
+              {cargando ? "Iniciando sesión..." : "Iniciar sesión"}
             </button>
 
             <button
@@ -174,7 +174,7 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
               className="forgot-password-orbix"
               onClick={() => navigate("/forgot-password")}
             >
-              Â¿Olvidaste la contraseÃ±a?
+              ¿¿Olvidaste la contraseña?
             </button>
           </form>
         </div>

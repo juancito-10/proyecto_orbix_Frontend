@@ -44,7 +44,7 @@ const CardsReportes = ({
         </div>
 
         <span className="card-reporte-subtitulo-azul">
-          Análisis completo de órdenes y facturación
+          Análisis completo de óÓrdenes y facturación
         </span>
 
         <button

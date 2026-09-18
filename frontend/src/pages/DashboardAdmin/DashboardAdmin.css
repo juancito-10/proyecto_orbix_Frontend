@@ -111,7 +111,7 @@
   font-size: 13px;
 }
 
-/* BOTÃ“N EXPORTAR */
+/* BOTí“N EXPORTAR */
 
 .dashboard-button-exportar {
   width: 150px;
@@ -131,7 +131,7 @@
 .dashboard-button-exportar:hover {
   filter: brightness(1.30);
 }
-/* GRÃFICAS */
+/* GRíFICAS */
 
 .graficas-dashboard {
   display: grid;

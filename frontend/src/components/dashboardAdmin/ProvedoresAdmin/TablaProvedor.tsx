@@ -151,11 +151,11 @@ const TablaProvedor = ({
       });
     });
 
-    const ordenes = ventasProveedor.length;
+    const oÓrdenes = ventasProveedor.length;
 
     return {
       totalComprado,
-      ordenes,
+      oÓrdenes,
     };
   };
 
@@ -324,8 +324,8 @@ const TablaProvedor = ({
 
                   {/* ÓRDENES */}
 
-                  <td className="ordenes-info">
-                    {informacion.ordenes}
+                  <td className="oÓrdenes-info">
+                    {informacion.oÓrdenes}
                   </td>
 
                   {/* TELÉFONO */}

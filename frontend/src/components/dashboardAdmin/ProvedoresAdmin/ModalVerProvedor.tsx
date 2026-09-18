@@ -6,7 +6,7 @@ import type { ProductoInventario } from "../../../services/productos.services";
 
 interface InformacionProveedor {
   totalComprado: number;
-  ordenes: number;
+  oÓrdenes: number;
 }
 
 interface ModalVerProvedorProps {
@@ -164,10 +164,10 @@ const ModalVerProvedor = ({
 
 
           <div>
-            <span>Órdenes</span>
+            <span>ÓÓrdenes</span>
 
             <strong>
-              {informacion.ordenes}
+              {informacion.oÓrdenes}
             </strong>
           </div>
 

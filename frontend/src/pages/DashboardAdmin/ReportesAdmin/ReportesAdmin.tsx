@@ -69,7 +69,7 @@ const ReportesAdmin = () => {
                 <h2>Reportes</h2>
 
                 <p className="reportes-fecha">
-                  AnÃ¡lisis y mÃ©tricas del negocio Â· PerÃ­odo:{" "}
+                  Análisis y métricas del negocio Â· Perí­odo:{" "}
                   {new Date().toLocaleDateString("es-CO", {
                     month: "long",
                     year: "numeric",

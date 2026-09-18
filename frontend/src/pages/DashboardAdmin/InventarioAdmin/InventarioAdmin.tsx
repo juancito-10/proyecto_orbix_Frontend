@@ -90,7 +90,7 @@ const InventarioAdmin = () => {
     setProductoEditar(null);
   };
 
-  // PREPARAR ELIMINACIÃ“N
+  // PREPARAR ELIMINACIí“N
   const solicitarEliminar = (idProducto: string) => {
     const producto = productos.find(
       (item) => item.idProducto === idProducto,
@@ -103,7 +103,7 @@ const InventarioAdmin = () => {
     setProductoEliminar(producto);
   };
 
-  // CONFIRMAR ELIMINACIÃ“N
+  // CONFIRMAR ELIMINACIí“N
   const confirmarEliminar = async () => {
     if (!productoEliminar) {
       return;
@@ -268,7 +268,7 @@ const InventarioAdmin = () => {
         />
       )}
 
-      {/* CONFIRMACIÃ“N DE ELIMINACIÃ“N */}
+      {/* CONFIRMACIí“N DE ELIMINACIí“N */}
       {productoEliminar && (
         <ConfirmarEliminacion
           nombreProducto={productoEliminar.nombre}
@@ -277,7 +277,7 @@ const InventarioAdmin = () => {
         />
       )}
 
-      {/* NOTIFICACIÃ“N */}
+      {/* NOTIFICACIí“N */}
       {notificacion && (
         <Notificacion
           mensaje={notificacion}

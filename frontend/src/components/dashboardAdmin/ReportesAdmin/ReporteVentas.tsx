@@ -281,7 +281,7 @@ const ReporteVentas = ({ onVolver }: ReporteVentasProps) => {
     doc.setFont("helvetica", "normal");
 
     doc.text(
-      "Análisis completo de órdenes y facturación",
+      "Análisis completo de óÓrdenes y facturación",
       20,
       29,
     );
@@ -568,7 +568,7 @@ const ReporteVentas = ({ onVolver }: ReporteVentasProps) => {
           </h3>
 
           <p>
-            Análisis completo de órdenes y facturación
+            Análisis completo de óÓrdenes y facturación
           </p>
         </div>
 
