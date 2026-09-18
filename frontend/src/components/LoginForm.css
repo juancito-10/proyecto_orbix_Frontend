@@ -1,5 +1,6 @@
 .main {
   min-height: 100vh;
+  width: 100%;
   padding: 40px;
   box-sizing: border-box;
 
@@ -8,6 +9,7 @@
   align-items: center;
 
   background-color: #f0f4f8;
+  overflow-x: hidden;
 }
 
 /* CONTENEDOR */
@@ -184,7 +186,7 @@
   font-size: 13px;
 }
 
-/* BOTÓN */
+/* BOTÃ“N */
 
 .button-login {
   width: 100%;
@@ -227,7 +229,7 @@
   cursor: not-allowed;
 }
 
-/* OLVIDASTE CONTRASEÑA */
+/* OLVIDASTE CONTRASEÃ‘A */
 
 .forgot-password-orbix {
   align-self: center;
@@ -299,21 +301,28 @@
 
 @media (max-width: 450px) {
   .main {
-    padding: 15px;
+    padding: 10px;
   }
 
   .login-container {
     min-height: auto;
-
     border-radius: 15px;
+    width: 100%;
   }
 
   .panel-derecho {
-    padding: 40px 25px;
+    padding: 30px 15px;
+    width: 100%;
+    max-width: 100vw;
   }
 
   .form-group h1 {
-    font-size: 26px;
+    font-size: 24px;
+  }
+  
+  .recaptcha-wrapper {
+    transform: scale(0.85);
+    transform-origin: 0 0;
   }
 }
 
@@ -357,7 +366,7 @@
   color: #087c9c;
 }
 
-/* DECORACIÓN DEL PANEL IZQUIERDO */
+/* DECORACIÃ“N DEL PANEL IZQUIERDO */
 
 .panel-izquierdo::before {
   content: "";
