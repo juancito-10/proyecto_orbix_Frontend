@@ -1,6 +1,6 @@
 ﻿import ProfileDropdown from "../../../components/ProfileDropdown";
 import { useState } from "react";
-import { Bell, Plus, Search } from "lucide-react";
+import { Plus} from "lucide-react";
 
 import Sidebar from "../../../components/dashboardAdmin/Sidebar";
 
@@ -51,18 +51,9 @@ const EmpleadosAdmin = () => {
           </p>
 
           <div className="empleados-acciones-superiores">
-            <form className="empleados-buscar">
-              <Search size={20} />
+            
 
-              <input
-                type="text"
-                placeholder="Buscar..."
-              />
-            </form>
-
-            <div className="empleados-notifi">
-              <Bell size={20} />
-            </div>
+            
 
             <ProfileDropdown />
           </div>

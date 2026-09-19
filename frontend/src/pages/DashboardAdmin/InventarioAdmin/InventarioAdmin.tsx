@@ -5,7 +5,7 @@ import "./InventarioAdmin.css";
 
 import Sidebar from "../../../components/dashboardAdmin/Sidebar";
 
-import { Search, Bell, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import BuscarProductos from "../../../components/dashboardAdmin/InventarioAdmin/BuscarProductos";
 
@@ -168,21 +168,9 @@ const InventarioAdmin = () => {
           </p>
 
           <div className="inventario-acciones-superiores">
-            <form
-              className="inventario-buscar"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <Search size={20} />
+            
 
-              <input
-                type="text"
-                placeholder="Buscar..."
-              />
-            </form>
-
-            <div className="inventario-notifi">
-              <Bell size={20} />
-            </div>
+            
 
             <ProfileDropdown />
           </div>

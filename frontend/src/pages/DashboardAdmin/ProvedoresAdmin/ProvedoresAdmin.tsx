@@ -1,5 +1,5 @@
 ﻿import ProfileDropdown from "../../../components/ProfileDropdown";
-import { Search, Bell, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import "./ProvedoresAdmin.css";
 
@@ -29,14 +29,9 @@ const ProvedoresAdmin = () => {
           </p>
 
           <div className="provedores-acciones-superiores">
-            <form className="provedores-buscar">
-              <Search size={20} />
-              <input type="text" placeholder="Buscar..." />
-            </form>
+            
 
-            <div className="provedores-notifi">
-              <Bell size={20} />
-            </div>
+            
 
             <ProfileDropdown />
           </div>
