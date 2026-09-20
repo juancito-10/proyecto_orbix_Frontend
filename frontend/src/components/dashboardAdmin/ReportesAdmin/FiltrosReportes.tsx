@@ -5,29 +5,14 @@ interface FiltrosReportesProps {
   setFiltro: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const FiltrosReportes = ({
-  filtro,
-  setFiltro,
-}: FiltrosReportesProps) => {
+const FiltrosReportes = ({ filtro, setFiltro }: FiltrosReportesProps) => {
   return (
     <div className="filtros-reportes">
-
       <button
-        className={`botones-reportes ${
-          filtro === "Resumen" ? "activo" : ""
-        }`}
+        className={`botones-reportes ${filtro === "Resumen" ? "activo" : ""}`}
         onClick={() => setFiltro("Resumen")}
       >
         Resumen
-      </button>
-
-      <button
-        className={`botones-reportes ${
-          filtro === "Ventas por periodo" ? "activo" : ""
-        }`}
-        onClick={() => setFiltro("Ventas por periodo")}
-      >
-        Ventas por periodo
       </button>
 
       <button
@@ -38,7 +23,6 @@ const FiltrosReportes = ({
       >
         Rendimiento equipo
       </button>
-
     </div>
   );
 };
