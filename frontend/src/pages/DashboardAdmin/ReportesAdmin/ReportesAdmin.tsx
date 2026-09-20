@@ -10,7 +10,6 @@ import CardsReportes from "../../../components/dashboardAdmin/ReportesAdmin/Card
 import FiltrosReportes from "../../../components/dashboardAdmin/ReportesAdmin/FiltrosReportes";
 import VentasMensuales from "../../../components/dashboardAdmin/ReportesAdmin/VentasMensuales";
 import ParticipacionCategoria from "../../../components/dashboardAdmin/ReportesAdmin/ParticipacionCategoria";
-import VentasPorPeriodo from "../../../components/dashboardAdmin/ReportesAdmin/VentasPorPeriodo";
 import RendimientoEquipo from "../../../components/dashboardAdmin/ReportesAdmin/RendimientoEquipo";
 
 import ReporteVentas from "../../../components/dashboardAdmin/ReportesAdmin/ReporteVentas";
@@ -44,10 +43,6 @@ const ReportesAdmin = () => {
           </p>
 
           <div className="reportes-acciones-superiores">
-            
-
-            
-
             <ProfileDropdown />
           </div>
         </div>
@@ -63,7 +58,7 @@ const ReportesAdmin = () => {
                 <h2>Reportes</h2>
 
                 <p className="reportes-fecha">
-                  Análisis y métricas del negocio Â· Perí­odo:{" "}
+                  Análisis y métricas del negocio · Perí­odo:{" "}
                   {new Date().toLocaleDateString("es-CO", {
                     month: "long",
                     year: "numeric",
@@ -94,10 +89,6 @@ const ReportesAdmin = () => {
                 <ParticipacionCategoria />
               </div>
             )}
-
-            {/* VENTAS POR PERIODO */}
-
-            {filtro === "Ventas por periodo" && <VentasPorPeriodo />}
 
             {/* RENDIMIENTO DEL EQUIPO */}
 
@@ -134,5 +125,3 @@ const ReportesAdmin = () => {
 };
 
 export default ReportesAdmin;
-
-

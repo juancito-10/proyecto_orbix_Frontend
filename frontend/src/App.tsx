@@ -79,7 +79,7 @@ function App() {
           }
         />
         <Route
-          path="/dashboard/admin/provedores"
+          path="/dashboard/admin/proveedores"
           element={
             <ProtectedRoute roles={["admin"]}>
               <ProvedoresAdmin />
