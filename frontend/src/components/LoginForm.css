@@ -407,3 +407,17 @@
   position: relative;
   z-index: 1;
 }
+
+/* SUBTITLE ADMIN */
+.form-group h1.has-subtitle {
+  margin: 0 0 5px;
+}
+
+.login-subtitle {
+  margin: 0 0 25px;
+  color: #087c9c;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

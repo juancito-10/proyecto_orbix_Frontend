@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 
 import { Mail, LockKeyhole, Eye, EyeOff } from "lucide-react";
 
@@ -111,7 +111,10 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
         <div className="panel-derecho">
           <form onSubmit={handleSubmit} className="form">
             <div className="form-group">
-              <h1>Orbix</h1>
+              <h1 className={tipo === "admin" ? "has-subtitle" : ""}>Orbix</h1>
+              {tipo === "admin" && (
+                <h2 className="login-subtitle">Perfil de Administrador</h2>
+              )}
 
               <label htmlFor="correo">Correo electrónico</label>
 
