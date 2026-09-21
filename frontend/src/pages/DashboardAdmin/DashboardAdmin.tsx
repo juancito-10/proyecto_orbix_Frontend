@@ -11,10 +11,7 @@ import VentasCategorias from "../../components/dashboardAdmin/VentasCategorias";
 
 import UltimasVentas from "../../components/dashboardAdmin/UltimasVentas";
 
-
-
 import "./DashboardAdmin.css";
-import EstaSemana from "../../components/dashboardAdmin/EstaSemana";
 
 const DashboardAdmin = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -32,12 +29,19 @@ const DashboardAdmin = () => {
             <span className="dashboard-titulo">Dashboard</span>
           </p>
 
-          <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: "none", border: "none", cursor: "pointer", display: "none" }}><Menu size={24} /></button>
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              display: "none",
+            }}
+          >
+            <Menu size={24} />
+          </button>
           <div className="dashboard-acciones-superiores">
-            
-
-            
-
             <ProfileDropdown />
           </div>
         </div>
@@ -68,7 +72,6 @@ const DashboardAdmin = () => {
 
         <div className="ventas-dashboard">
           <UltimasVentas />
-          <EstaSemana />
         </div>
       </div>
     </main>
@@ -76,8 +79,3 @@ const DashboardAdmin = () => {
 };
 
 export default DashboardAdmin;
-
-
-
-
-

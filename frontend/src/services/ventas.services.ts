@@ -61,88 +61,214 @@ type RespuestaVenta = {
   data: Venta;
 };
 
+/*
+ * CACHE DE VENTAS
+ */
+
+let ventasCache: Venta[] | null = null;
+
+let ventasPromise:
+  | Promise<Venta[]>
+  | null = null;
+
+let ventasToken: string | null = null;
+
+let ventasVersion = 0;
+
+/*
+ * INVALIDAR CACHE
+ */
+
+function invalidarCacheVentas() {
+  ventasCache = null;
+  ventasPromise = null;
+  ventasVersion++;
+}
+
+/*
+ * OBTENER TODAS LAS VENTAS
+ */
+
 async function obtenerVentas(): Promise<Venta[]> {
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   if (!token) {
-    throw new Error("No hay sesión activa.");
+    throw new Error(
+      "No hay sesión activa."
+    );
   }
 
-  const response = await fetch(
-    `${BASE_URL}/ventas?limit=500`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  /*
+   * Si cambió el usuario/token,
+   * limpiamos el cache anterior.
+   */
+  if (ventasToken !== token) {
+    ventasCache = null;
+    ventasPromise = null;
+    ventasToken = token;
+    ventasVersion++;
+  }
+
+  /*
+   * Si ya tenemos las ventas,
+   * no hacemos otra petición.
+   */
+  if (ventasCache) {
+    return ventasCache;
+  }
+
+  /*
+   * Si ya hay una petición en curso,
+   * reutilizamos esa misma petición.
+   */
+  if (ventasPromise) {
+    return ventasPromise;
+  }
+
+  const versionActual =
+    ventasVersion;
+
+  ventasPromise = (async () => {
+    const response =
+      await fetch(
+        `${BASE_URL}/ventas?limit=500`,
+        {
+          method: "GET",
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
+
+    const data: RespuestaVentas =
+      await response.json();
+
+    if (
+      !response.ok ||
+      !data.success
+    ) {
+      throw new Error(
+        "Error al obtener las ventas."
+      );
     }
-  );
 
-  const data: RespuestaVentas = await response.json();
+    /*
+     * Solo guardamos la respuesta
+     * si sigue siendo la versión actual.
+     */
+    if (
+      versionActual ===
+      ventasVersion
+    ) {
+      ventasCache = data.data;
+    }
 
-  if (!response.ok || !data.success) {
-    throw new Error("Error al obtener las ventas.");
+    return data.data;
+  })();
+
+  try {
+    return await ventasPromise;
+  } finally {
+    ventasPromise = null;
   }
-
-  return data.data;
 }
+
+/*
+ * OBTENER VENTA POR ID
+ */
 
 async function obtenerVentaPorId(
   idVenta: string
 ): Promise<Venta> {
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   if (!token) {
-    throw new Error("No hay sesión activa.");
+    throw new Error(
+      "No hay sesión activa."
+    );
   }
 
-  const response = await fetch(
-    `${BASE_URL}/ventas/${idVenta}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response =
+    await fetch(
+      `${BASE_URL}/ventas/${idVenta}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+        },
+      }
+    );
 
-  const data: RespuestaVenta = await response.json();
+  const data: RespuestaVenta =
+    await response.json();
 
-  if (!response.ok || !data.success) {
-    throw new Error("Error al obtener la venta.");
+  if (
+    !response.ok ||
+    !data.success
+  ) {
+    throw new Error(
+      "Error al obtener la venta."
+    );
   }
 
   return data.data;
 }
 
+/*
+ * CREAR VENTA
+ */
+
 async function crearVenta(
   venta: CrearVentaData
 ): Promise<Venta> {
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
-    `${BASE_URL}/ventas`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(venta),
-    }
-  );
-
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Error al crear la venta."
+      "No hay sesión activa."
     );
   }
+
+  const response =
+    await fetch(
+      `${BASE_URL}/ventas`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${token}`,
+        },
+        body: JSON.stringify(
+          venta
+        ),
+      }
+    );
+
+  const data =
+    await response.json();
+
+  if (
+    !response.ok ||
+    !data.success
+  ) {
+    throw new Error(
+      data.message ||
+        "Error al crear la venta."
+    );
+  }
+
+  /*
+   * La lista de ventas cambió.
+   * Limpiamos el cache.
+   */
+  invalidarCacheVentas();
 
   return data.data;
 }

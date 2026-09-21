@@ -10,9 +10,7 @@ import FiltrosVentas from "../../../components/dashboardAdmin/VentasAdmin/Filtro
 import TablaVentas from "../../../components/dashboardAdmin/VentasAdmin/TablaVentas";
 import NuevaVenta from "../../../components/dashboardAdmin/VentasAdmin/NuevaVenta";
 
-import ventasService, {
-  type Venta,
-} from "../../../services/ventas.services";
+import ventasService, { type Venta } from "../../../services/ventas.services";
 
 const VentasAdmin = () => {
   const [mostrarNuevaVenta, setMostrarNuevaVenta] = useState(false);
@@ -23,23 +21,17 @@ const VentasAdmin = () => {
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [cargandoVentas, setCargandoVentas] = useState(true);
 
-  // =========================
   // CARGAR VENTAS
-  // =========================
 
   const cargarVentas = async () => {
     try {
       setCargandoVentas(true);
 
-      const ventasObtenidas =
-        await ventasService.obtenerVentas();
+      const ventasObtenidas = await ventasService.obtenerVentas();
 
       setVentas(ventasObtenidas);
     } catch (error) {
-      console.error(
-        "Error al cargar ventas:",
-        error
-      );
+      console.error("Error al cargar ventas:", error);
     } finally {
       setCargandoVentas(false);
     }
@@ -49,25 +41,19 @@ const VentasAdmin = () => {
     cargarVentas();
   }, []);
 
-  // =========================
   // ABRIR NUEVA VENTA
-  // =========================
 
   const abrirNuevaVenta = () => {
     setMostrarNuevaVenta(true);
   };
 
-  // =========================
   // CERRAR NUEVA VENTA
-  // =========================
 
   const cerrarNuevaVenta = () => {
     setMostrarNuevaVenta(false);
   };
 
-  // =========================
   // VENTA CREADA
-  // =========================
 
   const manejarVentaCreada = async () => {
     await cargarVentas();
@@ -75,59 +61,34 @@ const VentasAdmin = () => {
 
   return (
     <main className="ventas-main">
-
       <Sidebar />
 
       <div className="ventas-contenido">
-
-        {/* =========================
+        {/* 
             BARRA SUPERIOR
-        ========================= */}
+        */}
 
         <div className="ventas-barra-superior">
-
           <p>
-            <span className="ventas-orbix">
-              Orbix
-            </span>{" "}
-            /{" "}
-            <span className="ventas-admin">
-              Admin
-            </span>{" "}
-            /{" "}
-            <span className="ventas-titulo">
-              Ventas
-            </span>
+            <span className="ventas-orbix">Orbix</span> /{" "}
+            <span className="ventas-admin">Admin</span> /{" "}
+            <span className="ventas-titulo">Ventas</span>
           </p>
 
           <div className="ventas-acciones-superiores">
-
-            
-
-            
-
             <ProfileDropdown />
-
           </div>
-
         </div>
 
-        {/* =========================
+        {/* 
             ENCABEZADO
-        ========================= */}
+         */}
 
         <div className="ventas-encabezado">
-
           <div>
+            <h2>Ventas</h2>
 
-            <h2>
-              Ventas
-            </h2>
-
-            <p className="ventas-fecha">
-              {ventas.length} óÓrdenes registradas
-            </p>
-
+            <p className="ventas-fecha">{ventas.length} óÓrdenes registradas</p>
           </div>
 
           <button
@@ -136,23 +97,19 @@ const VentasAdmin = () => {
             onClick={abrirNuevaVenta}
           >
             <Plus size={20} />
-
             Nueva venta
           </button>
-
         </div>
 
-        {/* =========================
+        {/* 
             CARDS
-        ========================= */}
+         */}
 
-        <CardsVentas
-          ventas={ventas}
-        />
+        <CardsVentas ventas={ventas} />
 
-        {/* =========================
+        {/* 
             FILTROS
-        ========================= */}
+        */}
 
         <FiltrosVentas
           filtro={filtro}
@@ -161,20 +118,13 @@ const VentasAdmin = () => {
           setBusqueda={setBusqueda}
           totalResultados={ventas.length}
           totalConfirmado={ventas
-            .filter(
-              (venta) =>
-                venta.estado === "completada"
-            )
-            .reduce(
-              (total, venta) =>
-                total + Number(venta.total),
-              0
-            )}
+            .filter((venta) => venta.estado === "completada")
+            .reduce((total, venta) => total + Number(venta.total), 0)}
         />
 
-        {/* =========================
+        {/* 
             TABLA
-        ========================= */}
+         */}
 
         <TablaVentas
           filtro={filtro}
@@ -183,20 +133,15 @@ const VentasAdmin = () => {
           cargando={cargandoVentas}
         />
 
-       
-
         {mostrarNuevaVenta && (
           <NuevaVenta
             cerrarModal={cerrarNuevaVenta}
             onVentaCreada={manejarVentaCreada}
           />
         )}
-
       </div>
-
     </main>
   );
 };
 
 export default VentasAdmin;
-

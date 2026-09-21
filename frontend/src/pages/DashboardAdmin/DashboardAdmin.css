@@ -111,7 +111,7 @@
   font-size: 13px;
 }
 
-/* BOTí“N EXPORTAR */
+/* BOTIN EXPORTAR */
 
 .dashboard-button-exportar {
   width: 150px;
@@ -143,9 +143,9 @@
 
 .ventas-dashboard {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr;
   gap: 18px;
-  align-items: start;
+  align-items: stretch;
 }
 
 

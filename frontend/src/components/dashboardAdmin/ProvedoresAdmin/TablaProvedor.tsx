@@ -9,9 +9,7 @@ import productosService, {
   type ProductoInventario,
 } from "../../../services/productos.services";
 
-import ventasService, {
-  type Venta,
-} from "../../../services/ventas.services";
+import ventasService, { type Venta } from "../../../services/ventas.services";
 
 import ModalVerProvedor from "../../dashboardAdmin/ProvedoresAdmin/ModalVerProvedor";
 import ModalEditarProvedores from "../../dashboardAdmin/ProvedoresAdmin/ModalEditarProvedores";
@@ -21,10 +19,7 @@ interface TablaProvedoresProps {
   busqueda: string;
 }
 
-const TablaProvedor = ({
-  filtro: _filtro,
-  busqueda,
-}: TablaProvedoresProps) => {
+const TablaProvedor = ({ filtro, busqueda }: TablaProvedoresProps) => {
   const [proveedores, setProveedores] = useState<Proveedor[]>([]);
 
   const [productos, setProductos] = useState<ProductoInventario[]>([]);
@@ -36,12 +31,12 @@ const TablaProvedor = ({
   const [error, setError] = useState("");
 
   /* Proveedor seleccionado para VER */
-  const [proveedorVer, setProveedorVer] =
-    useState<Proveedor | null>(null);
+  const [proveedorVer, setProveedorVer] = useState<Proveedor | null>(null);
 
   /* Proveedor seleccionado para EDITAR */
-  const [proveedorEditar, setProveedorEditar] =
-    useState<Proveedor | null>(null);
+  const [proveedorEditar, setProveedorEditar] = useState<Proveedor | null>(
+    null,
+  );
 
   /* Cargamos los datos */
   useEffect(() => {
@@ -50,11 +45,7 @@ const TablaProvedor = ({
         setCargando(true);
         setError("");
 
-        const [
-          proveedoresData,
-          productosData,
-          ventasData,
-        ] = await Promise.all([
+        const [proveedoresData, productosData, ventasData] = await Promise.all([
           proveedoresService.obtenerProveedores(),
           productosService.obtenerProductos(),
           ventasService.obtenerVentas(),
@@ -65,9 +56,7 @@ const TablaProvedor = ({
         setVentas(ventasData);
       } catch (error) {
         setError(
-          error instanceof Error
-            ? error.message
-            : "Error al cargar los datos.",
+          error instanceof Error ? error.message : "Error al cargar los datos.",
         );
       } finally {
         setCargando(false);
@@ -77,33 +66,23 @@ const TablaProvedor = ({
     cargarDatos();
   }, []);
 
-  const textoBusqueda = busqueda
-    .toLocaleLowerCase()
-    .trim();
+  const textoBusqueda = busqueda.toLocaleLowerCase().trim();
 
   /*
    * Busca los productos relacionados
    * con un proveedor.
    */
-  const obtenerProductosProveedor = (
-    idProveedor: string,
-  ) => {
+  const obtenerProductosProveedor = (idProveedor: string) => {
     return productos.filter((producto) => {
-      const proveedor = proveedores.find(
-        (p) => p.idProveedor === idProveedor,
-      );
+      const proveedor = proveedores.find((p) => p.idProveedor === idProveedor);
 
       if (!proveedor) {
         return false;
       }
 
       return (
-        producto.proveedor
-          .toLocaleLowerCase()
-          .trim() ===
-        proveedor.nombre
-          .toLocaleLowerCase()
-          .trim()
+        producto.proveedor.toLocaleLowerCase().trim() ===
+        proveedor.nombre.toLocaleLowerCase().trim()
       );
     });
   };
@@ -114,24 +93,15 @@ const TablaProvedor = ({
    *
    * Ya no manejamos categoría aquí.
    */
-  const obtenerInformacionProveedor = (
-    proveedor: Proveedor,
-  ) => {
-    const productosProveedor =
-      obtenerProductosProveedor(
-        proveedor.idProveedor,
-      );
+  const obtenerInformacionProveedor = (proveedor: Proveedor) => {
+    const productosProveedor = obtenerProductosProveedor(proveedor.idProveedor);
 
     const idsProductos = new Set(
-      productosProveedor.map(
-        (producto) => producto.idProducto,
-      ),
+      productosProveedor.map((producto) => producto.idProducto),
     );
 
     const ventasProveedor = ventas.filter((venta) =>
-      venta.detalles.some((detalle) =>
-        idsProductos.has(detalle.idProducto),
-      ),
+      venta.detalles.some((detalle) => idsProductos.has(detalle.idProducto)),
     );
 
     let totalComprado = 0;
@@ -139,14 +109,11 @@ const TablaProvedor = ({
     ventasProveedor.forEach((venta) => {
       venta.detalles.forEach((detalle) => {
         const producto = productosProveedor.find(
-          (p) =>
-            p.idProducto === detalle.idProducto,
+          (p) => p.idProducto === detalle.idProducto,
         );
 
         if (producto) {
-          totalComprado +=
-            producto.precioCompra *
-            detalle.cantidad;
+          totalComprado += producto.precioCompra * detalle.cantidad;
         }
       });
     });
@@ -165,27 +132,28 @@ const TablaProvedor = ({
    *
    * La categoría ya no pertenece a esta tabla.
    */
-  const proveedoresFiltrados =
-    proveedores.filter((proveedor) => {
-      const coincideBusqueda =
-        proveedor.nombre
-          .toLocaleLowerCase()
-          .includes(textoBusqueda) ||
-        proveedor.nit
-          .toLocaleLowerCase()
-          .includes(textoBusqueda) ||
-        (proveedor.telefono || "")
-          .toLocaleLowerCase()
-          .includes(textoBusqueda) ||
-        (proveedor.correo || "")
-          .toLocaleLowerCase()
-          .includes(textoBusqueda) ||
-        (proveedor.ciudad || "")
-          .toLocaleLowerCase()
-          .includes(textoBusqueda);
+  const proveedoresFiltrados = proveedores.filter((proveedor) => {
+    /* FILTRO POR BÚSQUEDA */
 
-      return coincideBusqueda;
-    });
+    const coincideBusqueda =
+      proveedor.nombre.toLocaleLowerCase().includes(textoBusqueda) ||
+      proveedor.nit.toLocaleLowerCase().includes(textoBusqueda) ||
+      (proveedor.telefono || "").toLocaleLowerCase().includes(textoBusqueda) ||
+      (proveedor.correo || "").toLocaleLowerCase().includes(textoBusqueda) ||
+      (proveedor.ciudad || "").toLocaleLowerCase().includes(textoBusqueda);
+
+    /* FILTRO POR CATEGORÍA */
+
+    const coincideCategoria =
+      filtro === "Todos" ||
+      obtenerProductosProveedor(proveedor.idProveedor).some(
+        (producto) =>
+          producto.categoria?.toLocaleLowerCase().trim() ===
+          filtro.toLocaleLowerCase().trim(),
+      );
+
+    return coincideBusqueda && coincideCategoria;
+  });
 
   /* Cargando */
   if (cargando) {
@@ -195,10 +163,7 @@ const TablaProvedor = ({
           <table className="tabla-provedores">
             <tbody>
               <tr>
-                <td
-                  colSpan={8}
-                  className="provedores-sin-resultados"
-                >
+                <td colSpan={8} className="provedores-sin-resultados">
                   Cargando proveedores...
                 </td>
               </tr>
@@ -217,10 +182,7 @@ const TablaProvedor = ({
           <table className="tabla-provedores">
             <tbody>
               <tr>
-                <td
-                  colSpan={8}
-                  className="provedores-sin-resultados"
-                >
+                <td colSpan={8} className="provedores-sin-resultados">
                   {error}
                 </td>
               </tr>
@@ -251,10 +213,7 @@ const TablaProvedor = ({
 
           <tbody>
             {proveedoresFiltrados.map((proveedor) => {
-              const informacion =
-                obtenerInformacionProveedor(
-                  proveedor,
-                );
+              const informacion = obtenerInformacionProveedor(proveedor);
 
               /* Iniciales */
               const iniciales = proveedor.nombre
@@ -266,8 +225,7 @@ const TablaProvedor = ({
 
               /* Estado */
               const estado =
-                proveedor.estado?.toLowerCase() ===
-                "inactivo"
+                proveedor.estado?.toLowerCase() === "inactivo"
                   ? "Inactivo"
                   : "Activo";
 
@@ -277,18 +235,14 @@ const TablaProvedor = ({
 
                   <td className="provedor-info">
                     <div className="provedor-contenido">
-                      <div className="provedor-avatar">
-                        {iniciales}
-                      </div>
+                      <div className="provedor-avatar">{iniciales}</div>
 
                       <div className="provedor-datos">
                         <span className="provedor-nombre">
                           {proveedor.nombre}
                         </span>
 
-                        <span className="provedor-id">
-                          {proveedor.nit}
-                        </span>
+                        <span className="provedor-id">{proveedor.nit}</span>
                       </div>
                     </div>
                   </td>
@@ -309,30 +263,21 @@ const TablaProvedor = ({
 
                   {/* CIUDAD */}
 
-                  <td className="ciudad-info">
-                    {proveedor.ciudad || "-"}
-                  </td>
+                  <td className="ciudad-info">{proveedor.ciudad || "-"}</td>
 
                   {/* TOTAL COMPRADO */}
 
                   <td className="compras-info">
-                    ${" "}
-                    {informacion.totalComprado.toLocaleString(
-                      "es-CO",
-                    )}
+                    $ {informacion.totalComprado.toLocaleString("es-CO")}
                   </td>
 
                   {/* ÓRDENES */}
 
-                  <td className="oÓrdenes-info">
-                    {informacion.oÓrdenes}
-                  </td>
+                  <td className="oÓrdenes-info">{informacion.oÓrdenes}</td>
 
                   {/* TELÉFONO */}
 
-                  <td className="telefono-info">
-                    {proveedor.telefono || "-"}
-                  </td>
+                  <td className="telefono-info">{proveedor.telefono || "-"}</td>
 
                   {/* ESTADO */}
 
@@ -357,9 +302,7 @@ const TablaProvedor = ({
                       <button
                         type="button"
                         className="boton-ver"
-                        onClick={() =>
-                          setProveedorVer(proveedor)
-                        }
+                        onClick={() => setProveedorVer(proveedor)}
                       >
                         Ver
                       </button>
@@ -369,9 +312,7 @@ const TablaProvedor = ({
                       <button
                         type="button"
                         className="boton-editar"
-                        onClick={() =>
-                          setProveedorEditar(proveedor)
-                        }
+                        onClick={() => setProveedorEditar(proveedor)}
                       >
                         Editar
                       </button>
@@ -385,10 +326,7 @@ const TablaProvedor = ({
 
             {proveedoresFiltrados.length === 0 && (
               <tr>
-                <td
-                  colSpan={8}
-                  className="provedores-sin-resultados"
-                >
+                <td colSpan={8} className="provedores-sin-resultados">
                   No se encontraron proveedores.
                 </td>
               </tr>
@@ -403,15 +341,9 @@ const TablaProvedor = ({
         {proveedorVer && (
           <ModalVerProvedor
             proveedor={proveedorVer}
-            productos={obtenerProductosProveedor(
-              proveedorVer.idProveedor,
-            )}
-            informacion={obtenerInformacionProveedor(
-              proveedorVer,
-            )}
-            onCerrar={() =>
-              setProveedorVer(null)
-            }
+            productos={obtenerProductosProveedor(proveedorVer.idProveedor)}
+            informacion={obtenerInformacionProveedor(proveedorVer)}
+            onCerrar={() => setProveedorVer(null)}
           />
         )}
 
@@ -422,21 +354,15 @@ const TablaProvedor = ({
         {proveedorEditar && (
           <ModalEditarProvedores
             proveedor={proveedorEditar}
-            onCerrar={() =>
-              setProveedorEditar(null)
-            }
-            onActualizado={(
-              proveedorActualizado,
-            ) => {
-              setProveedores(
-                (proveedoresActuales) =>
-                  proveedoresActuales.map(
-                    (proveedorActual) =>
-                      proveedorActual.idProveedor ===
-                      proveedorActualizado.idProveedor
-                        ? proveedorActualizado
-                        : proveedorActual,
-                  ),
+            onCerrar={() => setProveedorEditar(null)}
+            onActualizado={(proveedorActualizado) => {
+              setProveedores((proveedoresActuales) =>
+                proveedoresActuales.map((proveedorActual) =>
+                  proveedorActual.idProveedor ===
+                  proveedorActualizado.idProveedor
+                    ? proveedorActualizado
+                    : proveedorActual,
+                ),
               );
 
               setProveedorEditar(null);

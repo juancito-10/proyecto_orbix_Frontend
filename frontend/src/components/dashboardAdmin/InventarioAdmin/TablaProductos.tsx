@@ -7,13 +7,11 @@ import type {
 interface TablaProductosProps {
   productos: ProductoInventario[];
   onEditar: (producto: ProductoInventario) => void;
-  onEliminar: (idProducto: string) => void;
 }
 
 const TablaProductos = ({
   productos,
   onEditar,
-  onEliminar,
 }: TablaProductosProps) => {
   return (
     <div className="tabla-productos">
@@ -102,15 +100,6 @@ const TablaProductos = ({
                 onClick={() => onEditar(producto)}
               >
                 Editar
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  onEliminar(producto.idProducto)
-                }
-              >
-                Eliminar
               </button>
             </span>
           </div>

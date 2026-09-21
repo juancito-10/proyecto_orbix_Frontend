@@ -114,7 +114,7 @@ const ProfileDropdown = () => {
 
   const getRoleColor = (rol: string) => {
     switch(rol?.toLowerCase()) {
-      case 'admin': return '#3b82f6';
+      case 'admin': return '#087c9c';
       case 'vendedor': 
       case 'cajero': return '#8b5cf6';
       case 'inventario': return '#10b981';

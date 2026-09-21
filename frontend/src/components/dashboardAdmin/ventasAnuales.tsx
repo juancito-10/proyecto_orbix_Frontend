@@ -93,7 +93,10 @@ const Ventasanuales = () => {
       <div className="ventas-header">
         <div>
           <h3>Ventas anuales</h3>
-          <p>Ventas completadas por mes {new Date().getFullYear()}</p>
+          <p>
+            Ventas completadas por mes{" "}
+            {new Date().getFullYear()}
+          </p>
         </div>
 
         <div className="leyenda">
@@ -103,7 +106,15 @@ const Ventasanuales = () => {
 
       <div className="grafica">
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={datos}>
+          <LineChart
+            data={datos}
+            margin={{
+              top: 10,
+              right: 20,
+              left: 75,
+              bottom: 10,
+            }}
+          >
             <CartesianGrid strokeDasharray="4 4" />
 
             <XAxis dataKey="mes" />

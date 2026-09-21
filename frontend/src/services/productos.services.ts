@@ -72,6 +72,34 @@ export type ActualizarProducto = {
   idProveedor?: string | null;
 };
 
+/*
+ * CACHE DE PRODUCTOS
+ */
+
+let productosCache: ProductoInventario[] | null = null;
+
+let productosPromise:
+  | Promise<ProductoInventario[]>
+  | null = null;
+
+let productosToken: string | null = null;
+
+let productosVersion = 0;
+
+/*
+ * INVALIDAR CACHE
+ */
+
+function invalidarCacheProductos() {
+  productosCache = null;
+  productosPromise = null;
+  productosVersion++;
+}
+
+/*
+ * OBTENER PRODUCTOS
+ */
+
 async function obtenerProductos(): Promise<ProductoInventario[]> {
   const token = localStorage.getItem("token");
 
@@ -79,131 +107,277 @@ async function obtenerProductos(): Promise<ProductoInventario[]> {
     throw new Error("No hay sesión activa.");
   }
 
-  const response = await fetch(`${BASE_URL}/productos?limit=500`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data: RespuestaApi = await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error("Error al obtener los productos.");
+  /*
+   * Si cambió el usuario/token,
+   * limpiamos el cache anterior.
+   */
+  if (productosToken !== token) {
+    productosCache = null;
+    productosPromise = null;
+    productosToken = token;
+    productosVersion++;
   }
 
-  return data.data.map((producto) => ({
-    // UUID interno del producto
-    idProducto: producto.idProducto,
+  /*
+   * Si ya tenemos los productos,
+   * no hacemos otra petición.
+   */
+  if (productosCache) {
+    return productosCache;
+  }
 
-    // SKU que se muestra como código en la tabla
-    codigo: producto.sku ?? "Sin código",
+  /*
+   * Si ya hay una petición en curso,
+   * reutilizamos esa misma petición.
+   */
+  if (productosPromise) {
+    return productosPromise;
+  }
 
-    nombre: producto.nombre,
+  const versionActual = productosVersion;
 
-    descripcion: producto.descripcion ?? "",
+  productosPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/productos?limit=500`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    precioCompra: Number(producto.precioCompra),
+    const data: RespuestaApi =
+      await response.json();
 
-    precio: Number(producto.precio),
+    if (!response.ok || !data.success) {
+      throw new Error(
+        "Error al obtener los productos."
+      );
+    }
 
-    stock: Number(producto.stock),
+    const productos = data.data.map(
+      (producto) => ({
+        idProducto:
+          producto.idProducto,
 
-    stockMinimo: Number(producto.stockMinimo),
+        codigo:
+          producto.sku ??
+          "Sin código",
 
-    estado: producto.estado,
+        nombre:
+          producto.nombre,
 
-    categoria: producto.categoria?.nombre ?? "Sin categoría",
+        descripcion:
+          producto.descripcion ??
+          "",
 
-    proveedor: producto.proveedor?.nombre ?? "Sin proveedor",
-  }));
+        precioCompra:
+          Number(
+            producto.precioCompra
+          ),
+
+        precio:
+          Number(
+            producto.precio
+          ),
+
+        stock:
+          Number(
+            producto.stock
+          ),
+
+        stockMinimo:
+          Number(
+            producto.stockMinimo
+          ),
+
+        estado:
+          producto.estado,
+
+        categoria:
+          producto.categoria?.nombre ??
+          "Sin categoría",
+
+        proveedor:
+          producto.proveedor?.nombre ??
+          "Sin proveedor",
+      })
+    );
+
+    /*
+     * Solo guardamos la respuesta
+     * si sigue siendo la versión actual.
+     */
+    if (
+      versionActual ===
+      productosVersion
+    ) {
+      productosCache = productos;
+    }
+
+    return productos;
+  })();
+
+  try {
+    return await productosPromise;
+  } finally {
+    productosPromise = null;
+  }
 }
+
+/*
+ * CREAR PRODUCTO
+ */
 
 async function crearProducto(
   producto: CrearProducto,
 ): Promise<ProductoApi> {
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(`${BASE_URL}/productos`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(producto),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Error al crear el producto.",
+      "No hay sesión activa."
     );
   }
+
+  const response = await fetch(
+    `${BASE_URL}/productos`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/json",
+        Authorization:
+          `Bearer ${token}`,
+      },
+      body: JSON.stringify(
+        producto
+      ),
+    },
+  );
+
+  const data =
+    await response.json();
+
+  if (
+    !response.ok ||
+    !data.success
+  ) {
+    throw new Error(
+      data.message ||
+        "Error al crear el producto.",
+    );
+  }
+
+  /*
+   * El producto cambió.
+   * Limpiamos el cache.
+   */
+  invalidarCacheProductos();
 
   return data.data;
 }
 
+/*
+ * ELIMINAR PRODUCTO
+ */
+
 async function eliminarProducto(
   idProducto: string,
 ): Promise<void> {
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
-    `${BASE_URL}/productos/${idProducto}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    const data = await response.json().catch(() => null);
-
     throw new Error(
-      data?.message || "Error al eliminar el producto.",
+      "No hay sesión activa."
     );
   }
+
+  const response =
+    await fetch(
+      `${BASE_URL}/productos/${idProducto}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+        },
+      },
+    );
+
+  if (!response.ok) {
+    const data =
+      await response
+        .json()
+        .catch(() => null);
+
+    throw new Error(
+      data?.message ||
+        "Error al eliminar el producto.",
+    );
+  }
+
+  /*
+   * El producto cambió.
+   * Limpiamos el cache.
+   */
+  invalidarCacheProductos();
 }
+
+/*
+ * ACTUALIZAR PRODUCTO
+ */
 
 async function actualizarProducto(
   idProducto: string,
   producto: ActualizarProducto,
 ): Promise<ProductoApi> {
-  const token = localStorage.getItem("token");
+  const token =
+    localStorage.getItem("token");
 
   if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
-    `${BASE_URL}/productos/${idProducto}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(producto),
-    },
-  );
-
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Error al actualizar el producto.",
+      "No hay sesión activa."
     );
   }
+
+  const response =
+    await fetch(
+      `${BASE_URL}/productos/${idProducto}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type":
+            "application/json",
+          Authorization:
+            `Bearer ${token}`,
+        },
+        body: JSON.stringify(
+          producto
+        ),
+      },
+    );
+
+  const data =
+    await response.json();
+
+  if (
+    !response.ok ||
+    !data.success
+  ) {
+    throw new Error(
+      data.message ||
+        "Error al actualizar el producto.",
+    );
+  }
+
+  /*
+   * El producto cambió.
+   * Limpiamos el cache.
+   */
+  invalidarCacheProductos();
 
   return data.data;
 }

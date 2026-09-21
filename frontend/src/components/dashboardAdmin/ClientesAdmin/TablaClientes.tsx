@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./TablaClientes.css";
 
-import clienteService, {
+import {
   type Cliente,
 } from "../../../services/clientes.services";
 
@@ -12,15 +12,16 @@ import ventasService, {
 import PerfilClienteModal from "./PerfilClienteModal";
 
 interface TablaClientesProps {
+  clientes: Cliente[];
   filtro: string;
   busqueda: string;
 }
 
 const TablaClientes = ({
+  clientes,
   filtro,
   busqueda,
 }: TablaClientesProps) => {
-  const [clientes, setClientes] = useState<Cliente[]>([]);
   const [ventas, setVentas] = useState<Venta[]>([]);
 
   const [clienteSeleccionado, setClienteSeleccionado] =
@@ -30,30 +31,27 @@ const TablaClientes = ({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const cargarDatos = async () => {
+    const cargarVentas = async () => {
       try {
         setCargando(true);
         setError("");
 
-        const [datosClientes, datosVentas] = await Promise.all([
-          clienteService.obtenerClientes(),
-          ventasService.obtenerVentas(),
-        ]);
+        const datosVentas =
+          await ventasService.obtenerVentas();
 
-        setClientes(datosClientes);
         setVentas(datosVentas);
       } catch (error) {
         if (error instanceof Error) {
           setError(error.message);
         } else {
-          setError("Error al cargar los clientes.");
+          setError("Error al cargar las ventas.");
         }
       } finally {
         setCargando(false);
       }
     };
 
-    cargarDatos();
+    cargarVentas();
   }, []);
 
   const textoBusqueda = busqueda
@@ -63,7 +61,8 @@ const TablaClientes = ({
   const clientesFiltrados = clientes.filter((cliente) => {
     const coincideSegmento =
       filtro === "Todos" ||
-      cliente.segmento?.toLowerCase() === filtro.toLowerCase();
+      cliente.segmento?.toLowerCase() ===
+        filtro.toLowerCase();
 
     const coincideBusqueda =
       cliente.nombre
@@ -222,7 +221,9 @@ const TablaClientes = ({
   return (
     <section className="tabla-clientes-wrapper">
       <div className="tabla-clientes-contenedor">
+
         <table className="tabla-clientes">
+
           <thead>
             <tr>
               <th>CLIENTE</th>
@@ -237,7 +238,9 @@ const TablaClientes = ({
           </thead>
 
           <tbody>
+
             {clientesFiltrados.map((cliente) => {
+
               const iniciales =
                 obtenerIniciales(
                   cliente.nombre
@@ -262,14 +265,19 @@ const TablaClientes = ({
                 <tr
                   key={cliente.idCliente}
                 >
+
                   {/* CLIENTE */}
+
                   <td className="cliente-info">
+
                     <div className="cliente-contenido">
+
                       <div className="cliente-avatar">
                         {iniciales}
                       </div>
 
                       <div className="cliente-datos">
+
                         <span className="cliente-nombre">
                           {cliente.nombre}
                         </span>
@@ -278,13 +286,19 @@ const TablaClientes = ({
                           {cliente.codigoCliente ||
                             cliente.documento}
                         </span>
+
                       </div>
+
                     </div>
+
                   </td>
 
                   {/* CONTACTO */}
+
                   <td className="contacto-info">
+
                     <div className="contacto-datos">
+
                       <span className="contacto-nombre">
                         {cliente.telefono ||
                           "Sin teléfono"}
@@ -294,36 +308,46 @@ const TablaClientes = ({
                         {cliente.correo ||
                           "Sin correo"}
                       </span>
+
                     </div>
+
                   </td>
 
                   {/* CIUDAD */}
+
                   <td className="ciudad-info">
                     {cliente.ciudad ||
                       "Sin ciudad"}
                   </td>
 
                   {/* TOTAL COMPRAS */}
+
                   <td className="compras-info">
                     $ {formatearDinero(totalCompras)}
                   </td>
 
                   {/* PEDIDOS */}
+
                   <td className="pedidos-info">
                     {cantidadPedidos}
                   </td>
 
                   {/* ÚLTIMO PEDIDO */}
+
                   <td className="ultimo-pedido-info">
+
                     {ultimoPedido
                       ? formatearFecha(
                           ultimoPedido.fecha
                         )
                       : "Sin pedidos"}
+
                   </td>
 
                   {/* SEGMENTO */}
+
                   <td className="segmento-info">
+
                     <span
                       className={`segmento-${
                         cliente.segmento?.toLowerCase() ||
@@ -334,10 +358,13 @@ const TablaClientes = ({
                         cliente.segmento
                       )}
                     </span>
+
                   </td>
 
                   {/* PERFIL */}
+
                   <td className="perfil-info">
+
                     <button
                       type="button"
                       className="boton-ver-perfil"
@@ -347,43 +374,60 @@ const TablaClientes = ({
                     >
                       Ver perfil
                     </button>
+
                   </td>
+
                 </tr>
               );
             })}
 
             {clientesFiltrados.length === 0 && (
+
               <tr>
+
                 <td
                   colSpan={8}
                   className="clientes-sin-resultados"
                 >
                   No se encontraron clientes.
                 </td>
+
               </tr>
+
             )}
+
           </tbody>
+
         </table>
+
       </div>
 
       {/* MODAL PERFIL DEL CLIENTE */}
+
       {clienteSeleccionado && (
+
         <PerfilClienteModal
           cliente={clienteSeleccionado}
+
           totalCompras={obtenerTotalCompras(
             clienteSeleccionado.idCliente
           )}
+
           cantidadPedidos={obtenerCantidadPedidos(
             clienteSeleccionado.idCliente
           )}
+
           ultimoPedido={obtenerUltimoPedido(
             clienteSeleccionado.idCliente
           )}
+
           onCerrar={() =>
             setClienteSeleccionado(null)
           }
         />
+
       )}
+
     </section>
   );
 };
