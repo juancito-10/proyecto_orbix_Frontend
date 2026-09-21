@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-import { Mail, LockKeyhole, Eye, EyeOff } from "lucide-react";
+import {
+  Mail,
+  LockKeyhole,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -21,40 +26,51 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
 
   const [password, setPassword] = useState("");
 
-  const [mostrarPassword, setMostrarPassword] = useState(false);
+  const [mostrarPassword, setMostrarPassword] =
+    useState(false);
 
   const [error, setError] = useState("");
 
   const [cargando, setCargando] = useState(false);
 
-  const [captcha, setCaptcha] = useState<string | null>(null);
+  const [captcha, setCaptcha] =
+    useState<string | null>(null);
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
 
     setError("");
 
-    // Validar reCAPTCHA antes de iniciar sesión
     if (!captcha) {
-      setError("Por favor, verifica que no eres un robot.");
+      setError(
+        "Por favor, verifica que no eres un robot."
+      );
       return;
     }
 
     setCargando(true);
 
     try {
-      const response = await authService.login(email, password, captcha);
+      const response = await authService.login(
+        email,
+        password,
+        captcha
+      );
 
       const token = response.data.token;
 
       const usuario = response.data.usuario;
 
-      // Validar el tipo de acceso
-      if (tipo === "admin" && usuario.rol !== "admin") {
+      if (
+        tipo === "admin" &&
+        usuario.rol !== "admin"
+      ) {
         setError(
-          "Este usuario no tiene permisos para acceder como administrador.",
+          "Este usuario no tiene permisos para acceder como administrador."
         );
 
         return;
@@ -67,23 +83,27 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
         usuario.rol !== "inventario"
       ) {
         setError(
-          "Este usuario no tiene permisos para acceder al área operativa.",
+          "Este usuario no tiene permisos para acceder al área operativa."
         );
 
         return;
       }
 
-      // Guardar sesión solamente después de validar el rol
       localStorage.setItem("token", token);
 
-      localStorage.setItem("usuario", JSON.stringify(usuario));
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify(usuario)
+      );
 
-      // Redireccionar segíºn el rol
       if (usuario.rol === "admin") {
         navigate("/dashboard/admin");
       }
 
-      if (usuario.rol === "vendedor" || usuario.rol === "cajero") {
+      if (
+        usuario.rol === "vendedor" ||
+        usuario.rol === "cajero"
+      ) {
         navigate("/dashboard/vendedor");
       }
 
@@ -91,7 +111,9 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
         navigate("/dashboard/inventario");
       }
     } catch (error) {
-      setError("Correo o contraseña incorrectos.");
+      setError(
+        "Correo o contraseña incorrectos."
+      );
     } finally {
       setCargando(false);
     }
@@ -101,22 +123,45 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
     <main className="main">
       <div className="login-container">
         <div className="panel-izquierdo">
-          <img src={Logo} alt="Logo de Orbix" className="logo-imagen" />
+          <img
+            src={Logo}
+            alt="Logo de Orbix"
+            className="logo-imagen"
+          />
 
-          <p className="panel-titulo">Gestión de tu negocio, más simple.</p>
+          <p className="panel-titulo">
+            Gestión de tu negocio, más simple.
+          </p>
 
-          <p>Administra inventario, ventas y clientes desde un solo lugar.</p>
+          <p>
+            Administra inventario, ventas y clientes
+            desde un solo lugar.
+          </p>
         </div>
 
         <div className="panel-derecho">
-          <form onSubmit={handleSubmit} className="form">
+          <form
+            onSubmit={handleSubmit}
+            className="form"
+          >
             <div className="form-group">
-              <h1 className={tipo === "admin" ? "has-subtitle" : ""}>Orbix</h1>
-              {tipo === "admin" && (
-                <h2 className="login-subtitle">Perfil de Administrador</h2>
-              )}
+              <h1
+                className={
+                  "has-subtitle"
+                }
+              >
+                Orbix
+              </h1>
 
-              <label htmlFor="correo">Correo electrónico</label>
+              <h2 className="login-subtitle">
+                {tipo === "admin"
+                  ? "Área Administrativa"
+                  : "Área Operativa"}
+              </h2>
+
+              <label htmlFor="correo">
+                Correo electrónico
+              </label>
 
               <div className="input-con-icono">
                 <Mail size={19} />
@@ -127,81 +172,93 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
                   placeholder="correo@empresa.com"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) =>
+                    setEmail(e.target.value)
+                  }
                 />
               </div>
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Contraseña</label>
+              <label htmlFor="password">
+                Contraseña
+              </label>
 
               <div className="input-con-icono">
                 <LockKeyhole size={19} />
 
                 <input
-                  type={mostrarPassword ? "text" : "password"}
+                  type={
+                    mostrarPassword
+                      ? "text"
+                      : "password"
+                  }
                   id="password"
                   placeholder="Ingresa la contraseña"
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setPassword(e.target.value)
+                  }
                 />
 
                 <button
                   type="button"
                   className="mostrar-password"
-                  onClick={() => setMostrarPassword(!mostrarPassword)}
+                  onClick={() =>
+                    setMostrarPassword(
+                      !mostrarPassword
+                    )
+                  }
                   aria-label={
                     mostrarPassword
                       ? "Ocultar contraseña"
                       : "Mostrar contraseña"
                   }
                 >
-                  {mostrarPassword ? <EyeOff size={19} /> : <Eye size={19} />}
+                  {mostrarPassword ? (
+                    <EyeOff size={19} />
+                  ) : (
+                    <Eye size={19} />
+                  )}
                 </button>
               </div>
             </div>
 
-            <div className="recaptcha-wrapper"><ReCAPTCHA
-              sitekey="6LfYOZctAAAAAFisLyc7wavVJyjRgdDWlMk_8uhm"
-              onChange={(value: string | null) => setCaptcha(value)} /></div>
+            <div className="recaptcha-wrapper">
+              <ReCAPTCHA
+                sitekey="6LfYOZctAAAAAFisLyc7wavVJyjRgdDWlMk_8uhm"
+                onChange={(
+                  value: string | null
+                ) => setCaptcha(value)}
+              />
+            </div>
 
-            {error && <p className="login-error">{error}</p>}
+            {error && (
+              <p className="login-error">
+                {error}
+              </p>
+            )}
 
-            <button type="submit" className="button-login" disabled={cargando}>
-              {cargando ? "Iniciando sesión..." : "Iniciar sesión"}
+            <button
+              type="submit"
+              className="button-login"
+              disabled={cargando}
+            >
+              {cargando
+                ? "Iniciando sesión..."
+                : "Iniciar sesión"}
             </button>
 
             <button
               type="button"
               className="forgot-password-orbix"
-              onClick={() => navigate("/forgot-password")}
+              onClick={() =>
+                navigate("/forgot-password")
+              }
             >
               ¿Olvidaste la contraseña?
             </button>
-
-            {tipo === "opera" && (
-              <div className="login-footer-link">
-                <button
-                  type="button"
-                  className="switch-login-type"
-                  onClick={() => navigate("/login/admin")}
-                >
-                  Ir a perfil de administrador
-                </button>
-              </div>
-            )}
-            {tipo === "admin" && (
-              <div className="login-footer-link">
-                <button
-                  type="button"
-                  className="switch-login-type"
-                  onClick={() => navigate("/login/opera")}
-                >
-                  Ir a perfil operativo
-                </button>
-              </div>
-            )}
           </form>
         </div>
       </div>
@@ -210,7 +267,3 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
 };
 
 export default LoginForm;
-
-
-
-

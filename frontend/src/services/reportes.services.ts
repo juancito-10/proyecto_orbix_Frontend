@@ -60,6 +60,62 @@ type RespuestaApi<T> = {
 };
 
 /* =========================================================
+   CACHE
+========================================================= */
+
+let resumenCache: ResumenReporte | null = null;
+let resumenPromise: Promise<ResumenReporte> | null = null;
+
+let ventasPorCategoriaCache: VentaPorCategoria[] | null = null;
+let ventasPorCategoriaPromise:
+  | Promise<VentaPorCategoria[]>
+  | null = null;
+
+const ultimasVentasCache = new Map<number, UltimaVenta[]>();
+const ultimasVentasPromises = new Map<
+  number,
+  Promise<UltimaVenta[]>
+>();
+
+let productosPorProveedorCache:
+  | ProductoPorProveedor[]
+  | null = null;
+
+let productosPorProveedorPromise:
+  | Promise<ProductoPorProveedor[]>
+  | null = null;
+
+let reportesCache: Reporte[] | null = null;
+let reportesPromise: Promise<Reporte[]> | null = null;
+
+let reportesToken: string | null = null;
+
+let reportesVersion = 0;
+
+/* =========================================================
+   INVALIDAR CACHE
+========================================================= */
+
+function invalidarCacheReportes() {
+  resumenCache = null;
+  resumenPromise = null;
+
+  ventasPorCategoriaCache = null;
+  ventasPorCategoriaPromise = null;
+
+  ultimasVentasCache.clear();
+  ultimasVentasPromises.clear();
+
+  productosPorProveedorCache = null;
+  productosPorProveedorPromise = null;
+
+  reportesCache = null;
+  reportesPromise = null;
+
+  reportesVersion++;
+}
+
+/* =========================================================
    FUNCIÓN PARA OBTENER TOKEN
 ========================================================= */
 
@@ -68,6 +124,14 @@ function obtenerToken(): string {
 
   if (!token) {
     throw new Error("No hay sesión activa.");
+  }
+
+  /*
+   * Si cambió la sesión, limpiamos el cache.
+   */
+  if (reportesToken !== token) {
+    invalidarCacheReportes();
+    reportesToken = token;
   }
 
   return token;
@@ -80,26 +144,48 @@ function obtenerToken(): string {
 async function obtenerResumen(): Promise<ResumenReporte> {
   const token = obtenerToken();
 
-  const response = await fetch(
-    `${BASE_URL}/reportes/resumen`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const data: RespuestaApi<ResumenReporte> =
-    await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(
-      "Error al obtener el resumen de reportes."
-    );
+  if (resumenCache) {
+    return resumenCache;
   }
 
-  return data.data;
+  if (resumenPromise) {
+    return resumenPromise;
+  }
+
+  const versionActual = reportesVersion;
+
+  resumenPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/reportes/resumen`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data: RespuestaApi<ResumenReporte> =
+      await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        "Error al obtener el resumen de reportes."
+      );
+    }
+
+    if (versionActual === reportesVersion) {
+      resumenCache = data.data;
+    }
+
+    return data.data;
+  })();
+
+  try {
+    return await resumenPromise;
+  } finally {
+    resumenPromise = null;
+  }
 }
 
 /* =========================================================
@@ -111,29 +197,53 @@ async function obtenerVentasPorCategoria(): Promise<
 > {
   const token = obtenerToken();
 
-  const response = await fetch(
-    `${BASE_URL}/reportes/ventas-por-categoria`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const data: RespuestaApi<VentaPorCategoria[]> =
-    await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(
-      "Error al obtener las ventas por categoría."
-    );
+  if (ventasPorCategoriaCache) {
+    return ventasPorCategoriaCache;
   }
 
-  return data.data.map((item) => ({
-    categoria: item.categoria,
-    totalVendido: Number(item.totalVendido),
-  }));
+  if (ventasPorCategoriaPromise) {
+    return ventasPorCategoriaPromise;
+  }
+
+  const versionActual = reportesVersion;
+
+  ventasPorCategoriaPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/reportes/ventas-por-categoria`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data: RespuestaApi<VentaPorCategoria[]> =
+      await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        "Error al obtener las ventas por categoría."
+      );
+    }
+
+    const resultado = data.data.map((item) => ({
+      categoria: item.categoria,
+      totalVendido: Number(item.totalVendido),
+    }));
+
+    if (versionActual === reportesVersion) {
+      ventasPorCategoriaCache = resultado;
+    }
+
+    return resultado;
+  })();
+
+  try {
+    return await ventasPorCategoriaPromise;
+  } finally {
+    ventasPorCategoriaPromise = null;
+  }
 }
 
 /* =========================================================
@@ -145,29 +255,59 @@ async function obtenerUltimasVentas(
 ): Promise<UltimaVenta[]> {
   const token = obtenerToken();
 
-  const response = await fetch(
-    `${BASE_URL}/reportes/ultimas-ventas?limit=${limit}`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const cache = ultimasVentasCache.get(limit);
 
-  const data: RespuestaApi<UltimaVenta[]> =
-    await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(
-      "Error al obtener las últimas ventas."
-    );
+  if (cache) {
+    return cache;
   }
 
-  return data.data.map((venta) => ({
-    ...venta,
-    total: Number(venta.total),
-  }));
+  const promise = ultimasVentasPromises.get(limit);
+
+  if (promise) {
+    return promise;
+  }
+
+  const versionActual = reportesVersion;
+
+  const nuevaPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/reportes/ultimas-ventas?limit=${limit}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data: RespuestaApi<UltimaVenta[]> =
+      await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        "Error al obtener las últimas ventas."
+      );
+    }
+
+    const resultado = data.data.map((venta) => ({
+      ...venta,
+      total: Number(venta.total),
+    }));
+
+    if (versionActual === reportesVersion) {
+      ultimasVentasCache.set(limit, resultado);
+    }
+
+    return resultado;
+  })();
+
+  ultimasVentasPromises.set(limit, nuevaPromise);
+
+  try {
+    return await nuevaPromise;
+  } finally {
+    ultimasVentasPromises.delete(limit);
+  }
 }
 
 /* =========================================================
@@ -179,29 +319,53 @@ async function obtenerProductosPorProveedor(): Promise<
 > {
   const token = obtenerToken();
 
-  const response = await fetch(
-    `${BASE_URL}/reportes/productos-por-proveedor`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const data: RespuestaApi<ProductoPorProveedor[]> =
-    await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(
-      "Error al obtener los productos por proveedor."
-    );
+  if (productosPorProveedorCache) {
+    return productosPorProveedorCache;
   }
 
-  return data.data.map((producto) => ({
-    ...producto,
-    stock: Number(producto.stock),
-  }));
+  if (productosPorProveedorPromise) {
+    return productosPorProveedorPromise;
+  }
+
+  const versionActual = reportesVersion;
+
+  productosPorProveedorPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/reportes/productos-por-proveedor`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data: RespuestaApi<ProductoPorProveedor[]> =
+      await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        "Error al obtener los productos por proveedor."
+      );
+    }
+
+    const resultado = data.data.map((producto) => ({
+      ...producto,
+      stock: Number(producto.stock),
+    }));
+
+    if (versionActual === reportesVersion) {
+      productosPorProveedorCache = resultado;
+    }
+
+    return resultado;
+  })();
+
+  try {
+    return await productosPorProveedorPromise;
+  } finally {
+    productosPorProveedorPromise = null;
+  }
 }
 
 /* =========================================================
@@ -211,26 +375,48 @@ async function obtenerProductosPorProveedor(): Promise<
 async function obtenerReportes(): Promise<Reporte[]> {
   const token = obtenerToken();
 
-  const response = await fetch(
-    `${BASE_URL}/reportes?limit=500`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const data: RespuestaApi<Reporte[]> =
-    await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(
-      "Error al obtener los reportes."
-    );
+  if (reportesCache) {
+    return reportesCache;
   }
 
-  return data.data;
+  if (reportesPromise) {
+    return reportesPromise;
+  }
+
+  const versionActual = reportesVersion;
+
+  reportesPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/reportes?limit=500`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data: RespuestaApi<Reporte[]> =
+      await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        "Error al obtener los reportes."
+      );
+    }
+
+    if (versionActual === reportesVersion) {
+      reportesCache = data.data;
+    }
+
+    return data.data;
+  })();
+
+  try {
+    return await reportesPromise;
+  } finally {
+    reportesPromise = null;
+  }
 }
 
 /* =========================================================
@@ -300,6 +486,8 @@ async function crearReporte(
     );
   }
 
+  invalidarCacheReportes();
+
   return data.data;
 }
 
@@ -330,6 +518,8 @@ async function eliminarReporte(
         "Error al eliminar el reporte."
     );
   }
+
+  invalidarCacheReportes();
 }
 
 /* =========================================================

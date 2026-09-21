@@ -26,8 +26,28 @@
 }
 
 .titulo-cars svg {
-  width: 19px;
-  height: 19px;
+  width: 22px;
+  height: 22px;
+}
+
+/* Ingresos del mes */
+.card:nth-child(1) .titulo-cars svg {
+  color: #16a34a;
+}
+
+/* Pedidos */
+.card:nth-child(2) .titulo-cars svg {
+  color: #6366f1;
+}
+
+/* Clientes actuales */
+.card:nth-child(3) .titulo-cars svg {
+  color: #087c9c;
+}
+
+/* Valor de inventario */
+.card:nth-child(4) .titulo-cars svg {
+  color: #e99a16;
 }
 
 .card h2 {

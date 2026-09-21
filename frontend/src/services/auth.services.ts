@@ -1,3 +1,5 @@
+const BASE_URL = "http://localhost:3000/api/v1";
+
 const authService = {
   async login(
     correo: string,
@@ -5,7 +7,7 @@ const authService = {
     captcha: string
   ) {
     const response = await fetch(
-      "http://localhost:3000/api/v1/auth/login",
+      `${BASE_URL}/auth/login`,
       {
         method: "POST",
         headers: {
@@ -22,7 +24,9 @@ const authService = {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Error al iniciar sesión");
+      throw new Error(
+        data.message || "Error al iniciar sesión"
+      );
     }
 
     return data;
@@ -30,7 +34,7 @@ const authService = {
 
   async forgotPassword(correo: string) {
     const response = await fetch(
-      "http://localhost:3000/api/v1/auth/forgot-password",
+      `${BASE_URL}/auth/forgot-password`,
       {
         method: "POST",
         headers: {
@@ -46,7 +50,8 @@ const authService = {
 
     if (!response.ok) {
       throw new Error(
-        data.message || "Error al solicitar recuperación de contraseña"
+        data.message ||
+          "Error al solicitar recuperación de contraseña"
       );
     }
 
@@ -58,7 +63,7 @@ const authService = {
     passwordNueva: string
   ) {
     const response = await fetch(
-      "http://localhost:3000/api/v1/auth/reset-password",
+      `${BASE_URL}/auth/reset-password`,
       {
         method: "POST",
         headers: {
@@ -75,7 +80,8 @@ const authService = {
 
     if (!response.ok) {
       throw new Error(
-        data.message || "Error al restablecer la contraseña"
+        data.message ||
+          "Error al restablecer la contraseña"
       );
     }
 

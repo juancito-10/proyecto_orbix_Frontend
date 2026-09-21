@@ -66,6 +66,34 @@ export interface Usuario {
     | "inactivo";
 }
 
+/*
+ * CACHE DE USUARIOS
+ */
+
+let usuariosCache: Usuario[] | null = null;
+
+let usuariosPromise:
+  | Promise<Usuario[]>
+  | null = null;
+
+let usuariosToken: string | null = null;
+
+let usuariosVersion = 0;
+
+/*
+ * INVALIDAR CACHE
+ */
+
+function invalidarCacheUsuarios() {
+  usuariosCache = null;
+  usuariosPromise = null;
+  usuariosVersion++;
+}
+
+/*
+ * OBTENER USUARIOS
+ */
+
 async function obtenerUsuarios(): Promise<Usuario[]> {
   const token = localStorage.getItem("token");
 
@@ -73,39 +101,90 @@ async function obtenerUsuarios(): Promise<Usuario[]> {
     throw new Error("No hay sesión activa.");
   }
 
-  const response = await fetch(
-    `${BASE_URL}/usuarios?limit=500`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+  /*
+   * Si cambió el usuario/token,
+   * limpiamos el cache anterior.
+   */
+  if (usuariosToken !== token) {
+    usuariosCache = null;
+    usuariosPromise = null;
+    usuariosToken = token;
+    usuariosVersion++;
+  }
+
+  /*
+   * Si ya tenemos los usuarios,
+   * no hacemos otra petición.
+   */
+  if (usuariosCache) {
+    return usuariosCache;
+  }
+
+  /*
+   * Si ya hay una petición en curso,
+   * reutilizamos esa misma petición.
+   */
+  if (usuariosPromise) {
+    return usuariosPromise;
+  }
+
+  const versionActual = usuariosVersion;
+
+  usuariosPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/usuarios?limit=500`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       },
-    },
-  );
-
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(
-      data.message ||
-        "Error al obtener los usuarios.",
     );
-  }
 
-  if (Array.isArray(data.data)) {
-    return data.data;
-  }
+    const data = await response.json();
 
-  if (
-    data.data &&
-    Array.isArray(data.data.items)
-  ) {
-    return data.data.items;
-  }
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message ||
+          "Error al obtener los usuarios.",
+      );
+    }
 
-  return [];
+    let usuarios: Usuario[] = [];
+
+    if (Array.isArray(data.data)) {
+      usuarios = data.data;
+    } else if (
+      data.data &&
+      Array.isArray(data.data.items)
+    ) {
+      usuarios = data.data.items;
+    }
+
+    /*
+     * Solo guardamos la respuesta
+     * si sigue siendo la versión actual.
+     */
+    if (
+      versionActual === usuariosVersion
+    ) {
+      usuariosCache = usuarios;
+    }
+
+    return usuarios;
+  })();
+
+  try {
+    return await usuariosPromise;
+  } finally {
+    usuariosPromise = null;
+  }
 }
+
+/*
+ * OBTENER USUARIO POR ID
+ */
 
 async function obtenerUsuarioPorId(
   idUsuario: string,
@@ -139,6 +218,10 @@ async function obtenerUsuarioPorId(
   return data.data;
 }
 
+/*
+ * CREAR USUARIO
+ */
+
 async function crearUsuario(
   usuario: CrearUsuario,
 ): Promise<Usuario> {
@@ -169,8 +252,18 @@ async function crearUsuario(
     );
   }
 
+  /*
+   * La lista de usuarios cambió.
+   * Limpiamos el cache.
+   */
+  invalidarCacheUsuarios();
+
   return data.data;
 }
+
+/*
+ * EDITAR USUARIO
+ */
 
 async function editarUsuario(
   idUsuario: string,
@@ -203,8 +296,18 @@ async function editarUsuario(
     );
   }
 
+  /*
+   * La lista de usuarios cambió.
+   * Limpiamos el cache.
+   */
+  invalidarCacheUsuarios();
+
   return data.data;
 }
+
+/*
+ * ELIMINAR USUARIO
+ */
 
 async function eliminarUsuario(
   idUsuario: string,
@@ -240,6 +343,12 @@ async function eliminarUsuario(
         "Error al eliminar el usuario.",
     );
   }
+
+  /*
+   * La lista de usuarios cambió.
+   * Limpiamos el cache.
+   */
+  invalidarCacheUsuarios();
 }
 
 const usuariosService = {

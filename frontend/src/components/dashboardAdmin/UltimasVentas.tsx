@@ -30,7 +30,7 @@ const UltimasVentas = () => {
         setVentas(ultimasVentas);
       } catch (error) {
         console.error(
-          "Error al cargar las íºltimas ventas:",
+          "Error al cargar las ultimas ventas:",
           error
         );
       } finally {
@@ -85,7 +85,7 @@ const UltimasVentas = () => {
           className="ver-todas"
           onClick={() => navigate("/dashboard/admin/ventas")}
         >
-          Ver todas â†’
+          Ver todas
         </button>
       </div>
 

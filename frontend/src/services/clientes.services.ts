@@ -21,6 +21,7 @@ export type Cliente = {
   ciudad?: string;
   segmento?: string;
 };
+
 type RespuestaClientes = {
   success: boolean;
   data: Cliente[];
@@ -30,7 +31,19 @@ type RespuestaClientes = {
     total: number;
     totalPages: number;
   };
+  message?: string;
 };
+
+let clientesCache: Cliente[] | null = null;
+let clientesPromise: Promise<Cliente[]> | null = null;
+let clientesToken: string | null = null;
+let clientesVersion = 0;
+
+function invalidarCacheClientes() {
+  clientesCache = null;
+  clientesPromise = null;
+  clientesVersion++;
+}
 
 const clienteService = {
   async crear(cliente: ClienteNuevo) {
@@ -57,6 +70,8 @@ const clienteService = {
       );
     }
 
+    invalidarCacheClientes();
+
     return data;
   },
 
@@ -67,26 +82,55 @@ const clienteService = {
       throw new Error("No hay sesión activa.");
     }
 
-    const response = await fetch(
-      `${BASE_URL}/clientes?limit=500`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const data: RespuestaClientes =
-      await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(
-        "Error al obtener los clientes."
-      );
+    if (clientesToken !== token) {
+      clientesCache = null;
+      clientesPromise = null;
+      clientesToken = token;
+      clientesVersion++;
     }
 
-    return data.data;
+    if (clientesCache) {
+      return clientesCache;
+    }
+
+    if (clientesPromise) {
+      return clientesPromise;
+    }
+
+    const versionActual = clientesVersion;
+
+    clientesPromise = (async () => {
+      const response = await fetch(
+        `${BASE_URL}/clientes?limit=500`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data: RespuestaClientes =
+        await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Error al obtener los clientes."
+        );
+      }
+
+      if (versionActual === clientesVersion) {
+        clientesCache = data.data;
+      }
+
+      return data.data;
+    })();
+
+    try {
+      return await clientesPromise;
+    } finally {
+      clientesPromise = null;
+    }
   },
 };
 

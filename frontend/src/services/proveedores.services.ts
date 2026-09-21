@@ -14,7 +14,19 @@ export type Proveedor = {
 export type RespuestaApi = {
   success: boolean;
   data: Proveedor[];
+  message?: string;
 };
+
+let proveedoresCache: Proveedor[] | null = null;
+let proveedoresPromise: Promise<Proveedor[]> | null = null;
+let proveedoresToken: string | null = null;
+let proveedoresVersion = 0;
+
+function invalidarCacheProveedores() {
+  proveedoresCache = null;
+  proveedoresPromise = null;
+  proveedoresVersion++;
+}
 
 async function obtenerProveedores(): Promise<Proveedor[]> {
   const token = localStorage.getItem("token");
@@ -23,21 +35,53 @@ async function obtenerProveedores(): Promise<Proveedor[]> {
     throw new Error("No hay sesión activa.");
   }
 
-  const response = await fetch(`${BASE_URL}/proveedores?limit=500`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok || !data.success) {
-    throw new Error(
-      data.message || "Error al obtener los proveedores."
-    );
+  if (proveedoresToken !== token) {
+    proveedoresCache = null;
+    proveedoresPromise = null;
+    proveedoresToken = token;
+    proveedoresVersion++;
   }
 
-  return data.data;
+  if (proveedoresCache) {
+    return proveedoresCache;
+  }
+
+  if (proveedoresPromise) {
+    return proveedoresPromise;
+  }
+
+  const versionActual = proveedoresVersion;
+
+  proveedoresPromise = (async () => {
+    const response = await fetch(
+      `${BASE_URL}/proveedores?limit=500`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data: RespuestaApi = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message || "Error al obtener los proveedores."
+      );
+    }
+
+    if (versionActual === proveedoresVersion) {
+      proveedoresCache = data.data;
+    }
+
+    return data.data;
+  })();
+
+  try {
+    return await proveedoresPromise;
+  } finally {
+    proveedoresPromise = null;
+  }
 }
 
 async function crearProveedor(
@@ -80,13 +124,10 @@ async function crearProveedor(
     );
   }
 
+  invalidarCacheProveedores();
+
   return data.data;
 }
-
-
-/* =========================================
-   ACTUALIZAR PROVEEDOR
-========================================= */
 
 async function actualizarProveedor(
   idProveedor: string,
@@ -132,9 +173,10 @@ async function actualizarProveedor(
     );
   }
 
+  invalidarCacheProveedores();
+
   return data.data;
 }
-
 
 const proveedoresService = {
   obtenerProveedores,

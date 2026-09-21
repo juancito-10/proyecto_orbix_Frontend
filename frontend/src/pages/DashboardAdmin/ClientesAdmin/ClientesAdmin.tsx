@@ -24,29 +24,30 @@ const ClientesAdmin = () => {
   const [error, setError] = useState("");
 
   const [clientes, setClientes] = useState<Cliente[]>([]);
+
   useEffect(() => {
-  const cargarClientes = async () => {
-    try {
-      setCargando(true);
-      setError("");
+    const cargarClientes = async () => {
+      try {
+        setCargando(true);
+        setError("");
 
-      const clientesObtenidos =
-        await clienteService.obtenerClientes();
+        const clientesObtenidos =
+          await clienteService.obtenerClientes();
 
-      setClientes(clientesObtenidos);
-    } catch (error) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError("Error al cargar los clientes.");
+        setClientes(clientesObtenidos);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("Error al cargar los clientes.");
+        }
+      } finally {
+        setCargando(false);
       }
-    } finally {
-      setCargando(false);
-    }
-  };
+    };
 
-  cargarClientes();
-}, []);
+    cargarClientes();
+  }, []);
 
   const registrarCliente = async (
     cliente: ClienteNuevo
@@ -62,7 +63,6 @@ const ClientesAdmin = () => {
         await clienteService.obtenerClientes();
 
       setClientes(clientesActualizados);
-
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -71,7 +71,6 @@ const ClientesAdmin = () => {
       }
 
       throw error;
-
     } finally {
       setCargando(false);
     }
@@ -101,10 +100,6 @@ const ClientesAdmin = () => {
           </p>
 
           <div className="clientes-acciones-superiores">
-
-            
-
-            
 
             <ProfileDropdown />
 
@@ -143,6 +138,7 @@ const ClientesAdmin = () => {
         />
 
         <TablaClientes
+          clientes={clientes}
           filtro={filtro}
           busqueda={busqueda}
         />
@@ -162,6 +158,5 @@ const ClientesAdmin = () => {
     </main>
   );
 };
+
 export default ClientesAdmin;
-
-

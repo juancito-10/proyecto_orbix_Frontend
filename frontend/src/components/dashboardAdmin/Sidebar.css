@@ -78,8 +78,8 @@
 }
 
 .navegacion a.activo, .navegacion a.active {
-  background-color: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
+  background-color: rgba(8, 124, 156, 0.22);
+  color: #087c9c;
   font-weight: 600;
 }
 
@@ -153,7 +153,7 @@
   padding: 3px 10px;
   border-radius: 99px;
   background-color: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
+  color: #087c9c;
   margin-left: 10px;
 }
 
@@ -269,14 +269,14 @@
   font-weight: 600;
   padding: 3px 10px;
   border-radius: 99px;
-  background-color: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
+  background-color: rgba(66, 117, 199, 0.15);
+  color: #087c9c;
   margin-left: 10px;
 }
 
 
 
-.logo-admin { background-color: #3b82f6; }
+.logo-admin { background-color: #087c9c; }
 
 
 

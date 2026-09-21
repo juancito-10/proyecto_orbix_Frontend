@@ -30,54 +30,41 @@ const ModalVerProvedor = ({
     .toUpperCase();
 
   const estado =
-    proveedor.estado?.toLowerCase() === "inactivo"
-      ? "Inactivo"
-      : "Activo";
+    proveedor.estado?.toLowerCase() === "inactivo" ? "Inactivo" : "Activo";
 
   const productosProveedor = productos.filter(
     (producto) =>
-      producto.proveedor
-        ?.toLocaleLowerCase()
-        .trim() ===
-      proveedor.nombre
-        .toLocaleLowerCase()
-        .trim()
+      producto.proveedor?.toLocaleLowerCase().trim() ===
+      proveedor.nombre.toLocaleLowerCase().trim(),
+  );
+
+  const categoriasProveedor = Array.from(
+    new Set(
+      productosProveedor
+        .map((producto) => producto.categoria?.trim())
+        .filter((categoria): categoria is string => Boolean(categoria)),
+    ),
   );
 
   return (
-    <div
-      className="modal-ver-provedor-overlay"
-      onClick={onCerrar}
-    >
-      <div
-        className="modal-ver-provedor"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="modal-ver-provedor-overlay" onClick={onCerrar}>
+      <div className="modal-ver-provedor" onClick={(e) => e.stopPropagation()}>
         {/* CABECERA */}
 
         <div className="modal-ver-provedor-header">
-
           <div>
             <span className="modal-ver-provedor-subtitulo">
               Detalle del proveedor
             </span>
 
             <div className="modal-ver-provedor-titulo-contenido">
-
-              <div className="modal-ver-provedor-avatar">
-                {iniciales}
-              </div>
+              <div className="modal-ver-provedor-avatar">{iniciales}</div>
 
               <div>
-                <h2>
-                  {proveedor.nombre}
-                </h2>
+                <h2>{proveedor.nombre}</h2>
 
-                <span>
-                  {proveedor.nit}
-                </span>
+                <span>{proveedor.nit}</span>
               </div>
-
             </div>
           </div>
 
@@ -88,89 +75,60 @@ const ModalVerProvedor = ({
           >
             <X size={27} />
           </button>
-
         </div>
-
 
         {/* INFORMACIÓN */}
 
         <div className="modal-ver-provedor-grid">
-
           <div className="modal-ver-provedor-card">
-
             <span>Contacto</span>
 
-            <strong>
-              {proveedor.nombre}
-            </strong>
+            <strong>{proveedor.nombre}</strong>
 
-            <small>
-              {proveedor.telefono || "-"}
-            </small>
-
+            <small>{proveedor.telefono || "-"}</small>
           </div>
 
-
           <div className="modal-ver-provedor-card">
-
             <span>Correo electrónico</span>
 
-            <strong>
-              {proveedor.correo || "-"}
-            </strong>
+            <strong>{proveedor.correo || "-"}</strong>
 
-            <small>
-              {proveedor.ciudad || "-"}
-            </small>
-
+            <small>{proveedor.ciudad || "-"}</small>
           </div>
 
-
           <div className="modal-ver-provedor-card">
-
             <span>Ciudad</span>
 
-            <strong>
-              {proveedor.ciudad || "-"}
-            </strong>
-
+            <strong>{proveedor.ciudad || "-"}</strong>
           </div>
-
 
           <div className="modal-ver-provedor-card">
-
             <span>Categoría</span>
 
+            <strong>
+              {categoriasProveedor.length > 0
+                ? categoriasProveedor.join(", ")
+                : "-"}
+            </strong>
           </div>
-
         </div>
-
 
         {/* RESUMEN */}
 
         <div className="modal-ver-provedor-resumen">
-
           <div>
             <span>Total comprado</span>
 
             <strong>
-              $
-              {" "}
-              {informacion.totalComprado.toLocaleString(
-                "es-CO"
-              )}
+              $ {informacion.totalComprado.toLocaleString("es-CO")}
             </strong>
           </div>
-
 
           <div>
             <span>ÓÓrdenes</span>
 
-            <strong>
-              {informacion.oÓrdenes}
-            </strong>
+            <strong>{informacion.oÓrdenes}</strong>
           </div>
-
 
           <div>
             <span>Estado</span>
@@ -185,68 +143,42 @@ const ModalVerProvedor = ({
               {estado}
             </strong>
           </div>
-
         </div>
-
 
         {/* PRODUCTOS */}
 
         <div className="modal-ver-provedor-productos">
-
           <div className="modal-ver-provedor-productos-header">
-
             <span>Productos</span>
 
-            <span>
-              {productosProveedor.length} producto(s)
-            </span>
-
+            <span>{productosProveedor.length} producto(s)</span>
           </div>
 
-
           <div className="modal-ver-provedor-productos-lista">
-
             {productosProveedor.length > 0 ? (
-
               productosProveedor.map((producto) => (
                 <div
                   className="modal-ver-provedor-producto"
                   key={producto.idProducto}
                 >
-
                   <div>
-                    <strong>
-                      {producto.nombre}
-                    </strong>
+                    <strong>{producto.nombre}</strong>
 
-                    <small>
-                      {producto.categoria}
-                    </small>
+                    <small>{producto.categoria}</small>
                   </div>
 
                   <strong>
-                    $
-                    {" "}
-                    {producto.precioCompra.toLocaleString(
-                      "es-CO"
-                    )}
+                    $ {producto.precioCompra.toLocaleString("es-CO")}
                   </strong>
-
                 </div>
               ))
-
             ) : (
-
               <div className="modal-ver-provedor-sin-productos">
                 Este proveedor no tiene productos registrados.
               </div>
-
             )}
-
           </div>
-
         </div>
-
       </div>
     </div>
   );
