@@ -7,7 +7,7 @@ import type {
   VentaVendedor,
 } from "../data/mockDataVendedor";
 
-const BASE_URL = "http://localhost:3000/api/v1";
+const BASE_URL = "/api/v1";
 
 const MAPA_ESTADO: Record<string, EstadoVenta> = {
   pendiente: "Pendiente",

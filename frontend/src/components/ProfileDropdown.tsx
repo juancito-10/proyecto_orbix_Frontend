@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { X, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "./ProfileDropdown.css";
-import authService from "../../../frontend/src/services/auth.services";
+import authService from "../services/auth.services";
 
 interface ProfileData {
   idUsuario: string;
@@ -124,7 +124,7 @@ const ProfileDropdown = () => {
   const fetchProfile = async () => {
     try {
       const res = await fetchConRefresh(
-        "http://localhost:3000/api/v1/auth/me",
+        "/api/v1/auth/me",
         {
           method: "GET",
         }
@@ -161,7 +161,7 @@ const ProfileDropdown = () => {
   const handleSaveProfile = async () => {
     try {
       const res = await fetchConRefresh(
-        "http://localhost:3000/api/v1/auth/me",
+        "/api/v1/auth/me",
         {
           method: "PATCH",
           headers: {

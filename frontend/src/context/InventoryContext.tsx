@@ -142,10 +142,10 @@ export const InventoryProvider = ({
         // 0. Cargar categorías y proveedores
         const [resCat, resProv] = await Promise.all([
           fetchConRefresh(
-            "http://localhost:3000/api/v1/categorias"
+            "/api/v1/categorias"
           ),
           fetchConRefresh(
-            "http://localhost:3000/api/v1/proveedores"
+            "/api/v1/proveedores"
           ),
         ]);
 
@@ -171,7 +171,7 @@ export const InventoryProvider = ({
 
         // 1. Cargar productos reales
         const resProd = await fetchConRefresh(
-          "http://localhost:3000/api/v1/productos"
+          "/api/v1/productos"
         );
 
         if (resProd.ok) {
@@ -209,7 +209,7 @@ export const InventoryProvider = ({
 
         // 2. Cargar movimientos reales
         const resMov = await fetchConRefresh(
-          "http://localhost:3000/api/v1/inventario/movimientos"
+          "/api/v1/inventario/movimientos"
         );
 
         if (resMov.ok) {
@@ -310,7 +310,7 @@ export const InventoryProvider = ({
       };
 
       await fetchConRefresh(
-        "http://localhost:3000/api/v1/productos",
+        "/api/v1/productos",
         {
           method: "POST",
           headers: {
@@ -349,7 +349,7 @@ export const InventoryProvider = ({
         };
 
         await fetchConRefresh(
-          `http://localhost:3000/api/v1/productos/${prod.dbId}`,
+          `/api/v1/productos/${prod.dbId}`,
           {
             method: "PATCH",
             headers: {
@@ -428,7 +428,7 @@ export const InventoryProvider = ({
               : "ajuste";
 
         await fetchConRefresh(
-          `http://localhost:3000/api/v1/inventario/${endpointTipo}`,
+          `/api/v1/inventario/${endpointTipo}`,
           {
             method: "POST",
             headers: {
