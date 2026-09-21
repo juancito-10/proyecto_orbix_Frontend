@@ -421,3 +421,32 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
+/* LINK PARA CAMBIAR A ADMIN */
+.login-footer-link {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.switch-login-type {
+  padding: 8px 12px;
+  border: 1px solid #d9e0e8;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.switch-login-type:hover {
+  background-color: #f1f5f9;
+  color: #087c9c;
+  border-color: #cbd5e1;
+}
+
+.switch-login-type:active {
+  transform: scale(0.98);
+}

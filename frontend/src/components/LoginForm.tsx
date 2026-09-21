@@ -177,8 +177,20 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
               className="forgot-password-orbix"
               onClick={() => navigate("/forgot-password")}
             >
-              ¿¿Olvidaste la contraseña?
+              ¿Olvidaste la contraseña?
             </button>
+
+            {tipo === "opera" && (
+              <div className="login-footer-link">
+                <button
+                  type="button"
+                  className="switch-login-type"
+                  onClick={() => navigate("/login/admin")}
+                >
+                  Ir a perfil de administrador
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>
