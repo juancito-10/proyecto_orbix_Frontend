@@ -19,7 +19,7 @@
 
   width: 100%;
   max-width: 1050px;
-  min-height: 600px;
+  min-height: 550px; /* Reducido de 600px */
 
   background-color: #ffffff;
 
@@ -88,7 +88,7 @@
   justify-content: center;
   align-items: center;
 
-  padding: 60px;
+  padding: 40px; /* Reducido de 60px para evitar scroll */
 
   box-sizing: border-box;
 
@@ -104,7 +104,7 @@
   display: flex;
   flex-direction: column;
 
-  gap: 22px;
+  gap: 16px; /* Reducido de 22px para evitar scroll */
 }
 
 /* GRUPO */
@@ -117,7 +117,7 @@
 /* TITULO */
 
 .form-group h1 {
-  margin: 0 0 25px;
+  margin: 0 0 15px; /* Reducido de 25px */
 
   color: #0b2038;
 
@@ -414,7 +414,7 @@
 }
 
 .login-subtitle {
-  margin: 0 0 25px;
+  margin: 0 0 15px; /* Reducido de 25px */
   color: #087c9c;
   font-size: 15px;
   font-weight: 600;
@@ -426,7 +426,7 @@
 .login-footer-link {
   display: flex;
   justify-content: flex-end;
-  margin-top: 15px;
+  margin-top: 10px; /* Reducido de 15px */
 }
 
 .switch-login-type {
