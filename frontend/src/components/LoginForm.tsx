@@ -191,6 +191,17 @@ const LoginForm = ({ tipo }: LoginFormProps) => {
                 </button>
               </div>
             )}
+            {tipo === "admin" && (
+              <div className="login-footer-link">
+                <button
+                  type="button"
+                  className="switch-login-type"
+                  onClick={() => navigate("/login/opera")}
+                >
+                  Ir a perfil operativo
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>
