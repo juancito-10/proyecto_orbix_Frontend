@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from "react";
 import "./NuevaVenta.css";
 
 import ventasService from "../../../services/ventas.services";
+import authService from "../../../services/auth.services";
 
 interface NuevaVentaProps {
   cerrarModal: () => void;
@@ -44,6 +45,65 @@ type ProductoCarrito = {
 
 const BASE_URL = "http://localhost:3000/api/v1";
 
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ *
+ * Evita varios refresh simultáneos cuando
+ * varias peticiones reciben 401 al mismo tiempo.
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Si la petición recibe 401, renueva la sesión
+ * y vuelve a intentar la petición una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
+
 const NuevaVenta = ({
   cerrarModal,
   onVentaCreada,
@@ -67,10 +127,7 @@ const NuevaVenta = ({
   const [cargando, setCargando] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
 
-  // ==========================================
   // NUEVO CLIENTE
-  // ==========================================
-
   const [mostrarNuevoCliente, setMostrarNuevoCliente] =
     useState(false);
 
@@ -86,27 +143,14 @@ const NuevaVenta = ({
   const [guardandoCliente, setGuardandoCliente] =
     useState(false);
 
-  // ==========================================
   // CARGAR CLIENTES
-  // ==========================================
-
   useEffect(() => {
     const cargarClientes = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          throw new Error("No hay sesión activa.");
-        }
-
-        const response = await fetch(
+        const response = await fetchConRefresh(
           `${BASE_URL}/clientes?limit=500`,
           {
             method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
           }
         );
 
@@ -120,7 +164,10 @@ const NuevaVenta = ({
 
         setClientes(data.data);
       } catch (error) {
-        console.error("Error al cargar clientes:", error);
+        console.error(
+          "Error al cargar clientes:",
+          error
+        );
 
         setMensajeError(
           error instanceof Error
@@ -133,27 +180,14 @@ const NuevaVenta = ({
     cargarClientes();
   }, []);
 
-  // ==========================================
   // CARGAR PRODUCTOS
-  // ==========================================
-
   useEffect(() => {
     const cargarProductos = async () => {
       try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          throw new Error("No hay sesión activa.");
-        }
-
-        const response = await fetch(
+        const response = await fetchConRefresh(
           `${BASE_URL}/productos?limit=500`,
           {
             method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
           }
         );
 
@@ -167,7 +201,10 @@ const NuevaVenta = ({
 
         setProductos(data.data);
       } catch (error) {
-        console.error("Error al cargar productos:", error);
+        console.error(
+          "Error al cargar productos:",
+          error
+        );
 
         setMensajeError(
           error instanceof Error
@@ -180,10 +217,7 @@ const NuevaVenta = ({
     cargarProductos();
   }, []);
 
-  // ==========================================
   // PRODUCTOS FILTRADOS
-  // ==========================================
-
   const productosFiltrados = useMemo(() => {
     const texto = busquedaProducto.toLowerCase().trim();
 
@@ -196,11 +230,10 @@ const NuevaVenta = ({
     );
   }, [productos, busquedaProducto]);
 
-  // ==========================================
   // SELECCIONAR PRODUCTO
-  // ==========================================
-
-  const seleccionarProducto = (producto: Producto) => {
+  const seleccionarProducto = (
+    producto: Producto
+  ) => {
     if (producto.stock <= 0) {
       return;
     }
@@ -211,10 +244,7 @@ const NuevaVenta = ({
     setMensajeError("");
   };
 
-  // ==========================================
   // CAMBIAR TEXTO DE BÚSQUEDA
-  // ==========================================
-
   const cambiarBusquedaProducto = (
     texto: string
   ) => {
@@ -226,15 +256,14 @@ const NuevaVenta = ({
     setMensajeError("");
   };
 
-  // ==========================================
   // AGREGAR PRODUCTO AL CARRITO
-  // ==========================================
-
   const agregarProducto = () => {
     setMensajeError("");
 
     if (!productoSeleccionado) {
-      setMensajeError("Debes seleccionar un producto.");
+      setMensajeError(
+        "Debes seleccionar un producto."
+      );
       return;
     }
 
@@ -265,7 +294,8 @@ const NuevaVenta = ({
 
     const existente = carrito.find(
       (item) =>
-        item.producto.idProducto === producto.idProducto
+        item.producto.idProducto ===
+        producto.idProducto
     );
 
     if (existente) {
@@ -313,10 +343,7 @@ const NuevaVenta = ({
     setMostrarProductos(false);
   };
 
-  // ==========================================
   // CAMBIAR CANTIDAD
-  // ==========================================
-
   const cambiarCantidad = (
     idProducto: string,
     nuevaCantidad: number
@@ -356,11 +383,10 @@ const NuevaVenta = ({
     setMensajeError("");
   };
 
-  // ==========================================
   // ELIMINAR PRODUCTO
-  // ==========================================
-
-  const eliminarProducto = (idProducto: string) => {
+  const eliminarProducto = (
+    idProducto: string
+  ) => {
     setCarrito(
       carrito.filter(
         (item) =>
@@ -371,21 +397,16 @@ const NuevaVenta = ({
     setMensajeError("");
   };
 
-  // ==========================================
   // TOTAL
-  // ==========================================
-
   const total = carrito.reduce(
     (acumulado, item) =>
       acumulado +
-      Number(item.producto.precio) * item.cantidad,
+      Number(item.producto.precio) *
+        item.cantidad,
     0
   );
 
-  // ==========================================
   // CAMBIAR DATOS DEL NUEVO CLIENTE
-  // ==========================================
-
   const cambiarDatoNuevoCliente = (
     campo: keyof typeof nuevoCliente,
     valor: string
@@ -398,10 +419,7 @@ const NuevaVenta = ({
     setMensajeError("");
   };
 
-  // ==========================================
   // CANCELAR NUEVO CLIENTE
-  // ==========================================
-
   const cancelarNuevoCliente = () => {
     setMostrarNuevoCliente(false);
 
@@ -417,10 +435,7 @@ const NuevaVenta = ({
     setMensajeError("");
   };
 
-  // ==========================================
   // CREAR NUEVO CLIENTE
-  // ==========================================
-
   const crearNuevoCliente = async () => {
     if (guardandoCliente || cargando) {
       return;
@@ -443,12 +458,6 @@ const NuevaVenta = ({
         return;
       }
 
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("No hay sesión activa.");
-      }
-
       setGuardandoCliente(true);
 
       const clienteData = {
@@ -464,12 +473,11 @@ const NuevaVenta = ({
           nuevoCliente.ciudad.trim() || null,
       };
 
-      const response = await fetch(
+      const response = await fetchConRefresh(
         `${BASE_URL}/clientes`,
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(clienteData),
@@ -480,7 +488,8 @@ const NuevaVenta = ({
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message || "No se pudo crear el cliente."
+          data.message ||
+            "No se pudo crear el cliente."
         );
       }
 
@@ -521,10 +530,7 @@ const NuevaVenta = ({
     }
   };
 
-  // ==========================================
   // REGISTRAR VENTA
-  // ==========================================
-
   const registrarVenta = async (
     estado: "completada" | "pendiente"
   ) => {
@@ -614,7 +620,9 @@ const NuevaVenta = ({
             type="button"
             className="nueva-venta-cerrar"
             onClick={cerrarModal}
-            disabled={cargando || guardandoCliente}
+            disabled={
+              cargando || guardandoCliente
+            }
           >
             <X size={24} />
           </button>
@@ -684,7 +692,9 @@ const NuevaVenta = ({
                 <button
                   type="button"
                   className="nueva-venta-cancelar-nuevo-cliente"
-                  onClick={cancelarNuevoCliente}
+                  onClick={
+                    cancelarNuevoCliente
+                  }
                   disabled={guardandoCliente}
                 >
                   <X size={17} />
@@ -718,7 +728,9 @@ const NuevaVenta = ({
 
                   <input
                     type="text"
-                    value={nuevoCliente.documento}
+                    value={
+                      nuevoCliente.documento
+                    }
                     placeholder="Documento o NIT"
                     onChange={(e) =>
                       cambiarDatoNuevoCliente(
@@ -735,7 +747,9 @@ const NuevaVenta = ({
 
                   <input
                     type="text"
-                    value={nuevoCliente.telefono}
+                    value={
+                      nuevoCliente.telefono
+                    }
                     placeholder="Teléfono"
                     onChange={(e) =>
                       cambiarDatoNuevoCliente(
@@ -752,7 +766,9 @@ const NuevaVenta = ({
 
                   <input
                     type="email"
-                    value={nuevoCliente.correo}
+                    value={
+                      nuevoCliente.correo
+                    }
                     placeholder="Correo electrónico"
                     onChange={(e) =>
                       cambiarDatoNuevoCliente(
@@ -769,7 +785,9 @@ const NuevaVenta = ({
 
                   <input
                     type="text"
-                    value={nuevoCliente.direccion}
+                    value={
+                      nuevoCliente.direccion
+                    }
                     placeholder="Dirección"
                     onChange={(e) =>
                       cambiarDatoNuevoCliente(
@@ -803,7 +821,9 @@ const NuevaVenta = ({
                 <button
                   type="button"
                   className="nueva-venta-cancelar-cliente-btn"
-                  onClick={cancelarNuevoCliente}
+                  onClick={
+                    cancelarNuevoCliente
+                  }
                   disabled={guardandoCliente}
                 >
                   Cancelar
@@ -812,7 +832,9 @@ const NuevaVenta = ({
                 <button
                   type="button"
                   className="nueva-venta-guardar-cliente-btn"
-                  onClick={crearNuevoCliente}
+                  onClick={
+                    crearNuevoCliente
+                  }
                   disabled={guardandoCliente}
                 >
                   {guardandoCliente
@@ -861,8 +883,8 @@ const NuevaVenta = ({
 
               {mostrarProductos && (
                 <div className="nueva-venta-productos-lista">
-
-                  {productosFiltrados.length === 0 ? (
+                  {productosFiltrados.length ===
+                  0 ? (
                     <div className="nueva-venta-producto-sin-resultados">
                       No se encontraron productos.
                     </div>
@@ -871,7 +893,9 @@ const NuevaVenta = ({
                       (producto) => (
                         <button
                           type="button"
-                          key={producto.idProducto}
+                          key={
+                            producto.idProducto
+                          }
                           className={`nueva-venta-producto-opcion ${
                             producto.stock <= 0
                               ? "sin-stock"
@@ -912,7 +936,6 @@ const NuevaVenta = ({
                       )
                     )
                   )}
-
                 </div>
               )}
             </div>
@@ -1137,7 +1160,9 @@ const NuevaVenta = ({
           <button
             type="button"
             className="nueva-venta-pendiente"
-            disabled={cargando || guardandoCliente}
+            disabled={
+              cargando || guardandoCliente
+            }
             onClick={() =>
               registrarVenta("pendiente")
             }
@@ -1148,7 +1173,9 @@ const NuevaVenta = ({
           <button
             type="button"
             className="nueva-venta-registrar"
-            disabled={cargando || guardandoCliente}
+            disabled={
+              cargando || guardandoCliente
+            }
             onClick={() =>
               registrarVenta("completada")
             }

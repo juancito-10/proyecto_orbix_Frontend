@@ -1,3 +1,5 @@
+import authService from "./auth.services";
+
 const BASE_URL = "http://localhost:3000/api/v1";
 
 export type ProductoInventario = {
@@ -82,9 +84,71 @@ let productosPromise:
   | Promise<ProductoInventario[]>
   | null = null;
 
-let productosToken: string | null = null;
-
 let productosVersion = 0;
+
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita que varias peticiones que reciban
+ * 401 al mismo tiempo hagan varios refresh.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Hace la petición normalmente.
+ * Si recibe 401, renueva la sesión y
+ * vuelve a intentar una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
 
 /*
  * INVALIDAR CACHE
@@ -101,23 +165,6 @@ function invalidarCacheProductos() {
  */
 
 async function obtenerProductos(): Promise<ProductoInventario[]> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  /*
-   * Si cambió el usuario/token,
-   * limpiamos el cache anterior.
-   */
-  if (productosToken !== token) {
-    productosCache = null;
-    productosPromise = null;
-    productosToken = token;
-    productosVersion++;
-  }
-
   /*
    * Si ya tenemos los productos,
    * no hacemos otra petición.
@@ -137,12 +184,10 @@ async function obtenerProductos(): Promise<ProductoInventario[]> {
   const versionActual = productosVersion;
 
   productosPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/productos?limit=500`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        method: "GET",
       }
     );
 
@@ -232,24 +277,13 @@ async function obtenerProductos(): Promise<ProductoInventario[]> {
 async function crearProducto(
   producto: CrearProducto,
 ): Promise<ProductoApi> {
-  const token =
-    localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error(
-      "No hay sesión activa."
-    );
-  }
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/productos`,
     {
       method: "POST",
       headers: {
         "Content-Type":
           "application/json",
-        Authorization:
-          `Bearer ${token}`,
       },
       body: JSON.stringify(
         producto
@@ -286,24 +320,11 @@ async function crearProducto(
 async function eliminarProducto(
   idProducto: string,
 ): Promise<void> {
-  const token =
-    localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error(
-      "No hay sesión activa."
-    );
-  }
-
   const response =
-    await fetch(
+    await fetchConRefresh(
       `${BASE_URL}/productos/${idProducto}`,
       {
         method: "DELETE",
-        headers: {
-          Authorization:
-            `Bearer ${token}`,
-        },
       },
     );
 
@@ -334,25 +355,14 @@ async function actualizarProducto(
   idProducto: string,
   producto: ActualizarProducto,
 ): Promise<ProductoApi> {
-  const token =
-    localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error(
-      "No hay sesión activa."
-    );
-  }
-
   const response =
-    await fetch(
+    await fetchConRefresh(
       `${BASE_URL}/productos/${idProducto}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type":
             "application/json",
-          Authorization:
-            `Bearer ${token}`,
         },
         body: JSON.stringify(
           producto

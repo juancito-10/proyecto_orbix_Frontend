@@ -1,3 +1,5 @@
+import authService from "./auth.services";
+
 const BASE_URL = "http://localhost:3000/api/v1";
 
 export interface CrearUsuario {
@@ -76,9 +78,71 @@ let usuariosPromise:
   | Promise<Usuario[]>
   | null = null;
 
-let usuariosToken: string | null = null;
-
 let usuariosVersion = 0;
+
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita que varias peticiones que reciban
+ * 401 al mismo tiempo hagan varios refresh.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Hace la petición normalmente.
+ * Si recibe 401, renueva la sesión y
+ * vuelve a intentar una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
 
 /*
  * INVALIDAR CACHE
@@ -95,23 +159,6 @@ function invalidarCacheUsuarios() {
  */
 
 async function obtenerUsuarios(): Promise<Usuario[]> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  /*
-   * Si cambió el usuario/token,
-   * limpiamos el cache anterior.
-   */
-  if (usuariosToken !== token) {
-    usuariosCache = null;
-    usuariosPromise = null;
-    usuariosToken = token;
-    usuariosVersion++;
-  }
-
   /*
    * Si ya tenemos los usuarios,
    * no hacemos otra petición.
@@ -131,12 +178,11 @@ async function obtenerUsuarios(): Promise<Usuario[]> {
   const versionActual = usuariosVersion;
 
   usuariosPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/usuarios?limit=500`,
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       },
@@ -189,18 +235,11 @@ async function obtenerUsuarios(): Promise<Usuario[]> {
 async function obtenerUsuarioPorId(
   idUsuario: string,
 ): Promise<Usuario> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/usuarios/${idUsuario}`,
     {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     },
@@ -225,18 +264,11 @@ async function obtenerUsuarioPorId(
 async function crearUsuario(
   usuario: CrearUsuario,
 ): Promise<Usuario> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/usuarios`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(usuario),
@@ -269,18 +301,11 @@ async function editarUsuario(
   idUsuario: string,
   usuario: EditarUsuario,
 ): Promise<Usuario> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/usuarios/${idUsuario}`,
     {
       method: "PATCH",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(usuario),
@@ -312,18 +337,11 @@ async function editarUsuario(
 async function eliminarUsuario(
   idUsuario: string,
 ): Promise<void> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/usuarios/${idUsuario}`,
     {
       method: "DELETE",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     },

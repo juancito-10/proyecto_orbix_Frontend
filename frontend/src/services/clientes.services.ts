@@ -1,3 +1,5 @@
+import authService from "./auth.services";
+
 const BASE_URL = "http://localhost:3000/api/v1";
 
 export type ClienteNuevo = {
@@ -36,7 +38,6 @@ type RespuestaClientes = {
 
 let clientesCache: Cliente[] | null = null;
 let clientesPromise: Promise<Cliente[]> | null = null;
-let clientesToken: string | null = null;
 let clientesVersion = 0;
 
 function invalidarCacheClientes() {
@@ -45,28 +46,88 @@ function invalidarCacheClientes() {
   clientesVersion++;
 }
 
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita varios refresh simultáneos cuando
+ * varias peticiones reciben 401 al mismo tiempo.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Si la petición recibe 401, renueva la sesión
+ * y vuelve a intentar la petición una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
+
 const clienteService = {
   async crear(cliente: ClienteNuevo) {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      throw new Error("No hay sesión activa.");
-    }
-
-    const response = await fetch(`${BASE_URL}/clientes`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(cliente),
-    });
+    const response = await fetchConRefresh(
+      `${BASE_URL}/clientes`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cliente),
+      }
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
       throw new Error(
-        data.message || "Error al registrar el cliente."
+        data.message ||
+          "Error al registrar el cliente."
       );
     }
 
@@ -76,19 +137,6 @@ const clienteService = {
   },
 
   async obtenerClientes(): Promise<Cliente[]> {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      throw new Error("No hay sesión activa.");
-    }
-
-    if (clientesToken !== token) {
-      clientesCache = null;
-      clientesPromise = null;
-      clientesToken = token;
-      clientesVersion++;
-    }
-
     if (clientesCache) {
       return clientesCache;
     }
@@ -100,13 +148,10 @@ const clienteService = {
     const versionActual = clientesVersion;
 
     clientesPromise = (async () => {
-      const response = await fetch(
+      const response = await fetchConRefresh(
         `${BASE_URL}/clientes?limit=500`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
 
@@ -115,11 +160,14 @@ const clienteService = {
 
       if (!response.ok || !data.success) {
         throw new Error(
-          data.message || "Error al obtener los clientes."
+          data.message ||
+            "Error al obtener los clientes."
         );
       }
 
-      if (versionActual === clientesVersion) {
+      if (
+        versionActual === clientesVersion
+      ) {
         clientesCache = data.data;
       }
 

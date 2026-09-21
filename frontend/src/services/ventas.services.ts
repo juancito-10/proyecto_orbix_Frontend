@@ -1,3 +1,5 @@
+import authService from "./auth.services";
+
 const BASE_URL = "http://localhost:3000/api/v1";
 
 export type Venta = {
@@ -71,9 +73,71 @@ let ventasPromise:
   | Promise<Venta[]>
   | null = null;
 
-let ventasToken: string | null = null;
-
 let ventasVersion = 0;
+
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita que varias peticiones que reciban
+ * 401 al mismo tiempo hagan varios refresh.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Hace la petición normalmente.
+ * Si recibe 401, renueva la sesión y
+ * vuelve a intentar una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
 
 /*
  * INVALIDAR CACHE
@@ -90,26 +154,6 @@ function invalidarCacheVentas() {
  */
 
 async function obtenerVentas(): Promise<Venta[]> {
-  const token =
-    localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error(
-      "No hay sesión activa."
-    );
-  }
-
-  /*
-   * Si cambió el usuario/token,
-   * limpiamos el cache anterior.
-   */
-  if (ventasToken !== token) {
-    ventasCache = null;
-    ventasPromise = null;
-    ventasToken = token;
-    ventasVersion++;
-  }
-
   /*
    * Si ya tenemos las ventas,
    * no hacemos otra petición.
@@ -131,14 +175,10 @@ async function obtenerVentas(): Promise<Venta[]> {
 
   ventasPromise = (async () => {
     const response =
-      await fetch(
+      await fetchConRefresh(
         `${BASE_URL}/ventas?limit=500`,
         {
           method: "GET",
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
-          },
         }
       );
 
@@ -182,24 +222,11 @@ async function obtenerVentas(): Promise<Venta[]> {
 async function obtenerVentaPorId(
   idVenta: string
 ): Promise<Venta> {
-  const token =
-    localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error(
-      "No hay sesión activa."
-    );
-  }
-
   const response =
-    await fetch(
+    await fetchConRefresh(
       `${BASE_URL}/ventas/${idVenta}`,
       {
         method: "GET",
-        headers: {
-          Authorization:
-            `Bearer ${token}`,
-        },
       }
     );
 
@@ -225,25 +252,14 @@ async function obtenerVentaPorId(
 async function crearVenta(
   venta: CrearVentaData
 ): Promise<Venta> {
-  const token =
-    localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error(
-      "No hay sesión activa."
-    );
-  }
-
   const response =
-    await fetch(
+    await fetchConRefresh(
       `${BASE_URL}/ventas`,
       {
         method: "POST",
         headers: {
           "Content-Type":
             "application/json",
-          Authorization:
-            `Bearer ${token}`,
         },
         body: JSON.stringify(
           venta

@@ -1,8 +1,10 @@
+import authService from "./auth.services";
+
 const BASE_URL = "http://localhost:3000/api/v1";
 
-/* =========================================================
-   TIPOS
-========================================================= */
+/*
+ * TIPOS
+ */
 
 export type ResumenReporte = {
   ventasCompletadas: number;
@@ -59,9 +61,9 @@ type RespuestaApi<T> = {
   };
 };
 
-/* =========================================================
-   CACHE
-========================================================= */
+/*
+ * CACHE
+ */
 
 let resumenCache: ResumenReporte | null = null;
 let resumenPromise: Promise<ResumenReporte> | null = null;
@@ -88,13 +90,75 @@ let productosPorProveedorPromise:
 let reportesCache: Reporte[] | null = null;
 let reportesPromise: Promise<Reporte[]> | null = null;
 
-let reportesToken: string | null = null;
-
 let reportesVersion = 0;
 
-/* =========================================================
-   INVALIDAR CACHE
-========================================================= */
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita que varias peticiones que reciban
+ * 401 al mismo tiempo hagan varios refresh.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Hace la petición normalmente.
+ * Si recibe 401, renueva la sesión y
+ * vuelve a intentar una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
+
+/*
+ * INVALIDAR CACHE
+ */
 
 function invalidarCacheReportes() {
   resumenCache = null;
@@ -115,35 +179,11 @@ function invalidarCacheReportes() {
   reportesVersion++;
 }
 
-/* =========================================================
-   FUNCIÓN PARA OBTENER TOKEN
-========================================================= */
-
-function obtenerToken(): string {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  /*
-   * Si cambió la sesión, limpiamos el cache.
-   */
-  if (reportesToken !== token) {
-    invalidarCacheReportes();
-    reportesToken = token;
-  }
-
-  return token;
-}
-
-/* =========================================================
-   RESUMEN GENERAL
-========================================================= */
+/*
+ * RESUMEN GENERAL
+ */
 
 async function obtenerResumen(): Promise<ResumenReporte> {
-  const token = obtenerToken();
-
   if (resumenCache) {
     return resumenCache;
   }
@@ -155,13 +195,10 @@ async function obtenerResumen(): Promise<ResumenReporte> {
   const versionActual = reportesVersion;
 
   resumenPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/reportes/resumen`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
     );
 
@@ -188,15 +225,13 @@ async function obtenerResumen(): Promise<ResumenReporte> {
   }
 }
 
-/* =========================================================
-   VENTAS POR CATEGORÍA
-========================================================= */
+/*
+ * VENTAS POR CATEGORÍA
+ */
 
 async function obtenerVentasPorCategoria(): Promise<
   VentaPorCategoria[]
 > {
-  const token = obtenerToken();
-
   if (ventasPorCategoriaCache) {
     return ventasPorCategoriaCache;
   }
@@ -208,13 +243,10 @@ async function obtenerVentasPorCategoria(): Promise<
   const versionActual = reportesVersion;
 
   ventasPorCategoriaPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/reportes/ventas-por-categoria`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
     );
 
@@ -246,15 +278,13 @@ async function obtenerVentasPorCategoria(): Promise<
   }
 }
 
-/* =========================================================
-   ÚLTIMAS VENTAS
-========================================================= */
+/*
+ * ÚLTIMAS VENTAS
+ */
 
 async function obtenerUltimasVentas(
   limit = 10
 ): Promise<UltimaVenta[]> {
-  const token = obtenerToken();
-
   const cache = ultimasVentasCache.get(limit);
 
   if (cache) {
@@ -270,13 +300,10 @@ async function obtenerUltimasVentas(
   const versionActual = reportesVersion;
 
   const nuevaPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/reportes/ultimas-ventas?limit=${limit}`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
     );
 
@@ -310,15 +337,13 @@ async function obtenerUltimasVentas(
   }
 }
 
-/* =========================================================
-   PRODUCTOS POR PROVEEDOR
-========================================================= */
+/*
+ * PRODUCTOS POR PROVEEDOR
+ */
 
 async function obtenerProductosPorProveedor(): Promise<
   ProductoPorProveedor[]
 > {
-  const token = obtenerToken();
-
   if (productosPorProveedorCache) {
     return productosPorProveedorCache;
   }
@@ -330,13 +355,10 @@ async function obtenerProductosPorProveedor(): Promise<
   const versionActual = reportesVersion;
 
   productosPorProveedorPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/reportes/productos-por-proveedor`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
     );
 
@@ -368,13 +390,11 @@ async function obtenerProductosPorProveedor(): Promise<
   }
 }
 
-/* =========================================================
-   REPORTES GUARDADOS
-========================================================= */
+/*
+ * REPORTES GUARDADOS
+ */
 
 async function obtenerReportes(): Promise<Reporte[]> {
-  const token = obtenerToken();
-
   if (reportesCache) {
     return reportesCache;
   }
@@ -386,13 +406,10 @@ async function obtenerReportes(): Promise<Reporte[]> {
   const versionActual = reportesVersion;
 
   reportesPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/reportes?limit=500`,
       {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       }
     );
 
@@ -419,22 +436,17 @@ async function obtenerReportes(): Promise<Reporte[]> {
   }
 }
 
-/* =========================================================
-   OBTENER REPORTE POR ID
-========================================================= */
+/*
+ * OBTENER REPORTE POR ID
+ */
 
 async function obtenerReportePorId(
   idReporte: string
 ): Promise<Reporte> {
-  const token = obtenerToken();
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/reportes/${idReporte}`,
     {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     }
   );
 
@@ -450,9 +462,9 @@ async function obtenerReportePorId(
   return data.data;
 }
 
-/* =========================================================
-   CREAR REGISTRO DE REPORTE
-========================================================= */
+/*
+ * CREAR REGISTRO DE REPORTE
+ */
 
 export type CrearReporte = {
   nombre: string;
@@ -463,15 +475,12 @@ export type CrearReporte = {
 async function crearReporte(
   reporte: CrearReporte
 ): Promise<Reporte> {
-  const token = obtenerToken();
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/reportes`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(reporte),
     }
@@ -491,27 +500,24 @@ async function crearReporte(
   return data.data;
 }
 
-/* =========================================================
-   ELIMINAR REPORTE
-========================================================= */
+/*
+ * ELIMINAR REPORTE
+ */
 
 async function eliminarReporte(
   idReporte: string
 ): Promise<void> {
-  const token = obtenerToken();
-
-  const response = await fetch(
+  const response = await fetchConRefresh(
     `${BASE_URL}/reportes/${idReporte}`,
     {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     }
   );
 
   if (!response.ok) {
-    const data = await response.json().catch(() => null);
+    const data = await response
+      .json()
+      .catch(() => null);
 
     throw new Error(
       data?.message ||
@@ -522,9 +528,9 @@ async function eliminarReporte(
   invalidarCacheReportes();
 }
 
-/* =========================================================
-   EXPORTACIÓN DEL SERVICIO
-========================================================= */
+/*
+ * EXPORTACIÓN DEL SERVICIO
+ */
 
 const reportesService = {
   obtenerResumen,

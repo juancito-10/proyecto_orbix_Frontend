@@ -1,3 +1,5 @@
+import authService from "./auth.services";
+
 import type {
   ClienteVendedor,
   EstadoVenta,
@@ -60,8 +62,71 @@ let clientesPromise: Promise<ClienteVendedor[] | null> | null = null;
 let ventasCache: VentaVendedor[] | null = null;
 let ventasPromise: Promise<VentaVendedor[] | null> | null = null;
 
-let vendedorToken: string | null = null;
 let vendedorVersion = 0;
+
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita que varias peticiones que reciban
+ * 401 al mismo tiempo hagan varios refresh.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Hace la petición normalmente.
+ * Si recibe 401, renueva la sesión y
+ * vuelve a intentar una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
 
 function invalidarCacheVendedor() {
   productosCache = null;
@@ -76,30 +141,21 @@ function invalidarCacheVendedor() {
   vendedorVersion++;
 }
 
-function verificarToken(token: string) {
-  if (vendedorToken !== token) {
-    invalidarCacheVendedor();
-    vendedorToken = token;
-  }
-}
-
-const traer = async <T,>(ruta: string): Promise<T | null> => {
-  const token = localStorage.getItem("token");
-
-  if (!token) return null;
-
-  verificarToken(token);
-
+const traer = async <T,>(
+  ruta: string
+): Promise<T | null> => {
   try {
-    const response = await fetch(`${BASE_URL}${ruta}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetchConRefresh(
+      `${BASE_URL}${ruta}`,
+      {
+        method: "GET",
+      }
+    );
 
     if (!response.ok) return null;
 
-    const body = (await response.json()) as RespuestaApi<T>;
+    const body =
+      (await response.json()) as RespuestaApi<T>;
 
     return body.success ? body.data : null;
   } catch {
@@ -107,7 +163,9 @@ const traer = async <T,>(ruta: string): Promise<T | null> => {
   }
 };
 
-async function obtenerProductos(): Promise<ProductoVendedor[] | null> {
+async function obtenerProductos(): Promise<
+  ProductoVendedor[] | null
+> {
   if (productosCache) {
     return productosCache;
   }
@@ -119,34 +177,49 @@ async function obtenerProductos(): Promise<ProductoVendedor[] | null> {
   const versionActual = vendedorVersion;
 
   productosPromise = (async () => {
-    const items = await traer<Array<Record<string, unknown>>>(
-      "/productos?limit=500"
-    );
+    const items =
+      await traer<Array<Record<string, unknown>>>(
+        "/productos?limit=500"
+      );
 
     if (!items) return null;
 
     const productos = items.map((producto) => ({
       id: String(
-        producto.sku && producto.sku !== ""
+        producto.sku &&
+          producto.sku !== ""
           ? producto.sku
           : `PRD-${String(
               producto.idProducto ?? ""
             ).slice(0, 8)}`
       ),
-      idProducto: String(producto.idProducto ?? ""),
-      nombre: String(producto.nombre ?? "Producto"),
+      idProducto: String(
+        producto.idProducto ?? ""
+      ),
+      nombre: String(
+        producto.nombre ?? "Producto"
+      ),
       categoria:
         (
           producto.categoria as
             | { nombre?: string }
             | undefined
         )?.nombre ?? "General",
-      precio: Number(producto.precio ?? 0),
-      stock: Number(producto.stock ?? 0),
-      minStock: Number(producto.stockMinimo ?? 0),
+      precio: Number(
+        producto.precio ?? 0
+      ),
+      stock: Number(
+        producto.stock ?? 0
+      ),
+      minStock: Number(
+        producto.stockMinimo ?? 0
+      ),
     }));
 
-    if (versionActual === vendedorVersion) {
+    if (
+      versionActual ===
+      vendedorVersion
+    ) {
       productosCache = productos;
     }
 
@@ -160,7 +233,9 @@ async function obtenerProductos(): Promise<ProductoVendedor[] | null> {
   }
 }
 
-async function obtenerClientes(): Promise<ClienteVendedor[] | null> {
+async function obtenerClientes(): Promise<
+  ClienteVendedor[] | null
+> {
   if (clientesCache) {
     return clientesCache;
   }
@@ -172,26 +247,43 @@ async function obtenerClientes(): Promise<ClienteVendedor[] | null> {
   const versionActual = vendedorVersion;
 
   clientesPromise = (async () => {
-    const items = await traer<Array<Record<string, unknown>>>(
-      "/clientes?limit=500"
-    );
+    const items =
+      await traer<Array<Record<string, unknown>>>(
+        "/clientes?limit=500"
+      );
 
     if (!items) return null;
 
-    const clientes = items.map((cliente) => ({
-      id: String(cliente.idCliente ?? ""),
-      idCliente: String(cliente.idCliente ?? ""),
-      codigoCliente: cliente.codigoCliente
-        ? String(cliente.codigoCliente)
-        : undefined,
-      nombre: String(cliente.nombre ?? "Cliente"),
-      ciudad: String(cliente.ciudad ?? "—"),
-      totalCompras: 0,
-      pedidos: 0,
-      ultimo: "—",
-    }));
+    const clientes = items.map(
+      (cliente) => ({
+        id: String(
+          cliente.idCliente ?? ""
+        ),
+        idCliente: String(
+          cliente.idCliente ?? ""
+        ),
+        codigoCliente:
+          cliente.codigoCliente
+            ? String(
+                cliente.codigoCliente
+              )
+            : undefined,
+        nombre: String(
+          cliente.nombre ?? "Cliente"
+        ),
+        ciudad: String(
+          cliente.ciudad ?? "—"
+        ),
+        totalCompras: 0,
+        pedidos: 0,
+        ultimo: "—",
+      })
+    );
 
-    if (versionActual === vendedorVersion) {
+    if (
+      versionActual ===
+      vendedorVersion
+    ) {
       clientesCache = clientes;
     }
 
@@ -205,7 +297,9 @@ async function obtenerClientes(): Promise<ClienteVendedor[] | null> {
   }
 }
 
-async function obtenerVentas(): Promise<VentaVendedor[] | null> {
+async function obtenerVentas(): Promise<
+  VentaVendedor[] | null
+> {
   if (ventasCache) {
     return ventasCache;
   }
@@ -217,79 +311,117 @@ async function obtenerVentas(): Promise<VentaVendedor[] | null> {
   const versionActual = vendedorVersion;
 
   ventasPromise = (async () => {
-    const items = await traer<Array<Record<string, unknown>>>(
-      "/ventas?limit=500"
-    );
+    const items =
+      await traer<Array<Record<string, unknown>>>(
+        "/ventas?limit=500"
+      );
 
     if (!items) return null;
 
     const ventas = items.map((venta) => {
-      const detalles = venta.detalles as
-        | Array<{
-            cantidad: number;
-            precioUnitario: number;
-            producto: {
-              idProducto: string;
-              nombre: string;
-            };
-          }>
-        | undefined;
+      const detalles =
+        venta.detalles as
+          | Array<{
+              cantidad: number;
+              precioUnitario: number;
+              producto: {
+                idProducto: string;
+                nombre: string;
+              };
+            }>
+          | undefined;
 
       const cantidadItems =
         detalles?.reduce(
           (acumulado, detalle) =>
-            acumulado + Number(detalle.cantidad),
+            acumulado +
+            Number(
+              detalle.cantidad
+            ),
           0
         ) ?? 0;
 
       return {
-        id: `ORD-${String(venta.idVenta ?? "")}`,
-        idVenta: String(venta.idVenta ?? ""),
-        codigoVenta: venta.codigoVenta
-          ? String(venta.codigoVenta)
-          : undefined,
+        id: `ORD-${String(
+          venta.idVenta ?? ""
+        )}`,
+        idVenta: String(
+          venta.idVenta ?? ""
+        ),
+        codigoVenta:
+          venta.codigoVenta
+            ? String(
+                venta.codigoVenta
+              )
+            : undefined,
         idCliente: String(
           (
             venta.cliente as
-              | { idCliente?: string }
+              | {
+                  idCliente?: string;
+                }
               | undefined
           )?.idCliente ?? ""
         ),
         cliente:
           (
             venta.cliente as
-              | { nombre?: string }
+              | {
+                  nombre?: string;
+                }
               | undefined
-          )?.nombre ?? "Cliente",
-        monto: Number(venta.total ?? 0),
+          )?.nombre ??
+          "Cliente",
+        monto: Number(
+          venta.total ?? 0
+        ),
         estado:
-          MAPA_ESTADO[String(venta.estado)] ??
-          "Pendiente",
+          MAPA_ESTADO[
+            String(venta.estado)
+          ] ?? "Pendiente",
         fecha: formatearFecha(
           String(venta.fecha)
         ),
-        fechaISO: String(venta.fecha ?? ""),
+        fechaISO: String(
+          venta.fecha ?? ""
+        ),
         items: cantidadItems,
         pago:
-          MAPA_PAGO[String(venta.metodoPago)] ??
-          "Efectivo",
+          MAPA_PAGO[
+            String(
+              venta.metodoPago
+            )
+          ] ?? "Efectivo",
         metodoPago:
           (venta.metodoPago as VentaVendedor["metodoPago"]) ??
           "efectivo",
-        itemsDetalle: detalles?.map((detalle) => ({
-          idProducto: String(
-            detalle.producto.idProducto ?? ""
+        itemsDetalle:
+          detalles?.map(
+            (detalle) => ({
+              idProducto: String(
+                detalle.producto
+                  .idProducto ?? ""
+              ),
+              nombre:
+                detalle.producto
+                  .nombre,
+              cantidad: Number(
+                detalle.cantidad
+              ),
+              precioUnitario:
+                Number(
+                  detalle.precioUnitario ??
+                    0
+                ),
+            })
           ),
-          nombre: detalle.producto.nombre,
-          cantidad: Number(detalle.cantidad),
-          precioUnitario: Number(
-            detalle.precioUnitario ?? 0
-          ),
-        })),
       };
     });
 
-    if (versionActual === vendedorVersion) {
+    if (
+      versionActual ===
+      vendedorVersion
+    ) {
       ventasCache = ventas;
     }
 
@@ -322,27 +454,31 @@ export type VentaNueva = {
   }[];
 };
 
-async function crearVenta(venta: VentaNueva) {
-  const token = localStorage.getItem("token");
+async function crearVenta(
+  venta: VentaNueva
+) {
+  const response =
+    await fetchConRefresh(
+      `${BASE_URL}/ventas`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify(
+          venta
+        ),
+      }
+    );
 
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(`${BASE_URL}/ventas`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(venta),
-  });
-
-  const data = await response.json();
+  const data =
+    await response.json();
 
   if (!response.ok) {
     throw new Error(
-      data.message || "Error al registrar la venta."
+      data.message ||
+        "Error al registrar la venta."
     );
   }
 
@@ -353,31 +489,32 @@ async function crearVenta(venta: VentaNueva) {
 
 async function actualizarEstadoVenta(
   idVenta: string,
-  estado: NonNullable<VentaNueva["estado"]>
+  estado: NonNullable<
+    VentaNueva["estado"]
+  >
 ) {
-  const token = localStorage.getItem("token");
+  const response =
+    await fetchConRefresh(
+      `${BASE_URL}/ventas/${idVenta}/estado`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+        body: JSON.stringify({
+          estado,
+        }),
+      }
+    );
 
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
-    `${BASE_URL}/ventas/${idVenta}/estado`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ estado }),
-    }
-  );
-
-  const data = await response.json();
+  const data =
+    await response.json();
 
   if (!response.ok) {
     throw new Error(
-      data.message || "Error al actualizar el estado."
+      data.message ||
+        "Error al actualizar el estado."
     );
   }
 

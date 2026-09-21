@@ -13,6 +13,7 @@ const authService = {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           correo,
           password,
@@ -32,6 +33,66 @@ const authService = {
     return data;
   },
 
+  async refresh() {
+    const response = await fetch(
+      `${BASE_URL}/auth/refresh`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Sesión expirada"
+      );
+    }
+
+    return data;
+  },
+
+  async me() {
+    const response = await fetch(
+      `${BASE_URL}/auth/me`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Sesión no válida"
+      );
+    }
+
+    return data;
+  },
+
+  async logout() {
+    const response = await fetch(
+      `${BASE_URL}/auth/logout`,
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Error al cerrar sesión"
+      );
+    }
+
+    return data;
+  },
+
   async forgotPassword(correo: string) {
     const response = await fetch(
       `${BASE_URL}/auth/forgot-password`,
@@ -40,6 +101,7 @@ const authService = {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           correo,
         }),
@@ -69,6 +131,7 @@ const authService = {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           token,
           passwordNueva,

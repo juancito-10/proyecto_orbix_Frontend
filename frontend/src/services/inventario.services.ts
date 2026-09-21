@@ -1,3 +1,5 @@
+import authService from "./auth.services";
+
 const BASE_URL = "http://localhost:3000/api/v1";
 
 export type ProductoInventario = {
@@ -14,8 +16,71 @@ type RespuestaProductos = {
 
 let productosCache: ProductoInventario[] | null = null;
 let productosPromise: Promise<ProductoInventario[]> | null = null;
-let productosToken: string | null = null;
 let productosVersion = 0;
+
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita que varias peticiones que reciban
+ * 401 al mismo tiempo hagan varios refresh.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Hace la petición normalmente.
+ * Si recibe 401, renueva la sesión y
+ * vuelve a intentar una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
 
 function invalidarCacheProductos() {
   productosCache = null;
@@ -24,19 +89,6 @@ function invalidarCacheProductos() {
 }
 
 async function obtenerProductos(): Promise<ProductoInventario[]> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  if (productosToken !== token) {
-    productosCache = null;
-    productosPromise = null;
-    productosToken = token;
-    productosVersion++;
-  }
-
   if (productosCache) {
     return productosCache;
   }
@@ -48,20 +100,26 @@ async function obtenerProductos(): Promise<ProductoInventario[]> {
   const versionActual = productosVersion;
 
   productosPromise = (async () => {
-    const response = await fetch(`${BASE_URL}/productos`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetchConRefresh(
+      `${BASE_URL}/productos`,
+      {
+        method: "GET",
+      }
+    );
 
-    const data: RespuestaProductos = await response.json();
+    const data: RespuestaProductos =
+      await response.json();
 
     if (!response.ok || !data.success) {
-      throw new Error("Error al obtener los productos.");
+      throw new Error(
+        "Error al obtener los productos."
+      );
     }
 
-    if (versionActual === productosVersion) {
+    if (
+      versionActual ===
+      productosVersion
+    ) {
       productosCache = data.data;
     }
 
@@ -78,9 +136,16 @@ async function obtenerProductos(): Promise<ProductoInventario[]> {
 async function obtenerValorInventario(): Promise<number> {
   const productos = await obtenerProductos();
 
-  const valorTotal = productos.reduce((total, producto) => {
-    return total + Number(producto.precio) * Number(producto.stock);
-  }, 0);
+  const valorTotal = productos.reduce(
+    (total, producto) => {
+      return (
+        total +
+        Number(producto.precio) *
+          Number(producto.stock)
+      );
+    },
+    0
+  );
 
   return valorTotal;
 }

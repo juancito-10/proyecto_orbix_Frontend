@@ -1,3 +1,5 @@
+import authService from "./auth.services";
+
 const BASE_URL = "http://localhost:3000/api/v1";
 
 export type Proveedor = {
@@ -19,8 +21,71 @@ export type RespuestaApi = {
 
 let proveedoresCache: Proveedor[] | null = null;
 let proveedoresPromise: Promise<Proveedor[]> | null = null;
-let proveedoresToken: string | null = null;
 let proveedoresVersion = 0;
+
+/*
+ * CONTROL DEL REFRESH
+ *
+ * Evita que varias peticiones que reciban
+ * 401 al mismo tiempo hagan varios refresh.
+ */
+
+let refreshPromise: Promise<void> | null = null;
+
+/*
+ * RENOVAR SESIÓN
+ */
+
+async function renovarSesion(): Promise<void> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      try {
+        await authService.refresh();
+      } catch {
+        window.location.href = "/login/admin";
+        throw new Error("Sesión expirada.");
+      } finally {
+        refreshPromise = null;
+      }
+    })();
+  }
+
+  return refreshPromise;
+}
+
+/*
+ * FETCH CON REFRESH AUTOMÁTICO
+ *
+ * Hace la petición normalmente.
+ * Si recibe 401, renueva la sesión y
+ * vuelve a intentar una sola vez.
+ */
+
+async function fetchConRefresh(
+  url: string,
+  options: RequestInit = {},
+  reintento = false
+): Promise<Response> {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include",
+  });
+
+  if (
+    response.status !== 401 ||
+    reintento
+  ) {
+    return response;
+  }
+
+  await renovarSesion();
+
+  return fetchConRefresh(
+    url,
+    options,
+    true
+  );
+}
 
 function invalidarCacheProveedores() {
   proveedoresCache = null;
@@ -29,19 +94,6 @@ function invalidarCacheProveedores() {
 }
 
 async function obtenerProveedores(): Promise<Proveedor[]> {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  if (proveedoresToken !== token) {
-    proveedoresCache = null;
-    proveedoresPromise = null;
-    proveedoresToken = token;
-    proveedoresVersion++;
-  }
-
   if (proveedoresCache) {
     return proveedoresCache;
   }
@@ -53,24 +105,27 @@ async function obtenerProveedores(): Promise<Proveedor[]> {
   const versionActual = proveedoresVersion;
 
   proveedoresPromise = (async () => {
-    const response = await fetch(
+    const response = await fetchConRefresh(
       `${BASE_URL}/proveedores?limit=500`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        method: "GET",
       }
     );
 
-    const data: RespuestaApi = await response.json();
+    const data: RespuestaApi =
+      await response.json();
 
     if (!response.ok || !data.success) {
       throw new Error(
-        data.message || "Error al obtener los proveedores."
+        data.message ||
+          "Error al obtener los proveedores."
       );
     }
 
-    if (versionActual === proveedoresVersion) {
+    if (
+      versionActual ===
+      proveedoresVersion
+    ) {
       proveedoresCache = data.data;
     }
 
@@ -93,34 +148,33 @@ async function crearProveedor(
   ciudad?: string,
   estado?: string
 ): Promise<Proveedor> {
-  const token = localStorage.getItem("token");
+  const response =
+    await fetchConRefresh(
+      `${BASE_URL}/proveedores`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre,
+          nit,
+          telefono: telefono || null,
+          correo: correo || null,
+          direccion: direccion || null,
+          ciudad: ciudad || null,
+          estado: estado || undefined,
+        }),
+      }
+    );
 
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(`${BASE_URL}/proveedores`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      nombre,
-      nit,
-      telefono: telefono || null,
-      correo: correo || null,
-      direccion: direccion || null,
-      ciudad: ciudad || null,
-      estado: estado || undefined,
-    }),
-  });
-
-  const data = await response.json();
+  const data =
+    await response.json();
 
   if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Error al crear el proveedor."
+      data.message ||
+        "Error al crear el proveedor."
     );
   }
 
@@ -139,37 +193,33 @@ async function actualizarProveedor(
   ciudad?: string,
   estado?: string
 ): Promise<Proveedor> {
-  const token = localStorage.getItem("token");
+  const response =
+    await fetchConRefresh(
+      `${BASE_URL}/proveedores/${idProveedor}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre,
+          nit,
+          telefono: telefono || null,
+          correo: correo || null,
+          direccion: direccion || null,
+          ciudad: ciudad || null,
+          estado: estado || undefined,
+        }),
+      }
+    );
 
-  if (!token) {
-    throw new Error("No hay sesión activa.");
-  }
-
-  const response = await fetch(
-    `${BASE_URL}/proveedores/${idProveedor}`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        nombre,
-        nit,
-        telefono: telefono || null,
-        correo: correo || null,
-        direccion: direccion || null,
-        ciudad: ciudad || null,
-        estado: estado || undefined,
-      }),
-    }
-  );
-
-  const data = await response.json();
+  const data =
+    await response.json();
 
   if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Error al actualizar el proveedor."
+      data.message ||
+        "Error al actualizar el proveedor."
     );
   }
 
