@@ -1,0 +1,340 @@
+﻿.vendedor-app {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+.vendedor-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Barra superior */
+.vendedor-topbar {
+  height: 56px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(240, 244, 248, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.vendedor-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "DM Mono", monospace;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.vendedor-breadcrumb-muted {
+  opacity: 0.65;
+}
+
+.vendedor-breadcrumb-sep {
+  opacity: 0.4;
+}
+
+.vendedor-breadcrumb-rol {
+  color: #8b5cf6;
+  font-weight: 600;
+}
+
+.vendedor-breadcrumb strong {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.vendedor-topbar-acciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vendedor-buscar {
+  position: relative;
+}
+
+.vendedor-buscar svg {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted-foreground);
+}
+
+.vendedor-buscar input {
+  height: 32px;
+  width: 200px;
+  padding: 0 12px 0 32px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  background-color: var(--card);
+  color: var(--foreground);
+  font-family: "Source Sans 3", sans-serif;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.vendedor-notifi {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground);
+}
+
+.vendedor-notifi-dot {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #f59e0b;
+}
+
+.vendedor-usuario-menu {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #8b5cf6;
+  color: #ffffff;
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Contenido */
+.vendedor-main {
+  flex: 1;
+  padding: 28px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Buscador global (omnibox) */
+.vbusqueda {
+  position: relative;
+}
+
+.vbusqueda .vendedor-buscar input {
+  width: 260px;
+}
+
+.vbusqueda-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 360px;
+  max-height: 420px;
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  padding: 8px;
+  z-index: 30;
+}
+
+.vbusqueda-grupo {
+  margin-bottom: 6px;
+}
+
+.vbusqueda-grupo:last-child {
+  margin-bottom: 0;
+}
+
+.vbusqueda-grupo-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Outfit", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-foreground);
+  padding: 8px 10px 4px;
+  margin: 0;
+}
+
+.vbusqueda-grupo-titulo span {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.75;
+}
+
+.vbusqueda-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-family: "Source Sans 3", sans-serif;
+}
+
+.vbusqueda-item:hover,
+.vbusqueda-item.activo {
+  background-color: var(--background);
+}
+
+.vbusqueda-item-icono {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vbusqueda-item-icono.producto {
+  background-color: #ede9fe;
+  color: #6d28d9;
+}
+
+.vbusqueda-item-icono.cliente {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.vbusqueda-item-icono.venta {
+  background-color: #d1fae5;
+  color: #047857;
+}
+
+.vbusqueda-item-texto {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+  flex: 1;
+}
+
+.vbusqueda-item-texto strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vbusqueda-item-texto small {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vbusqueda-item-accion {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Outfit", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #8b5cf6;
+  background-color: #ede9fe;
+  padding: 4px 9px;
+  border-radius: 99px;
+  flex-shrink: 0;
+}
+
+.vbusqueda-item.activo .vbusqueda-item-accion,
+.vbusqueda-item:hover .vbusqueda-item-accion {
+  color: #ffffff;
+  background-color: #8b5cf6;
+}
+
+.vbusqueda-estado {
+  font-size: 10px;
+  padding: 2px 8px;
+}
+
+.vbusqueda-ver-todos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+  padding: 7px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: "Outfit", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #8b5cf6;
+}
+
+.vbusqueda-ver-todos:hover {
+  background-color: var(--background);
+}
+
+.vbusqueda-vacio {
+  padding: 24px 12px;
+  text-align: center;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.vbusqueda-pie {
+  margin: 0;
+  padding: 6px 10px 2px;
+  font-family: "DM Mono", monospace;
+  font-size: 10px;
+  color: var(--muted-foreground);
+  border-top: 1px solid var(--border);
+  opacity: 0.8;
+}@media (max-width: 768px) {
+  .vendedor-topbar {
+    padding: 0 10px;
+  }
+  .vendedor-buscar input {
+    width: 130px;
+  }
+  .vendedor-breadcrumb-muted, .vendedor-breadcrumb-sep, .vendedor-breadcrumb-rol {
+    display: none;
+  }
+  .vendedor-main {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 768px) { .mobile-menu-btn { display: block !important; } }
+
+.vendedor-contenido { overflow-x: hidden; }

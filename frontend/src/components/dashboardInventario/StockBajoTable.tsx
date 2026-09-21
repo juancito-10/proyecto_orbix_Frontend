@@ -1,7 +1,20 @@
 import { TriangleAlert } from "lucide-react";
 import "./StockBajoTable.css";
 
-const StockBajoTable = () => {
+export interface ProductoStockBajo {
+  producto: string;
+  stockActual: number;
+  stockMin: number;
+  deficit: number;
+  proveedor: string;
+}
+
+export interface StockBajoTableProps {
+  data: ProductoStockBajo[];
+  isLoading?: boolean;
+}
+
+const StockBajoTable = ({ data, isLoading = false }: StockBajoTableProps) => {
   return (
     <div className="table-container">
       <div className="table-header-alert">
@@ -9,7 +22,7 @@ const StockBajoTable = () => {
           <TriangleAlert size={20} className="alert-icon" />
           <span>Productos con stock bajo</span>
         </div>
-        <div className="alert-badge">3 alertas</div>
+        <div className="alert-badge">{isLoading ? "-" : data.length} alertas</div>
       </div>
       
       <table className="stock-table">
@@ -23,27 +36,33 @@ const StockBajoTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className="product-name">Zapatillas Nike Air Max 270</td>
-            <td className="stock-actual">3</td>
-            <td className="stock-min">10</td>
-            <td className="deficit">-7</td>
-            <td className="proveedor">Nike Distribuidora</td>
-          </tr>
-          <tr>
-            <td className="product-name">Impresora HP LaserJet Pro</td>
-            <td className="stock-actual">2</td>
-            <td className="stock-min">3</td>
-            <td className="deficit">-1</td>
-            <td className="proveedor">HP Argentina</td>
-          </tr>
-          <tr>
-            <td className="product-name">Teclado Mecánico Logitech G413</td>
-            <td className="stock-actual">4</td>
-            <td className="stock-min">5</td>
-            <td className="deficit">-1</td>
-            <td className="proveedor">Logitech Corp</td>
-          </tr>
+          {isLoading ? (
+            Array(3).fill(0).map((_, i) => (
+              <tr key={i}>
+                <td><div className="skeleton skeleton-text" style={{ width: '80%', margin: 0 }}></div></td>
+                <td><div className="skeleton skeleton-text" style={{ width: '30%', margin: 0 }}></div></td>
+                <td><div className="skeleton skeleton-text" style={{ width: '30%', margin: 0 }}></div></td>
+                <td><div className="skeleton skeleton-text" style={{ width: '30%', margin: 0 }}></div></td>
+                <td><div className="skeleton skeleton-text" style={{ width: '70%', margin: 0 }}></div></td>
+              </tr>
+            ))
+          ) : data.length > 0 ? (
+            data.map((item, index) => (
+              <tr key={index}>
+                <td className="product-name">{item.producto}</td>
+                <td className="stock-actual">{item.stockActual}</td>
+                <td className="stock-min">{item.stockMin}</td>
+                <td className="deficit">{item.deficit}</td>
+                <td className="proveedor">{item.proveedor}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={5} style={{ textAlign: "center", padding: "20px" }}>
+                No hay productos con stock bajo
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

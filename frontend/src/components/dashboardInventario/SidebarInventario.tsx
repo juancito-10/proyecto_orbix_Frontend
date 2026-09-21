@@ -1,56 +1,77 @@
-import {
+﻿import {
   LayoutDashboard,
   Package,
   ArrowRightLeft,
-  LogOut
+  Pin,
+  PinOff
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { useState } from "react";
 import "./SidebarInventario.css";
 
-const SidebarInventario = () => {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  isPinned?: boolean;
+  onTogglePin?: () => void;
+}
+
+const SidebarInventario = ({ isOpen = true, onClose, isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
+  const [internalPinned, setInternalPinned] = useState(false);
+  const isPinned = propIsPinned !== undefined ? propIsPinned : internalPinned;
+
+  const handleTogglePin = () => {
+    if (onTogglePin) onTogglePin();
+    else setInternalPinned(!internalPinned);
+  };
+
   return (
-    <aside className="sidebar-inventario">
-      <div className="sidebar-titulo-inv">
-        <div className="logo-container">
-          <div className="logo-icon">
-            <span className="logo-inner-circle"></span>
-          </div>
-          <h2 className="siti-inv">Orbix</h2>
-        </div>
-        <span className="badge-inventario">Inventario</span>
-      </div>
+    <>
+      {isOpen && onClose && <div className="sidebar-overlay" onClick={onClose}></div>}
       
-      <nav className="navegacion-inv">
-        <p className="navp-inv">MENÚ</p>
-        <a href="/dashboard/inventario" className="active">
-          <LayoutDashboard size={22} />
-          <span>Dashboard</span>
-        </a>
-
-        <a href="/dashboard/inventario/productos">
-          <Package size={22} />
-          <span>Productos</span>
-        </a>
-        <a href="/dashboard/inventario/movimientos">
-          <ArrowRightLeft size={22} />
-          <span>Movimientos</span>
-        </a>
-      </nav>
-
-      <div className="sidebar-footer-inv">
-        <div className="user-profile-inv">
-          <div className="user-avatar-inv">LH</div>
-          <div className="user-info-inv">
-            <p className="user-name-inv">Luis Herrera</p>
-            <p className="user-role-inv">Inventario</p>
+      <aside className={`sidebar-inventario ${isOpen ? 'open' : ''} ${isPinned ? 'pinned' : 'unpinned'}`}>
+        <div className="sidebar-titulo-inv">
+          <div className="logo-container">
+            <div className="logo-icon-orbix logo-inventario">O</div>
+            <h2 className="siti-inv">Orbix</h2>
           </div>
+          <span className="badge-inventario">Inventario</span>
         </div>
-        <button className="btn-cambiar-perfil">
-          <LogOut size={18} />
-          <span>Cambiar perfil</span>
-        </button>
-      </div>
-    </aside>
+        
+        <nav className="navegacion-inv">
+          <p className="navp-inv">MENU</p>
+          <NavLink to="/dashboard/inventario" end className={({ isActive }) => (isActive ? "active" : "")} onClick={onClose}>
+            <LayoutDashboard size={22} />
+            <span>Dashboard</span>
+          </NavLink>
+
+          <NavLink to="/dashboard/inventario/productos" className={({ isActive }) => (isActive ? "active" : "")} onClick={onClose}>
+            <Package size={22} />
+            <span>Productos</span>
+          </NavLink>
+          
+          <NavLink to="/dashboard/inventario/movimientos" className={({ isActive }) => (isActive ? "active" : "")} onClick={onClose}>
+            <ArrowRightLeft size={22} />
+            <span>Movimientos</span>
+          </NavLink>
+        </nav>
+
+        <div className="sidebar-footer-inv">
+          <button 
+            className="btn-cambiar-perfil toggle-pin-btn" 
+            onClick={handleTogglePin}
+            title={isPinned ? "Desanclar barra" : "Anclar barra"}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", width: "100%" }}
+          >
+            {isPinned ? <PinOff size={18} /> : <Pin size={18} />}
+            <span>{isPinned ? "Desanclar" : "Anclar barra"}</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 };
 
 export default SidebarInventario;
+
+

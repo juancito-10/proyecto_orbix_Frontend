@@ -1,22 +1,58 @@
-.dashboard-cards {
+﻿.dashboard-cards {
   display: flex;
   gap: 20px;
-  padding: 0 30px;
+  padding: 0px;
 }
 
 .card {
   flex: 1;
-  height: 240px;
-  padding: 25px;
-
+  height: 130px;
+  padding: 18px;
   background-color: #ffffff;
   border-radius: 15px;
-
   display: flex;
   flex-direction: column;
 }
+
 .titulo-cars {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
+
+.titulo-cars p {
+  margin: 0;
+  font-size: 13px;
+}
+
+.titulo-cars svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Ingresos del mes */
+.card:nth-child(1) .titulo-cars svg {
+  color: #16a34a;
+}
+
+/* Pedidos */
+.card:nth-child(2) .titulo-cars svg {
+  color: #6366f1;
+}
+
+/* Clientes actuales */
+.card:nth-child(3) .titulo-cars svg {
+  color: #087c9c;
+}
+
+/* Valor de inventario */
+.card:nth-child(4) .titulo-cars svg {
+  color: #e99a16;
+}
+
+.card h2 {
+  margin: 10px 0 0;
+  font-size: 24px;
+}
+@media (max-width: 992px) { .dashboard-cards { flex-wrap: wrap; } .card { min-width: 45%; } }
+@media (max-width: 576px) { .card { min-width: 100%; } }

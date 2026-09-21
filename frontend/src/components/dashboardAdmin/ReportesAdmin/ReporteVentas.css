@@ -1,0 +1,671 @@
+/* REPORTE DE VENTAS */
+
+.reporte-ventas {
+  width: 100%;
+  margin-bottom: 40px;
+  color: #071b2f;
+}
+
+/* ENCABEZADO */
+
+.reporte-ventas-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reporte-ventas-header h3 {
+  margin: 0;
+  color: #071b2f;
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.reporte-ventas-header p {
+  margin: 7px 0 0;
+  color: #70839a;
+  font-size: 14px;
+}
+
+/* BOTÓN VOLVER */
+
+.reporte-ventas-volver {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #087c9c;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.reporte-ventas-volver:hover {
+  color: #065f78;
+  transform: translateX(-3px);
+}
+
+/* BOTONES DE PERÍODO */
+
+.reporte-ventas-periodos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+.reporte-ventas-periodos-botones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reporte-ventas-periodos button {
+  min-width: 105px;
+  padding: 11px 20px;
+  border: 1px solid #d6e0e8;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #58708c;
+  font-size: 14px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.reporte-ventas-periodos button:hover {
+  border-color: #087c9c;
+  color: #087c9c;
+  background-color: #f7fcfd;
+  transform: translateY(-1px);
+}
+
+.reporte-ventas-periodos .periodo-activo {
+  background-color: #087c9c;
+  border-color: #087c9c;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(8, 124, 156, 0.18);
+}
+
+.reporte-ventas-periodos .periodo-activo:hover {
+  background-color: #087c9c;
+  border-color: #087c9c;
+  color: #ffffff;
+}
+
+/* BOTÓN DESCARGAR PDF */
+
+.reporte-ventas-pdf {
+  height: 42px;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border: none !important;
+  border-radius: 10px;
+
+  background: #087c9c !important;
+  color: #ffffff !important;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.reporte-ventas-pdf:hover {
+  background: #096d88 !important;
+  color: #ffffff !important;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 5px 12px
+    rgba(8, 124, 156, 0.20);
+}
+
+.reporte-ventas-pdf:disabled {
+  background: #087c9c !important;
+  color: #ffffff !important;
+
+  opacity: 0.6;
+  cursor: not-allowed;
+
+  transform: none;
+  box-shadow: none;
+}
+
+/* FILTRO PERSONALIZADO */
+
+.reporte-ventas-personalizado {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+
+  width: fit-content;
+
+  margin-bottom: 22px;
+  padding: 18px 20px;
+
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+  border-radius: 13px;
+
+  box-shadow: 0 3px 10px rgba(7, 27, 47, 0.04);
+}
+
+.campo-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.campo-fecha label {
+  color: #58708c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.campo-fecha input {
+  width: 175px;
+  height: 40px;
+
+  padding: 0 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d6e0e8;
+  border-radius: 9px;
+
+  outline: none;
+
+  background-color: #ffffff;
+
+  color: #071b2f;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.campo-fecha input:hover {
+  border-color: #aebfce;
+}
+
+.campo-fecha input:focus {
+  border-color: #087c9c;
+  box-shadow: 0 0 0 3px rgba(8, 124, 156, 0.09);
+}
+
+/* FECHAS PERSONALIZADAS */
+
+.reporte-ventas-fechas {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+
+  width: fit-content;
+
+  padding: 25px 30px;
+
+  margin-bottom: 30px;
+
+  background-color: #ffffff;
+
+  border: 1px solid #d9e0e8;
+
+  border-radius: 15px;
+
+  box-shadow: 0 5px 15px rgba(7, 27, 47, 0.04);
+}
+
+.reporte-ventas-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.reporte-ventas-fecha label {
+  color: #58708c;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reporte-ventas-fecha input {
+  width: 265px;
+  height: 42px;
+
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  border: 1px solid #d9e0e8;
+  border-radius: 10px;
+
+  background-color: #ffffff;
+
+  color: #071b2f;
+
+  font-size: 14px;
+
+  outline: none;
+}
+
+.reporte-ventas-fecha input:focus {
+  border-color: #087c9c;
+  box-shadow: 0 0 0 3px rgba(8, 124, 156, 0.08);
+}
+
+/* RESUMEN */
+
+.reporte-ventas-resumen {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 22px;
+}
+
+/* TARJETAS DE MÉTRICAS */
+
+.reporte-ventas-card {
+  position: relative;
+
+  min-height: 125px;
+
+  padding: 22px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-shadow: 0 3px 10px rgba(7, 27, 47, 0.035);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.reporte-ventas-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 4px;
+  height: 100%;
+
+  background-color: #087c9c;
+}
+
+.reporte-ventas-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 7px 18px rgba(7, 27, 47, 0.07);
+}
+
+.reporte-ventas-card span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #70839a;
+
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.reporte-ventas-card strong {
+  display: block;
+
+  color: #071b2f;
+
+  font-size: 25px;
+  font-weight: 750;
+
+  line-height: 1.2;
+}
+
+/* CONTENIDO PRINCIPAL */
+
+.reporte-ventas-contenido {
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+  border-radius: 15px;
+
+  padding: 26px;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 3px 12px rgba(7, 27, 47, 0.035);
+}
+
+.reporte-ventas-contenido h4 {
+  margin: 0 0 8px;
+
+  color: #071b2f;
+
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.reporte-ventas-contenido p {
+  margin: 0;
+
+  color: #70839a;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.reporte-ventas-contenido p strong {
+  color: #36536f;
+}
+
+/* TABLA */
+
+.tabla-ventas-reporte {
+  width: 100%;
+
+  overflow-x: auto;
+
+  margin-top: 24px;
+
+  border: 1px solid #e1e8ee;
+  border-radius: 11px;
+
+  scrollbar-width: thin;
+}
+
+.tabla-ventas-reporte table {
+  width: 100%;
+
+  min-width: 850px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* ENCABEZADOS DE TABLA */
+
+.tabla-ventas-reporte th {
+  padding: 14px 15px;
+
+  text-align: left;
+
+  background-color: #f7f9fb;
+
+  border-bottom: 1px solid #dfe7ed;
+
+  color: #58708c;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  white-space: nowrap;
+}
+
+.tabla-ventas-reporte th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.tabla-ventas-reporte th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* CELDAS */
+
+.tabla-ventas-reporte td {
+  padding: 15px;
+
+  color: #263f58;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #edf1f4;
+
+  white-space: nowrap;
+
+  background-color: #ffffff;
+}
+
+.tabla-ventas-reporte tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* HOVER DE FILAS */
+
+.tabla-ventas-reporte tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.tabla-ventas-reporte tbody tr:hover td {
+  background-color: #f8fbfc;
+}
+
+/* CÓDIGO DE VENTA */
+
+.tabla-ventas-reporte td:first-child {
+  color: #087c9c;
+  font-weight: 700;
+}
+
+/* TOTAL */
+
+.tabla-ventas-reporte td:last-child {
+  color: #071b2f;
+  font-weight: 750;
+}
+
+/* ESTADOS */
+
+.tabla-ventas-reporte td:nth-child(5) {
+  font-weight: 650;
+  color: #087c9c;
+}
+
+/* CARGANDO */
+
+.reporte-ventas-cargando {
+  padding: 35px;
+
+  text-align: center;
+
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+  border-radius: 14px;
+
+  color: #58708c;
+
+  font-size: 14px;
+}
+
+/* ERROR */
+
+.reporte-ventas-error {
+  padding: 16px 18px;
+
+  background-color: #fff7f7;
+
+  border: 1px solid #f1caca;
+  border-radius: 11px;
+
+  color: #b42318;
+
+  font-size: 14px;
+}
+
+/* SIN DATOS */
+
+.ventas-sin-datos {
+  margin-top: 22px;
+
+  padding: 35px 20px;
+
+  text-align: center;
+
+  background-color: #f8fafc;
+
+  border: 1px dashed #d4dfe7;
+  border-radius: 11px;
+
+  color: #75879a;
+
+  font-size: 14px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+  .reporte-ventas-resumen {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .reporte-ventas-periodos {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .reporte-ventas-periodos-botones {
+    flex-wrap: wrap;
+  }
+
+  .reporte-ventas-fechas {
+    width: 100%;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 700px) {
+  .reporte-ventas-header h3 {
+    font-size: 22px;
+  }
+
+  .reporte-ventas-periodos {
+    gap: 8px;
+  }
+
+  .reporte-ventas-periodos button {
+    min-width: auto;
+    padding: 10px 15px;
+    font-size: 13px;
+  }
+
+  .reporte-ventas-personalizado {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 13px;
+  }
+
+  .campo-fecha input {
+    width: 100%;
+  }
+
+  .reporte-ventas-resumen {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .reporte-ventas-contenido {
+    padding: 18px;
+  }
+
+  .tabla-ventas-reporte {
+    margin-top: 20px;
+  }
+
+  .reporte-ventas-periodos-botones {
+    width: 100%;
+  }
+
+  .reporte-ventas-periodos-botones button {
+    flex: 1;
+  }
+
+  .reporte-ventas-pdf {
+    width: 100%;
+  }
+
+  .reporte-ventas-fechas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reporte-ventas-fecha input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .reporte-ventas-periodos-botones {
+    width: 100%;
+  }
+
+  .reporte-ventas-periodos-botones button {
+    flex: 1;
+  }
+
+  .reporte-ventas-pdf {
+    width: 100%;
+  }
+
+  .reporte-ventas-fechas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reporte-ventas-fecha input {
+    width: 100%;
+  }
+}

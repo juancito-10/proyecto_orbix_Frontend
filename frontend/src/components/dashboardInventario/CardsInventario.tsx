@@ -1,6 +1,7 @@
 import "./CardsInventario.css";
 
 export interface CardsInventarioProps {
+  isLoading?: boolean;
   metrics: {
     valorTotal: number;
     totalProductos: number;
@@ -14,7 +15,21 @@ export interface CardsInventarioProps {
   };
 }
 
-const CardsInventario = ({ metrics }: CardsInventarioProps) => {
+const CardsInventario = ({ metrics, isLoading = false }: CardsInventarioProps) => {
+  if (isLoading) {
+    return (
+      <div className="cards-inv-container">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="card-inv" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div className="skeleton skeleton-text" style={{ width: '60%', marginBottom: '15px' }}></div>
+            <div className="skeleton skeleton-text" style={{ width: '40%', height: '28px', marginBottom: '10px' }}></div>
+            <div className="skeleton skeleton-text" style={{ width: '80%', marginBottom: '0' }}></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="cards-inv-container">
       <div className="card-inv">

@@ -1,0 +1,400 @@
+.reporte-inventario {
+  width: 100%;
+  margin-bottom: 40px;
+  color: #071b2f;
+}
+
+.reporte-inventario-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reporte-inventario-header h3 {
+  margin: 0;
+  color: #071b2f;
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+
+.reporte-inventario-header p {
+  margin: 7px 0 0;
+  color: #70839a;
+  font-size: 14px;
+}
+
+.reporte-inventario-volver {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #087c9c;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.reporte-inventario-volver:hover {
+  color: #065f78;
+  transform: translateX(-3px);
+}
+
+.reporte-inventario-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-top: 28px;
+  margin-bottom: 22px;
+}
+
+.reporte-inventario-acciones h4 {
+  margin: 0 0 6px;
+
+  color: #071b2f;
+
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.reporte-inventario-acciones p {
+  margin: 0;
+
+  color: #70839a;
+
+  font-size: 14px;
+}
+
+.reporte-inventario-pdf {
+  height: 42px;
+
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 9px;
+
+  border: none;
+  border-radius: 10px;
+
+  background-color: #087c9c;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.reporte-inventario-pdf:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+
+.reporte-inventario-pdf:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.reporte-inventario-resumen {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 22px;
+}
+
+.reporte-inventario-card {
+  position: relative;
+
+  min-height: 125px;
+
+  padding: 22px;
+
+  box-sizing: border-box;
+
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+  border-radius: 14px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 3px 10px rgba(7, 27, 47, 0.035);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.reporte-inventario-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 4px;
+  height: 100%;
+
+  background-color: #a16207;
+}
+
+.reporte-inventario-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 18px rgba(7, 27, 47, 0.07);
+}
+
+.reporte-inventario-card span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #70839a;
+
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.reporte-inventario-card strong {
+  display: block;
+
+  color: #071b2f;
+
+  font-size: 25px;
+  font-weight: 750;
+
+  line-height: 1.2;
+}
+
+.reporte-inventario-contenido {
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+  border-radius: 15px;
+
+  padding: 26px;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 3px 12px rgba(7, 27, 47, 0.035);
+}
+
+.reporte-inventario-contenido h4 {
+  margin: 0 0 8px;
+
+  color: #071b2f;
+
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.reporte-inventario-contenido p {
+  margin: 0;
+
+  color: #70839a;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.reporte-inventario-contenido p strong {
+  color: #36536f;
+}
+
+.tabla-inventario-reporte {
+  width: 100%;
+
+  overflow-x: auto;
+
+  margin-top: 24px;
+
+  border: 1px solid #e1e8ee;
+  border-radius: 11px;
+
+  scrollbar-width: thin;
+}
+
+.tabla-inventario-reporte table {
+  width: 100%;
+
+  min-width: 700px;
+
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tabla-inventario-reporte th {
+  padding: 14px 15px;
+
+  text-align: left;
+
+  background-color: #f7f9fb;
+
+  border-bottom: 1px solid #dfe7ed;
+
+  color: #58708c;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  white-space: nowrap;
+}
+
+.tabla-inventario-reporte th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.tabla-inventario-reporte th:last-child {
+  border-top-right-radius: 10px;
+}
+
+.tabla-inventario-reporte td {
+  padding: 15px;
+
+  color: #263f58;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #edf1f4;
+
+  white-space: nowrap;
+
+  background-color: #ffffff;
+}
+
+.tabla-inventario-reporte tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabla-inventario-reporte tbody tr {
+  transition:
+    background-color 0.2s ease;
+}
+
+.tabla-inventario-reporte tbody tr:hover td {
+  background-color: #f8fbfc;
+}
+
+.tabla-inventario-reporte td:first-child {
+  color: #a16207;
+  font-weight: 700;
+}
+
+.tabla-inventario-reporte td:last-child {
+  color: #071b2f;
+  font-weight: 750;
+}
+
+.reporte-inventario-cargando {
+  padding: 35px;
+
+  text-align: center;
+
+  background-color: #ffffff;
+
+  border: 1px solid #dce5ec;
+  border-radius: 14px;
+
+  color: #58708c;
+
+  font-size: 14px;
+}
+
+.reporte-inventario-error {
+  padding: 16px 18px;
+
+  background-color: #fff7f7;
+
+  border: 1px solid #f1caca;
+  border-radius: 11px;
+
+  color: #b42318;
+
+  font-size: 14px;
+}
+
+.inventario-sin-datos {
+  margin-top: 22px;
+
+  padding: 35px 20px;
+
+  text-align: center;
+
+  background-color: #f8fafc;
+
+  border: 1px dashed #d4dfe7;
+  border-radius: 11px;
+
+  color: #75879a;
+
+  font-size: 14px;
+}
+
+@media (max-width: 1100px) {
+  .reporte-inventario-resumen {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .reporte-inventario-header h3 {
+    font-size: 22px;
+  }
+
+  .reporte-inventario-acciones {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .reporte-inventario-pdf {
+    width: 100%;
+  }
+
+  .reporte-inventario-resumen {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .reporte-inventario-contenido {
+    padding: 18px;
+  }
+
+  .tabla-inventario-reporte {
+    margin-top: 20px;
+  }
+}

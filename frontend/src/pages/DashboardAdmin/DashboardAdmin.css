@@ -1,85 +1,86 @@
-.main {
-  min-height: 100vh;
-  background-color: #f0f4f8;
+﻿.dashboard-main { display: flex; min-height: 100vh; background-color: #f0f4f8;  }
+
+.dashboard-contenido { flex: 1; min-width: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; }
+
+/* BARRA SUPERIOR */
+
+.dashboard-barra-superior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 15px 0;
+  border-bottom: 1px solid #d9e0e8;
+  gap: 40px;
+  margin-top: 0;
 }
 
-.contenido-dashboard {
-  margin-left: 230px;
-  min-width: 0;
-  min-height: 100vh;
+.dashboard-barra-superior p {
+  margin: 0;
+  padding: 5px 0;
+  font-size: 15px;
 }
-.orbix {
+
+.dashboard-orbix {
   color: #757e87;
 }
 
-.admin {
+.dashboard-admin {
   color: #087c9c;
   font-weight: 800;
 }
-.fecha-mes {
-  color: #757e87;
-}
-.dashboard-letra {
+
+.dashboard-titulo {
   font-weight: bold;
 }
 
-.barra-superior {
+/* ACCIONES SUPERIORES */
+
+.dashboard-acciones-superiores {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0px 30px 15px;
-  border-bottom: 1px solid #d9e0e8;
-  gap: 380px;
+  gap: 10px;
 }
 
-.encabezado-dashboard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 30px;
-}
-.button-exportar {
-  width: 170px;
-  height: 40px;
-  border: none;
-  border-radius: 17px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  cursor: pointer;
-  color: white;
-  background-color: #087c9c;
-}
-.button-exportar:hover {
-  filter: brightness(1.30);
-}
-
-.buscar {
+.dashboard-buscar {
   position: relative;
 }
 
-.buscar input {
+.dashboard-buscar input {
   width: 285px;
+  height: 35px;
   padding: 10px 15px 10px 40px;
   box-sizing: border-box;
-  height: 35px;
   border: 1px solid #d9e0e8;
   border-radius: 10px;
+  outline: none;
 }
 
-.buscar svg {
+.dashboard-buscar input:focus {
+  border-color: #087c9c;
+}
+
+.dashboard-buscar svg {
   position: absolute;
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
 }
-.acciones-superiores {
+
+/* NOTIFICACIONES */
+
+.dashboard-notifi {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: white;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
 }
-.usuario {
+
+/* USUARIO */
+
+.dashboard-usuario {
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -90,12 +91,82 @@
   justify-content: center;
   font-weight: bold;
 }
-.notifi {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: white;
+
+/* ENCABEZADO */
+
+.dashboard-encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+}
+
+.dashboard-encabezado h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.dashboard-fecha {
+  color: #757e87;
+  font-size: 13px;
+}
+
+/* BOTIN EXPORTAR */
+
+.dashboard-button-exportar {
+  width: 150px;
+  height: 36px;
+  border: none;
+  border-radius: 17px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  color: white;
+  background-color: #087c9c;
+  font-size: 13px;
 }
+
+.dashboard-button-exportar:hover {
+  filter: brightness(1.30);
+}
+/* GRíFICAS */
+
+.graficas-dashboard {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 18px;
+  padding: 18px 0;
+  align-items: start;
+}
+
+.ventas-dashboard {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+
+@media (max-width: 768px) { .dashboard-contenido, .empleados-contenido, .clientes-contenido, .inventario-contenido, .provedores-contenido, .reportes-contenido, .ventas-contenido { padding: 10px; margin-left: 0 !important; } }
+
+@media (max-width: 768px) {
+  .dashboard-barra-superior, .empleados-barra-superior, .clientes-barra-superior, .inventario-barra-superior, .provedores-barra-superior, .reportes-barra-superior, .ventas-barra-superior {
+    gap: 10px !important;
+  }
+  .dashboard-orbix, .dashboard-admin, .empleados-orbix, .empleados-admin, .clientes-orbix, .clientes-admin, .inventario-orbix, .inventario-admin, .provedores-orbix, .provedores-admin, .reportes-orbix, .reportes-admin, .ventas-orbix, .ventas-admin {
+    display: none !important;
+  }
+  .dashboard-buscar input, .empleados-buscar input, .clientes-buscar input, .inventario-buscar input, .provedores-buscar input, .reportes-buscar input, .ventas-buscar input {
+    width: 120px !important;
+  }
+}
+
+
+@media (max-width: 768px) { .mobile-menu-btn { display: block !important; } }
+
+@media (max-width: 992px) { .graficas-dashboard, .ventas-dashboard { grid-template-columns: 1fr; } }
+
+.dashboard-contenido { overflow-x: hidden; }
+.empleados-contenido, .clientes-contenido, .inventario-contenido, .provedores-contenido, .reportes-contenido, .ventas-contenido { overflow-x: hidden; }

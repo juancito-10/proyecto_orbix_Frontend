@@ -1,45 +1,78 @@
+﻿import { Menu } from "lucide-react";
+import { useState } from "react";
+import ProfileDropdown from "../../components/ProfileDropdown";
 import Sidebar from "../../components/dashboardAdmin/Sidebar";
+
 import CarsDatos from "../../components/dashboardAdmin/CarsDatos";
-import { Search, Bell, Download } from "lucide-react";
+
+import Ventasanuales from "../../components/dashboardAdmin/ventasAnuales";
+
+import VentasCategorias from "../../components/dashboardAdmin/VentasCategorias";
+
+import UltimasVentas from "../../components/dashboardAdmin/UltimasVentas";
+
 import "./DashboardAdmin.css";
 
 const DashboardAdmin = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
-    <main className="main">
-      <Sidebar />
+    <main className="dashboard-main">
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
-      <div className="contenido-dashboard">
-        <div className="barra-superior">
+      <div className="dashboard-contenido">
+        {/* BARRA SUPERIOR */}
+
+        <div className="dashboard-barra-superior">
           <p>
-            <span className="orbix">Orbix</span> /{" "}
-            <span className="admin">Admin</span> /{" "}
-            <span className="dashboard-letra">Dashboard</span>
+            <span className="dashboard-orbix">Orbix</span> /{" "}
+            <span className="dashboard-admin">Admin</span> /{" "}
+            <span className="dashboard-titulo">Dashboard</span>
           </p>
 
-          <div className="acciones-superiores">
-            <form className="buscar">
-              <Search size={20} />
-              <input type="text" placeholder="Buscar..." />
-            </form>
-            <div className="notifi">
-              <Bell size={20} />
-            </div>
-            <div className="usuario">VO</div>
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              display: "none",
+            }}
+          >
+            <Menu size={24} />
+          </button>
+          <div className="dashboard-acciones-superiores">
+            <ProfileDropdown />
           </div>
         </div>
 
-        <div className="encabezado-dashboard">
+        {/* ENCABEZADO */}
+
+        <div className="dashboard-encabezado">
           <div>
             <h2>Dashboard</h2>
-            <p className="fecha-mes">Miércoles, 30 de julio de 2026</p>
-          </div>
 
-          <button className="button-exportar">
-            <Download size={20} />
-            Exportar reporte
-          </button>
+            <p className="dashboard-fecha">
+              {new Date().toLocaleDateString("es-CO", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
+          </div>
         </div>
+
         <CarsDatos />
+
+        <div className="graficas-dashboard">
+          <Ventasanuales />
+          <VentasCategorias />
+        </div>
+
+        <div className="ventas-dashboard">
+          <UltimasVentas />
+        </div>
       </div>
     </main>
   );

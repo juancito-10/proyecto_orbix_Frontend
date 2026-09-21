@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { Search, Bell } from "lucide-react";
-import SidebarInventario from "../../components/dashboardInventario/SidebarInventario";
-import CardsInventario, { CardsInventarioProps } from "../../components/dashboardInventario/CardsInventario";
-import StockBajoTable from "../../components/dashboardInventario/StockBajoTable";
-import StockChart from "../../components/dashboardInventario/StockChart";
-import UltimosMovimientos from "../../components/dashboardInventario/UltimosMovimientos";
-
-import "./DashboardInventario.css";
+import CardsInventario, { type CardsInventarioProps } from "../../components/dashboardInventario/CardsInventario";
+import StockBajoTable, { type ProductoStockBajo } from "../../components/dashboardInventario/StockBajoTable";
+import StockChart, { type StockChartData } from "../../components/dashboardInventario/StockChart";
+import UltimosMovimientos, { type Movimiento } from "../../components/dashboardInventario/UltimosMovimientos";
+import { useInventory } from "../../context/InventoryContext";
 
 const DashboardInventario = () => {
-  // Estado local para almacenar las métricas dinámicas
+  const { productos, movimientos } = useInventory();
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Métrica general
   const [dashboardMetrics, setDashboardMetrics] = useState<CardsInventarioProps['metrics']>({
     valorTotal: 0,
     totalProductos: 0,
@@ -18,68 +18,93 @@ const DashboardInventario = () => {
     movimientosHoy: { total: 0, entradas: 0, salidas: 0 }
   });
 
-  // Simular la carga de datos desde el backend (API)
-  useEffect(() => {
-    // Aquí iría el fetch real a la API (ej: /api/inventario/dashboard-stats)
-    const fetchMetrics = async () => {
-      // Usamos un timeout para simular la petición de red
-      setTimeout(() => {
-        setDashboardMetrics({
-          valorTotal: 523330,
-          totalProductos: 12,
-          productosStockBajo: 3,
-          sinStock: 0,
-          movimientosHoy: { total: 7, entradas: 4, salidas: 3 }
-        });
-      }, 500); // 500ms de retraso
-    };
+  const [stockBajo, setStockBajo] = useState<ProductoStockBajo[]>([]);
+  const [chartData, setChartData] = useState<StockChartData[]>([]);
+  const [movimientosRecientes, setMovimientosRecientes] = useState<Movimiento[]>([]);
 
-    fetchMetrics();
-  }, []);
+  useEffect(() => {
+    // Calculando métricas dinámicas
+    const valorT = productos.reduce((acc, p) => acc + p.valor, 0);
+    const prodBajo = productos.filter(p => p.stock <= p.stockMin && p.stock > 0).length;
+    const sinStk = productos.filter(p => p.stock === 0).length;
+
+    // Calcular las operaciones del dia (entradas y salidas) en base a todos los movs
+    const totalEntradas = movimientos.filter(m => m.tipo === "Entrada").length;
+    const totalSalidas = movimientos.filter(m => m.tipo === "Salida").length;
+
+    setDashboardMetrics({
+      valorTotal: valorT,
+      totalProductos: productos.length,
+      productosStockBajo: prodBajo,
+      sinStock: sinStk,
+      movimientosHoy: { total: movimientos.length, entradas: totalEntradas, salidas: totalSalidas }
+    });
+
+    // Productos con stock bajo
+    const tableStockBajo = productos
+      .filter(p => p.stock <= p.stockMin)
+      .slice(0, 4) // max 4 for dashboard
+      .map(p => ({
+        producto: p.nombre,
+        stockActual: p.stock,
+        stockMin: p.stockMin,
+        deficit: p.stock - p.stockMin,
+        proveedor: p.proveedor
+      }));
+    setStockBajo(tableStockBajo);
+
+    // Chart Data (Distribución de valor por categoría)
+    const categoriasVal = productos.reduce((acc, p) => {
+      acc[p.categoria] = (acc[p.categoria] || 0) + p.valor;
+      return acc;
+    }, {} as Record<string, number>);
+
+    setChartData(Object.keys(categoriasVal).map(cat => ({
+      name: cat,
+      valor: categoriasVal[cat]
+    })));
+
+    // Movimientos recientes adaptados al formato del componente
+    const movRecientes = movimientos.slice(0, 5).map(m => {
+      let iconT: "in" | "out" | "adj" = "adj";
+      if (m.tipo === "Entrada") iconT = "in";
+      else if (m.tipo === "Salida") iconT = "out";
+
+      return {
+        tipo: m.tipo,
+        producto: m.producto,
+        detalle: `${m.cantidad} - ${m.responsable}`,
+        fecha: m.fecha.substring(0, 6), // 30 Jul
+        iconType: iconT
+      };
+    });
+    setMovimientosRecientes(movRecientes);
+
+    // Simulamos carga rápida la primera vez
+    if (isLoading) {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800);
+    }
+  }, [productos, movimientos, isLoading]);
 
   return (
-    <main className="main-inv">
-      <SidebarInventario />
-
-      <div className="contenido-dashboard-inv">
-        <div className="barra-superior-inv">
-          <p className="breadcrumbs-inv">
-            <span className="bread-orbix">Orbix</span> <span className="bread-sep">/</span>{" "}
-            <span className="bread-inventario">Inventario</span> <span className="bread-sep">/</span>{" "}
-            <span className="bread-dashboard">Dashboard</span>
-          </p>
-
-          <div className="acciones-superiores-inv">
-            <form className="buscar-inv">
-              <Search size={18} />
-              <input type="text" placeholder="Buscar..." />
-            </form>
-            <div className="notifi-inv">
-              <Bell size={20} />
-            </div>
-            <div className="usuario-inv">LH</div>
-          </div>
-        </div>
-
-        <div className="panel-scroll-inv">
-          <div className="encabezado-dashboard-inv">
-            <h2>Dashboard de Inventario</h2>
-            <p className="fecha-mes-inv">Estado general del stock · 30 de julio de 2026</p>
-          </div>
-          
-          <div className="dashboard-content">
-            {/* Pasamos los datos dinámicos como props */}
-            <CardsInventario metrics={dashboardMetrics} />
-            <StockBajoTable />
-            
-            <div className="bottom-row-inv">
-              <StockChart />
-              <UltimosMovimientos />
-            </div>
-          </div>
+    <>
+      <div className="encabezado-dashboard-inv">
+        <h2>Dashboard Principal</h2>
+        <p className="fecha-mes-inv">Resumen general del inventario</p>
+      </div>
+      
+      <div className="dashboard-content">
+        <CardsInventario metrics={dashboardMetrics} isLoading={isLoading} />
+        <StockBajoTable data={stockBajo} isLoading={isLoading} />
+        
+        <div className="bottom-row-inv">
+          <StockChart data={chartData} isLoading={isLoading} />
+          <UltimosMovimientos data={movimientosRecientes} isLoading={isLoading} />
         </div>
       </div>
-    </main>
+    </>
   );
 };
 

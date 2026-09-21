@@ -1,0 +1,30 @@
+.vchart-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.vchart-card-ancho {
+  flex: 1;
+}
+
+.vchart-card-estrecho {
+  flex: 0 0 340px;
+}
+
+.vchart-card h3 {
+  margin: 0 0 4px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--foreground);
+}
+
+.vchart-sub {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}

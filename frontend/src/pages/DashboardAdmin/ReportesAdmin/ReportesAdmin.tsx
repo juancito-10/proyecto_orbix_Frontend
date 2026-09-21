@@ -1,0 +1,127 @@
+﻿import ProfileDropdown from "../../../components/ProfileDropdown";
+
+import { useState } from "react";
+
+import Sidebar from "../../../components/dashboardAdmin/Sidebar";
+
+import "./ReportesAdmin.css";
+
+import CardsReportes from "../../../components/dashboardAdmin/ReportesAdmin/CardsReportes";
+import FiltrosReportes from "../../../components/dashboardAdmin/ReportesAdmin/FiltrosReportes";
+import VentasMensuales from "../../../components/dashboardAdmin/ReportesAdmin/VentasMensuales";
+import ParticipacionCategoria from "../../../components/dashboardAdmin/ReportesAdmin/ParticipacionCategoria";
+import RendimientoEquipo from "../../../components/dashboardAdmin/ReportesAdmin/RendimientoEquipo";
+
+import ReporteVentas from "../../../components/dashboardAdmin/ReportesAdmin/ReporteVentas";
+import ReporteInventario from "../../../components/dashboardAdmin/ReportesAdmin/ReporteInventario";
+import ReporteClientes from "../../../components/dashboardAdmin/ReportesAdmin/ReporteClientes";
+import ReporteFinanciero from "../../../components/dashboardAdmin/ReportesAdmin/ReporteFinanciero";
+
+const ReportesAdmin = () => {
+  const [filtro, setFiltro] = useState("Resumen");
+
+  const [reporteActivo, setReporteActivo] = useState<string | null>(null);
+
+  return (
+    <main className="reportes-main">
+      <Sidebar />
+
+      <div className="reportes-contenido">
+        {/* BARRA SUPERIOR */}
+
+        <div className="reportes-barra-superior">
+          <p>
+            <span className="reportes-orbix">Orbix</span>
+
+            {" / "}
+
+            <span className="reportes-admin">Admin</span>
+
+            {" / "}
+
+            <span className="reportes-titulo">Reportes</span>
+          </p>
+
+          <div className="reportes-acciones-superiores">
+            <ProfileDropdown />
+          </div>
+        </div>
+
+        {/* PANTALLA PRINCIPAL DE REPORTES */}
+
+        {!reporteActivo && (
+          <>
+            {/* ENCABEZADO */}
+
+            <div className="reportes-encabezado">
+              <div>
+                <h2>Reportes</h2>
+
+                <p className="reportes-fecha">
+                  Análisis y métricas del negocio · Perí­odo:{" "}
+                  {new Date().toLocaleDateString("es-CO", {
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+            </div>
+
+            {/* CARDS */}
+
+            <CardsReportes
+              onGenerarVentas={() => setReporteActivo("ventas")}
+              onGenerarInventario={() => setReporteActivo("inventario")}
+              onGenerarClientes={() => setReporteActivo("clientes")}
+              onGenerarFinanciero={() => setReporteActivo("financiero")}
+            />
+
+            {/* FILTROS */}
+
+            <FiltrosReportes filtro={filtro} setFiltro={setFiltro} />
+
+            {/* RESUMEN */}
+
+            {filtro === "Resumen" && (
+              <div className="reportes-resumen">
+                <VentasMensuales />
+
+                <ParticipacionCategoria />
+              </div>
+            )}
+
+            {/* RENDIMIENTO DEL EQUIPO */}
+
+            {filtro === "Rendimiento equipo" && <RendimientoEquipo />}
+          </>
+        )}
+
+        {/* REPORTE DE VENTAS */}
+
+        {reporteActivo === "ventas" && (
+          <ReporteVentas onVolver={() => setReporteActivo(null)} />
+        )}
+
+        {/* REPORTE DE INVENTARIO */}
+
+        {reporteActivo === "inventario" && (
+          <ReporteInventario onVolver={() => setReporteActivo(null)} />
+        )}
+
+        {/* REPORTE DE CLIENTES */}
+
+        {reporteActivo === "clientes" && (
+          <ReporteClientes onVolver={() => setReporteActivo(null)} />
+        )}
+
+        {/* REPORTE FINANCIERO */}
+
+        {reporteActivo === "financiero" && (
+          <ReporteFinanciero onVolver={() => setReporteActivo(null)} />
+        )}
+      </div>
+    </main>
+  );
+};
+
+export default ReportesAdmin;

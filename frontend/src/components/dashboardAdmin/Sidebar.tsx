@@ -1,53 +1,130 @@
-import {
+﻿import {
   LayoutDashboard,
-  SquareLibrary,
-  ShoppingBag,
   Users,
-  Truck,
-  ChartNoAxesCombined,
+  Building2,
+  Package,
+  TrendingUp,
+  FileText,
+  Pin,
+  PinOff,
 } from "lucide-react";
-import LogoutButton from "../LogoutButton";
-
+import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 import "./Sidebar.css";
 
-const Sidebar = () => {
-  return (
-    <aside className="sidebar">
-      <div className="sidebar-titulo">
-        <h2 className="siti">Orbix</h2>
-        <p className="sitip">Gestón Empresarial</p>
-      </div>
-      <nav className="navegacion">
-        <p className="navp">PRINCIPAL</p>
-        <a href="/dashboard/admin">
-          <LayoutDashboard size={22} />
-          <span>Dashboard</span>
-        </a>
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  isPinned?: boolean;
+  onTogglePin?: () => void;
+}
 
-        <a href="/dashboard/admin/inventario">
-          <SquareLibrary size={22} />
-          <span>Inventario</span>
-        </a>
-        <a href="/dashboard/admin/ventas">
-          <ShoppingBag size={22} />
-          <span>ventas</span>
-        </a>
-        <a href="/dashboard/admin/clientes">
-          <Users size={22} />
-          <span>Clientes</span>
-        </a>
-        <a href="/dashboard/admin/provedores">
-          <Truck size={22} />
-          <span>Proveedores</span>
-        </a>
-        <a href="/dashboard/admin/reportes">
-          <ChartNoAxesCombined size={22} />
-          <span>Reportes</span>
-        </a>
+const Sidebar = ({ isOpen = false, onClose, isPinned: propIsPinned, onTogglePin }: SidebarProps) => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const [internalPinned, setInternalPinned] = useState(false);
+
+  const isPinned = propIsPinned !== undefined ? propIsPinned : internalPinned;
+  const handleTogglePin = () => {
+    if (onTogglePin) onTogglePin();
+    else setInternalPinned(!internalPinned);
+  };
+
+  const menuItems = [
+    {
+      path: "/dashboard/admin",
+      icon: <LayoutDashboard size={20} />,
+      label: "Dashboard",
+      exact: true,
+    },
+    {
+      path: "/dashboard/admin/empleados",
+      icon: <Users size={20} />,
+      label: "Empleados",
+    },
+    {
+      path: "/dashboard/admin/clientes",
+      icon: <Users size={20} />,
+      label: "Clientes",
+    },
+    {
+      path: "/dashboard/admin/proveedores",
+      icon: <Building2 size={20} />,
+      label: "Proveedores",
+    },
+    {
+      path: "/dashboard/admin/inventario",
+      icon: <Package size={20} />,
+      label: "Inventario",
+    },
+    {
+      path: "/dashboard/admin/ventas",
+      icon: <TrendingUp size={20} />,
+      label: "Ventas",
+    },
+    {
+      path: "/dashboard/admin/reportes",
+      icon: <FileText size={20} />,
+      label: "Reportes",
+    },
+  ];
+
+  return (
+    <>
+      {isOpen && onClose && <div className="sidebar-overlay" onClick={onClose} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 999 }}></div>}
+      <aside
+        className={`sidebar ${isOpen ? "open" : ""} ${isPinned ? "pinned" : "unpinned"}`}
+      >
+      <div className="sidebar-titulo">
+        <div className="logo-container">
+          <div className="logo-icon-orbix logo-admin">O</div>
+          <h2 className="siti">Orbix</h2>
+        </div>
+        <span className="badge-admin" style={{ marginLeft: "10px" }}>
+          Admin
+        </span>
+      </div>
+
+      <nav className="navegacion">
+        <p className="navp">MEN</p>
+        {menuItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={
+              item.exact
+                ? currentPath === item.path
+                  ? "activo"
+                  : ""
+                : currentPath.startsWith(item.path)
+                  ? "activo"
+                  : ""
+            }
+          >
+            {item.icon}
+            <span>{item.label}</span>
+          </Link>
+        ))}
       </nav>
-      <LogoutButton/>
+
+      <div className="sidebar-footer-inv">
+        <button
+          className="btn-cambiar-perfil toggle-pin-btn"
+          onClick={handleTogglePin}
+          title={isPinned ? "Desanclar barra" : "Anclar barra"}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", width: "100%" }}
+        >
+          {isPinned ? <PinOff size={18} /> : <Pin size={18} />}
+          <span>{isPinned ? "Desanclar" : "Anclar barra"}</span>
+        </button>
+      </div>
     </aside>
+    </>
   );
 };
 
 export default Sidebar;
+
+
+
+

@@ -1,0 +1,70 @@
+.buscar-productos {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+  margin-top: 5px;
+  margin-bottom: 22px;
+}
+
+.buscar-productos-form {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.buscar-productos-form svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  width: 19px;
+  height: 19px;
+}
+
+.buscar-productos-form input {
+  width: 285px;
+  height: 40px;
+  padding: 0 15px 0 40px;
+  box-sizing: border-box;
+  border: 1px solid #d9e0e8;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+}
+
+.buscar-productos-form input::placeholder {
+  color: #64748b;
+}
+
+.categorias-productos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.categoria-producto {
+  height: 38px;
+  padding: 0 22px;
+  border: 1px solid #d9e0e8;
+  border-radius: 21px;
+  background-color: white;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.categoria-producto.activa {
+  background-color: #087c9c;
+  border-color: #087c9c;
+  color: white;
+  font-weight: 600;
+}
+
+.categoria-producto:hover {
+  border-color: #087c9c;
+}   

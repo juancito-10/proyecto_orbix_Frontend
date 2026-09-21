@@ -9,12 +9,15 @@ import {
 } from "recharts";
 import "./StockChart.css";
 
-const data = [
-  { name: "Electrónica", valor: 210000 },
-  { name: "Ropa", valor: 65000 },
-  { name: "Hogar", valor: 85000 },
-  { name: "Alimentos", valor: 38200 }
-];
+export interface StockChartData {
+  name: string;
+  valor: number;
+}
+
+export interface StockChartProps {
+  data: StockChartData[];
+  isLoading?: boolean;
+}
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -28,7 +31,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-const StockChart = () => {
+const StockChart = ({ data, isLoading = false }: StockChartProps) => {
   return (
     <div className="chart-container">
       <div className="chart-header">
@@ -36,38 +39,41 @@ const StockChart = () => {
         <p>En pesos argentinos</p>
       </div>
       <div className="chart-wrapper">
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart
-            layout="vertical"
-            data={data}
-            margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-            <XAxis 
-              type="number" 
-              tickFormatter={(value) => `$${value / 1000}k`}
-              domain={[0, 200000]}
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#64748b', fontSize: 12 }}
-            />
-            <YAxis 
-              dataKey="name" 
-              type="category" 
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#64748b', fontSize: 13 }}
-              width={90}
-            />
-            <Tooltip content={<CustomTooltip />} cursor={{fill: 'rgba(0,0,0,0.05)'}} />
-            <Bar 
-              dataKey="valor" 
-              fill="#10b981" 
-              radius={[0, 4, 4, 0]} 
-              barSize={30}
-            />
-          </BarChart>
-        </ResponsiveContainer>
+        {isLoading ? (
+          <div className="skeleton skeleton-chart"></div>
+        ) : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart
+              layout="vertical"
+              data={data}
+              margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+              <XAxis 
+                type="number" 
+                tickFormatter={(value) => `$${value / 1000}k`}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 12 }}
+              />
+              <YAxis 
+                dataKey="name" 
+                type="category" 
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: '#64748b', fontSize: 13 }}
+                width={90}
+              />
+              <Tooltip content={<CustomTooltip />} cursor={{fill: 'rgba(0,0,0,0.05)'}} />
+              <Bar 
+                dataKey="valor" 
+                fill="#10b981" 
+                radius={[0, 4, 4, 0]} 
+                barSize={30}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );
